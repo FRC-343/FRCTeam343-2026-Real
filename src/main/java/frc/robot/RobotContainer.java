@@ -167,6 +167,8 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
   }
 
   /**

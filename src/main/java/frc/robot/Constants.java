@@ -40,6 +40,6 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static double WheelCir = 1.2;
+    public static double WheelCir = 6;
   }
 }

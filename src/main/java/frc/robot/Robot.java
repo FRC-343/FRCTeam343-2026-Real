@@ -7,10 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.vision2.VisionConstants;
 import frc.robot.util.Meth.HoodAim;
@@ -99,13 +102,15 @@ public class Robot extends LoggedRobot {
      * This is importaint for our shooter calcs
      */
 
-    // BobotState.updateToF(
-    //     TimeOfFlight.solveTime(
-    //         BobotState.getGlobalPose().getTranslation(),
-    //         BobotState.getGlobalPose().getTranslation(),
-    //         null,
-    //         null,
-    //         defaultPeriodSecs));
+    BobotState.updateToF(
+        TimeOfFlight.solveTime(
+            BobotState.getGlobalPose()
+                .transformBy(new Transform2d(2, 2, new Rotation2d()))
+                .getTranslation(),
+            BobotState.getGlobalPose().getTranslation(),
+            new Translation2d(5, 5.1),
+            new Translation2d(),
+            23));
 
     /*
      * This is importaint for our shooter calcs
@@ -115,19 +120,22 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
-    Translation2d shooterXY = BobotState.getGlobalPose().getTranslation();
+    Translation2d shooterXY =
+        BobotState.getGlobalPose()
+            .transformBy(new Transform2d(2, 2, new Rotation2d()))
+            .getTranslation();
     Translation2d robotVelocityXY = BobotState.getGlobalPose().getTranslation();
-    Translation2d targetXY = new Translation2d();
+    Translation2d targetXY = new Translation2d(5, 5.1);
     double time = BobotState.getToF();
     double shooterExitVelocity =
-        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3 +1;
+        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
 
     if (!Double.isNaN(time)) {
       double yaw =
           TurretAim.calculateYaw(
+              shooterXY,
               BobotState.getGlobalPose().getTranslation(),
-              BobotState.getGlobalPose().getTranslation(),
-              new Translation2d(),
+              targetXY,
               new Translation2d(),
               BobotState.getToF());
 

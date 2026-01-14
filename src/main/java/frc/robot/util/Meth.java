@@ -24,22 +24,28 @@ public class Meth {
 
   public final class HoodAim {
 
-    private static final double GRAVITY = 9.81;
-
     /** Calculates hood angle in radians. Returns NaN if unreachable. */
     public static double calculateHoodAngle(
         double horizontalDistance, double heightDifference, double exitVelocity) {
+      if (horizontalDistance < 0.05) return Double.NaN;
+      if (exitVelocity < 0.1) return Double.NaN;
 
+      double g = 9.81;
       double v2 = exitVelocity * exitVelocity;
-      double g = GRAVITY;
 
       double term =
           v2 * v2 - g * (g * horizontalDistance * horizontalDistance + 2 * heightDifference * v2);
 
       if (term < 0) return Double.NaN;
 
-      // LOW arc (recommended for FRC)
-      return Math.atan((v2 - Math.sqrt(term)) / (g * horizontalDistance));
+      double sqrt = Math.sqrt(term);
+
+      // Prefer low arc, fall back to high arc
+      double low = Math.atan((v2 - sqrt) / (g * horizontalDistance));
+
+      if (!Double.isNaN(low) && low > 0) return low;
+
+      return Math.atan((v2 + sqrt) / (g * horizontalDistance));
     }
   }
 }

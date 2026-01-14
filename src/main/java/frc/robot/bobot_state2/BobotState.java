@@ -142,6 +142,10 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.ShooterRPM;
   }
 
+  public static double getTurretYaw() {
+    return BobotState.TurretCalc;
+  }
+
   public static Trigger onTeamSide() {
     return new Trigger(
         () ->
