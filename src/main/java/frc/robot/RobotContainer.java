@@ -19,6 +19,7 @@ import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -40,6 +41,8 @@ public class RobotContainer {
   private final Drive drive;
 
   private final Shooter shooter;
+
+  private final Turret turret;
 
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
@@ -71,6 +74,7 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         shooter = new Shooter();
+        turret = new Turret();
 
         break;
 
@@ -86,6 +90,7 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         shooter = new Shooter();
+        turret = new Turret();
 
         break;
 
@@ -102,6 +107,7 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         shooter = new Shooter();
+        turret = new Turret();
 
         break;
     }
@@ -169,6 +175,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
+    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getTurretYaw()));
   }
 
   /**

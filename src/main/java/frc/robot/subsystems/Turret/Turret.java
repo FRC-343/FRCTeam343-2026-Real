@@ -17,6 +17,7 @@ import frc.robot.LimitSwitch.LimitSwitchIOInputsAutoLogged;
 import frc.robot.beambreak.BeambreakDigitalInput;
 import frc.robot.beambreak.BeambreakIO;
 import frc.robot.beambreak.BeambreakIOInputsAutoLogged;
+import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -54,7 +55,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new TurretMotorTalonFX(21);
+        io = new TurretMotorTalonFX(21, 7);
         beambreak = new BeambreakDigitalInput(9); // 3 and 2
         LimitSwitch = new LimitSwitchDigitalInput(0);
         LimitSwitchBackup = new LimitSwitchDigitalInput(1);
@@ -102,6 +103,7 @@ public class Turret extends SubsystemBase {
     // setpointVisualizer.update(this.setpointInches);
     // // I'm not quite sure how this works, it is semi working in sim.
 
+    BobotState.updateTurretPos(this.inputs.extentionAbsPos);
   }
 
   // These needs to be reorganized
@@ -138,7 +140,7 @@ public class Turret extends SubsystemBase {
   public Command setTurretPosition(double position) {
     return new RunCommand(
         () ->
-            this.io.setTurretPosition(
+            this.io.setVoltage(
                 MathUtil.clamp(
                     position,
                     Constants.TurretConstants.minTurret,

@@ -120,6 +120,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.ShooterRPM = RPM;
   }
 
+  public static void updateTurretPos(double pose) {
+    BobotState.TurretPos = pose;
+  }
+
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
   }
@@ -178,6 +182,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Hood Wanted Position", HoodCalc);
 
     Logger.recordOutput(logRoot + "RobotPose", globalPose);
+
+    Logger.recordOutput(logRoot + "Turret Active Position", TurretPos);
     // {
     //   String calcLogRoot = logRoot + "ClosestAlignment/";
     //   Logger.recordOutput(

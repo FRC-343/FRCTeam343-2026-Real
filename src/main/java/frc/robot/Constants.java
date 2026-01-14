@@ -36,7 +36,7 @@ public final class Constants {
 
   public static final class TurretConstants {
     public static double minTurret = 0.0;
-    public static double maxTurret = 0.0;
+    public static double maxTurret = 2.8;
   }
 
   public static final class ShooterConstants {
