@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-// import frc.robot.bobot_state2.BobotState;
+import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -37,6 +37,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     this.io.updateInputs(this.inputs);
     this.io.updateInputs(this.inputs);
+
+    BobotState.updateShooterRPM(this.inputs.velocityRotPerSecond * 60);
 
     Logger.processInputs("Shooter", this.inputs);
 

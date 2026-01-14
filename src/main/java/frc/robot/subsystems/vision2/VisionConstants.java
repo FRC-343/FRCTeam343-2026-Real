@@ -44,42 +44,7 @@ public class VisionConstants {
                           Units.inchesToMeters(13.242), // left+
                           Units.inchesToMeters(27.897)), // up+
                       new Rotation3d(0, Units.degreesToRadians(5), Units.degreesToRadians(30)))),
-              SimCameraConfig.ARDUCAM_OV9281_70),
-          // FLI
-          new AprilTagCameraConfig(
-              new VisionSource(
-                  "FLeft",
-                  new Transform3d(
-                      new Translation3d(
-                          Units.inchesToMeters(10.806), // forward+
-                          Units.inchesToMeters(11.934), // left+
-                          Units.inchesToMeters(7.848)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(-30)))),
-              SimCameraConfig.ARDUCAM_OV9281_70),
-          // FRI
-
-          // FRO
-          new AprilTagCameraConfig(
-              new VisionSource(
-                  "FRight",
-                  new Transform3d(
-                      new Translation3d(
-                          Units.inchesToMeters(10.806), // forward+
-                          Units.inchesToMeters(-11.934), // left+
-                          Units.inchesToMeters(7.848)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(30)))),
-              SimCameraConfig.ARDUCAM_OV9281_70),
-          new AprilTagCameraConfig(
-              new VisionSource(
-                  "BRight",
-                  new Transform3d(
-                      new Translation3d(
-                          Units.inchesToMeters(-4.059), // forward+
-                          Units.inchesToMeters(-13.242), // left+
-                          Units.inchesToMeters(27.897)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(5), Units.degreesToRadians(-30)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
-
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = riptideConfigs;
 
   public static final double ambiguityCutoff = 0.06;

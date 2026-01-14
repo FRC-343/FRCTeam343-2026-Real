@@ -7,8 +7,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.bobot_state2.BobotState;
+import frc.robot.subsystems.vision2.VisionConstants;
+import frc.robot.util.Meth.HoodAim;
+import frc.robot.util.Meth.TurretAim;
+import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -74,6 +81,9 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
+
+    Threads.setCurrentThreadPriority(true, 99);
+    VirtualSubsystem.runPeriodically();
     // Optionally switch the thread to high priority to improve loop
     // timing (see the template project documentation for details)
     // Threads.setCurrentThreadPriority(true, 99);
@@ -85,8 +95,51 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+    /*
+     * This is importaint for our shooter calcs
+     */
+
+    // BobotState.updateToF(
+    //     TimeOfFlight.solveTime(
+    //         BobotState.getGlobalPose().getTranslation(),
+    //         BobotState.getGlobalPose().getTranslation(),
+    //         null,
+    //         null,
+    //         defaultPeriodSecs));
+
+    /*
+     * This is importaint for our shooter calcs
+     */
+
     // Return to non-RT thread priority (do not modify the first argument)
-    // Threads.setCurrentThreadPriority(false, 10);
+    Threads.setCurrentThreadPriority(false, 10);
+
+    // The below is highly experimental
+    Translation2d shooterXY = BobotState.getGlobalPose().getTranslation();
+    Translation2d robotVelocityXY = BobotState.getGlobalPose().getTranslation();
+    Translation2d targetXY = new Translation2d();
+    double time = BobotState.getToF();
+    double shooterExitVelocity =
+        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3 +1;
+
+    if (!Double.isNaN(time)) {
+      double yaw =
+          TurretAim.calculateYaw(
+              BobotState.getGlobalPose().getTranslation(),
+              BobotState.getGlobalPose().getTranslation(),
+              new Translation2d(),
+              new Translation2d(),
+              BobotState.getToF());
+
+      Translation2d intercept = targetXY.plus(robotVelocityXY.times(-time));
+
+      double distance = intercept.getDistance(shooterXY);
+
+      double hood = HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity);
+
+      BobotState.updateTurretYaw(yaw);
+      BobotState.updateHoodAngle(hood);
+    }
   }
 
   /** This function is called once when the robot is disabled. */
@@ -141,9 +194,14 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    VisionConstants.aprilTagSim.ifPresent(
+        aprilTagSim -> aprilTagSim.addAprilTags(VisionConstants.fieldLayout));
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    VirtualSubsystem.runSimulationPeriodically();
+  }
 }

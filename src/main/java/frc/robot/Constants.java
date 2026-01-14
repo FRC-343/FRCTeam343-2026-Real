@@ -33,4 +33,13 @@ public final class Constants {
     public static double minHood = 0.0;
     public static double maxHood = 0.0;
   }
+
+  public static final class TurretConstants {
+    public static double minTurret = 0.0;
+    public static double maxTurret = 0.0;
+  }
+
+  public static final class ShooterConstants {
+    public static double WheelCir = 1.2;
+  }
 }
