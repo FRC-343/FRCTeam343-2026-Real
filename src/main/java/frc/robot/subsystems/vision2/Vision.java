@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Constants;
+import frc.robot.bobot_state2.BobotState;
 // import frc.robot.bobot_state2.BobotState;
 import frc.robot.util.VirtualSubsystem;
 import java.util.ArrayList;
@@ -131,8 +132,8 @@ public class Vision extends VirtualSubsystem {
 
   @Override
   public void simulationPeriodic() {
-    // VisionConstants.aprilTagSim.ifPresent(
-    //     // aprilTagSim -> aprilTagSim.update(BobotState.getGlobalPose()));
-    // Logger.recordOutput(aggregateAprilTagLogRoot + "/Accessed", "Accessed");
+    VisionConstants.aprilTagSim.ifPresent(
+        aprilTagSim -> aprilTagSim.update(BobotState.getGlobalPose()));
+    Logger.recordOutput(aggregateAprilTagLogRoot + "/Accessed", "Accessed");
   }
 }
