@@ -28,4 +28,9 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final class HoodConstants {
+    public static double minHood = 0.0;
+    public static double maxHood = 0.0;
+  }
 }
