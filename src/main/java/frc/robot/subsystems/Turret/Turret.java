@@ -143,8 +143,8 @@ public class Turret extends SubsystemBase {
             this.io.setVoltage(
                 MathUtil.clamp(
                     position,
-                    Constants.TurretConstants.minTurret,
-                    Constants.TurretConstants.maxTurret)));
+                    Constants.TurretConstants.TURRET_MIN_RAD,
+                    Constants.TurretConstants.TURRET_MAX_RAD)));
   }
 
   public Command stopCommand() {
