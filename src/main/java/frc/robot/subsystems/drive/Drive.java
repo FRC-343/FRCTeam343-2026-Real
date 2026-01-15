@@ -214,6 +214,7 @@ public class Drive extends SubsystemBase {
     }
 
     BobotState.updateGlobalPose(getPose());
+    BobotState.updateRoboChassisSpeed(getChassisSpeeds());
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
@@ -301,6 +302,7 @@ public class Drive extends SubsystemBase {
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
   private ChassisSpeeds getChassisSpeeds() {
+
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 

@@ -1,6 +1,7 @@
 package frc.robot.bobot_state2;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
@@ -70,6 +71,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static double ShooterRPM;
 
+  private static ChassisSpeeds roboChassisSpeeds;
+
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
   }
@@ -124,6 +127,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.TurretPos = pose;
   }
 
+  public static void updateRoboChassisSpeed(ChassisSpeeds speed) {
+    BobotState.roboChassisSpeeds = speed;
+  }
+
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
   }
@@ -148,6 +155,10 @@ public class BobotState extends VirtualSubsystem {
 
   public static double getTurretYaw() {
     return BobotState.TurretCalc;
+  }
+
+  public static ChassisSpeeds getRoboSpeed() {
+    return BobotState.roboChassisSpeeds;
   }
 
   public static Trigger onTeamSide() {
@@ -184,6 +195,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "RobotPose", globalPose);
 
     Logger.recordOutput(logRoot + "Turret Active Position", TurretPos);
+
+    Logger.recordOutput(logRoot + "Robot Speed", roboChassisSpeeds);
     // {
     //   String calcLogRoot = logRoot + "ClosestAlignment/";
     //   Logger.recordOutput(

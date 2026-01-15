@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -120,11 +121,20 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
+
+    ChassisSpeeds fieldSpeeds =
+        ChassisSpeeds.fromRobotRelativeSpeeds(
+            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
+
+    Translation2d robotVelocityXY =
+        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+
     Translation2d shooterXY =
         BobotState.getGlobalPose()
             .transformBy(new Transform2d(2, 2, new Rotation2d()))
             .getTranslation();
-    Translation2d robotVelocityXY = BobotState.getGlobalPose().getTranslation();
+    // ChassisSpeeds robotVelocityXY = BobotState.getRoboSpeed().;
+    // Translation2d robotVelocityXY = BobotState.getGlobalPose().getTranslation();
     Translation2d targetXY = new Translation2d(5, 5.1);
     double time = BobotState.getToF();
     double shooterExitVelocity =
