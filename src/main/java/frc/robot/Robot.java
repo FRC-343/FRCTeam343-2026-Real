@@ -10,15 +10,12 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.vision2.VisionConstants;
-import frc.robot.util.Meth.HoodAim;
-import frc.robot.util.Meth.TurretAim;
 import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -122,42 +119,7 @@ public class Robot extends LoggedRobot {
 
     // The below is highly experimental
 
-    ChassisSpeeds fieldSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
-
-    Translation2d robotVelocityXY =
-        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
-
-    Translation2d shooterXY =
-        BobotState.getGlobalPose()
-            .transformBy(new Transform2d(2, 2, new Rotation2d()))
-            .getTranslation();
-    // ChassisSpeeds robotVelocityXY = BobotState.getRoboSpeed().;
-    // Translation2d robotVelocityXY = BobotState.getGlobalPose().getTranslation();
-    Translation2d targetXY = new Translation2d(5, 5.1);
-    double time = BobotState.getToF();
-    double shooterExitVelocity =
-        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
-
-    if (!Double.isNaN(time)) {
-      double yaw =
-          TurretAim.calculateYaw(
-              shooterXY,
-              BobotState.getGlobalPose().getTranslation(),
-              targetXY,
-              new Translation2d(),
-              BobotState.getToF());
-
-      Translation2d intercept = targetXY.plus(robotVelocityXY.times(-time));
-
-      double distance = intercept.getDistance(shooterXY);
-
-      double hood = HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity);
-
-      BobotState.updateTurretYaw(yaw);
-      BobotState.updateHoodAngle(hood);
-    }
+    robotContainer.MethCalcs();
   }
 
   /** This function is called once when the robot is disabled. */

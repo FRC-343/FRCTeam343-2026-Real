@@ -10,11 +10,15 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -28,6 +32,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
+import frc.robot.util.Meth.HoodAim;
+import frc.robot.util.Meth.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -185,5 +191,45 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public void MethCalcs() {
+    ChassisSpeeds fieldSpeeds =
+        ChassisSpeeds.fromRobotRelativeSpeeds(
+            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
+
+    Translation2d robotVelocityXY =
+        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+
+    Translation2d shooterXY =
+        BobotState.getGlobalPose()
+            .transformBy(new Transform2d(2, 2, new Rotation2d()))
+            .getTranslation();
+    Translation2d targetXY = new Translation2d(5, 5.1);
+
+    double shooterExitVelocity =
+        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
+
+    BobotState.updateToF(
+        TimeOfFlight.solveTime(shooterXY, robotVelocityXY, targetXY, new Translation2d(), 23));
+    double time = BobotState.getToF();
+    if (!Double.isNaN(time)) {
+      double yaw =
+          TurretAim.calculateYaw(
+              shooterXY,
+              BobotState.getGlobalPose().getTranslation(),
+              targetXY,
+              new Translation2d(),
+              BobotState.getToF());
+
+      Translation2d intercept = targetXY.plus(robotVelocityXY.times(-time));
+
+      double distance = intercept.getDistance(shooterXY);
+
+      double hood = HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity);
+
+      BobotState.updateTurretYaw(yaw);
+      BobotState.updateHoodAngle(hood);
+    }
   }
 }
