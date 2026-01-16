@@ -22,6 +22,8 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
+import frc.robot.field.FieldConstants;
+import frc.robot.field.HubFaces;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Turret.Turret;
@@ -207,7 +209,13 @@ public class RobotContainer {
         BobotState.getGlobalPose()
             .transformBy(new Transform2d(2, 2, new Rotation2d()))
             .getTranslation();
-    Translation2d targetXY = new Translation2d(5, 5.1);
+    Translation2d targetXY =
+        HubFaces.A.get()
+            .tag
+            .pose()
+            .getTranslation()
+            .toTranslation2d()
+            .plus(new Translation2d(FieldConstants.distanceToTag, 0.0));
 
     double shooterExitVelocity =
         BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
