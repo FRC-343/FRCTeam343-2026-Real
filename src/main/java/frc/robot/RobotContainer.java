@@ -18,9 +18,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
+import frc.robot.field.FieldConstants;
+import frc.robot.field.HubFaces;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Turret.Turret;
@@ -32,6 +35,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
+import frc.robot.util.Meth;
 import frc.robot.util.Meth.HoodAim;
 import frc.robot.util.Meth.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -181,7 +185,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
-    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getTurretYaw()));
+    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getOptiTurretYaw()));
   }
 
   /**
@@ -205,7 +209,13 @@ public class RobotContainer {
         BobotState.getGlobalPose()
             .transformBy(new Transform2d(2, 2, new Rotation2d()))
             .getTranslation();
-    Translation2d targetXY = new Translation2d(5, 5.1);
+    Translation2d targetXY =
+        HubFaces.A.get()
+            .tag
+            .pose()
+            .getTranslation()
+            .toTranslation2d()
+            .plus(new Translation2d(FieldConstants.distanceToTag, 0.0));
 
     double shooterExitVelocity =
         BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
@@ -231,5 +241,11 @@ public class RobotContainer {
       BobotState.updateTurretYaw(yaw);
       BobotState.updateHoodAngle(hood);
     }
+
+    BobotState.updateOptiTurretYaw(
+        Meth.TurretYawLimiter.optimizeYaw(
+            BobotState.getTurretYaw(),
+            BobotState.getGlobalPose().getRotation().getRadians(),
+            BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION));
   }
 }
