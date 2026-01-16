@@ -233,9 +233,7 @@ public class RobotContainer {
       BobotState.updateHoodAngle(hood);
     }
 
-    Meth.TurretYawLimiter.optimizeYaw(
-        BobotState.getTurretYaw(),
-        BobotState.getGlobalPose().getRotation().getRadians(),
-        BobotState.getTurretPosi());
+    Meth.TurretYawLimiter.optimizeYaw(BobotState.getTurretYaw(), BobotState.getGlobalPose().getRotation().getRadians(), BobotState.getTurretPosi());
+
   }
 }

@@ -51,13 +51,15 @@ public class Meth {
     }
   }
 
-  /**
-   * Handles limited-rotation turret optimization (ex: 270° sweep). Works for real turrets OR
-   * "robot-as-turret".
-   */
-  public final class TurretYawLimiter {
+
+/**
+ * Handles limited-rotation turret optimization (ex: 270° sweep).
+ * Works for real turrets OR "robot-as-turret".
+ */
+public final class TurretYawLimiter {
 
     // Example: 270° total travel (-135° to +135° relative to robot forward)
+
 
     // Optional soft margin to avoid hard stops
     public static final double SOFT_MARGIN_RAD = Math.toRadians(5);
@@ -65,42 +67,52 @@ public class Meth {
     private TurretYawLimiter() {}
 
     /**
-     * @param fieldYawRad Desired yaw in FIELD coordinates (from solver)
-     * @param robotYawRad Current robot heading (gyro / pose)
-     * @param currentTurretRad Current turret angle relative to robot
+     * @param fieldYawRad        Desired yaw in FIELD coordinates (from solver)
+     * @param robotYawRad        Current robot heading (gyro / pose)
+     * @param currentTurretRad   Current turret angle relative to robot
+     *
      * @return Best legal turret yaw (robot-relative), or NaN if unreachable
      */
     public static double optimizeYaw(
-        double fieldYawRad, double robotYawRad, double currentTurretRad) {
+            double fieldYawRad,
+            double robotYawRad,
+            double currentTurretRad
+    ) {
 
-      // Convert FIELD yaw → ROBOT-relative yaw
-      double desiredRobotYaw = MathUtil.angleModulus(fieldYawRad - robotYawRad);
+        // Convert FIELD yaw → ROBOT-relative yaw
+        double desiredRobotYaw =
+                MathUtil.angleModulus(fieldYawRad - robotYawRad);
 
-      // Generate equivalent angles (wrap handling)
-      double[] candidates =
-          new double[] {
-            desiredRobotYaw, desiredRobotYaw + 2.0 * Math.PI, desiredRobotYaw - 2.0 * Math.PI
-          };
+        // Generate equivalent angles (wrap handling)
+        double[] candidates = new double[] {
+                desiredRobotYaw,
+                desiredRobotYaw + 2.0 * Math.PI,
+                desiredRobotYaw - 2.0 * Math.PI
+        };
 
-      double bestYaw = Double.NaN;
-      double bestCost = Double.POSITIVE_INFINITY;
+        double bestYaw = Double.NaN;
+        double bestCost = Double.POSITIVE_INFINITY;
 
-      for (double candidate : candidates) {
+        for (double candidate : candidates) {
 
-        // Enforce hard + soft limits
-        if (candidate < Constants.TurretConstants.TURRET_MIN_RAD + SOFT_MARGIN_RAD) continue;
-        if (candidate > Constants.TurretConstants.TURRET_MAX_RAD - SOFT_MARGIN_RAD) continue;
+            // Enforce hard + soft limits
+            if (candidate < Constants.TurretConstants.TURRET_MIN_RAD + SOFT_MARGIN_RAD) continue;
+            if (candidate > Constants.TurretConstants.TURRET_MAX_RAD - SOFT_MARGIN_RAD) continue;
 
-        // Cost = smallest movement from current turret angle
-        double cost = Math.abs(MathUtil.angleModulus(candidate - currentTurretRad));
+            // Cost = smallest movement from current turret angle
+            double cost =
+                    Math.abs(
+                        MathUtil.angleModulus(candidate - currentTurretRad)
+                    );
 
-        if (cost < bestCost) {
-          bestCost = cost;
-          bestYaw = candidate;
+            if (cost < bestCost) {
+                bestCost = cost;
+                bestYaw = candidate;
+            }
         }
-      }
 
-      return bestYaw; // NaN means "no valid solution"
+        return bestYaw; // NaN means "no valid solution"
     }
-  }
+}
+
 }
