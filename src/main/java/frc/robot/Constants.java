@@ -35,8 +35,8 @@ public final class Constants {
   }
 
   public static final class TurretConstants {
-    public static final double TURRET_MIN_RAD = Math.toRadians(-135);
-    public static final double TURRET_MAX_RAD = Math.toRadians(135);
+    public static final double TURRET_MIN_RAD = Math.toRadians(-150);
+    public static final double TURRET_MAX_RAD = Math.toRadians(150);
 
     // Encoder rotations per turret rotation
     public static final double ENCODER_ROTATIONS_PER_TURRET_ROTATION =
