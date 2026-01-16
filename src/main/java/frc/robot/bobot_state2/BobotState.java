@@ -2,6 +2,7 @@ package frc.robot.bobot_state2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -80,6 +81,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static double OptiTurretYaw;
 
+  private static Translation2d TurretTarget;
+
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
   }
@@ -140,6 +143,10 @@ public class BobotState extends VirtualSubsystem {
 
   public static void updateOptiTurretYaw(double yaw) {
     BobotState.OptiTurretYaw = yaw;
+  }
+
+  public static void updateTurretTarget(Translation2d target) {
+    BobotState.TurretTarget = target;
   }
 
   public static Pose2d getGlobalPose() {
@@ -222,6 +229,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Robot Speed", roboChassisSpeeds);
 
     Logger.recordOutput(logRoot + "Opti Turret Yaw", OptiTurretYaw);
+
+    Logger.recordOutput(logRoot + "Turret Target", TurretTarget);
     // {
     //   String calcLogRoot = logRoot + "ClosestAlignment/";
     //   Logger.recordOutput(
