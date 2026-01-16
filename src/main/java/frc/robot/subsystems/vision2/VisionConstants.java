@@ -25,7 +25,7 @@ public class VisionConstants {
   }
 
   public static final AprilTagFieldLayout fieldLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
   public static final Optional<VisionSystemSim> aprilTagSim =
       Constants.currentMode == Mode.SIM
@@ -37,13 +37,13 @@ public class VisionConstants {
           // FLO
           new AprilTagCameraConfig(
               new VisionSource(
-                  "FLeft",
+                  "BLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(4.059), // forward+
+                          Units.inchesToMeters(-4.059), // forward+
                           Units.inchesToMeters(13.242), // left+
-                          Units.inchesToMeters(12.897)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(30)))),
+                          Units.inchesToMeters(27.897)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(5), Units.degreesToRadians(30)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = riptideConfigs;
 

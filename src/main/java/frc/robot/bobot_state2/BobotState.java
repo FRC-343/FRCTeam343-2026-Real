@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
@@ -38,10 +37,7 @@ public class BobotState extends VirtualSubsystem {
       atWantedParaPose; // Robots parallel position in relation to whatever Apriltag we are lining
   // up to
 
-  // adding Tag Trackers here
-  private static HubTagTracker hubTracker = new HubTagTracker();
-
-  private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
+  private static List<TargetAngleTracker> autoAlignmentTrackers = List.of();
 
   /*
    *  Adding new Tracking info below this
@@ -179,10 +175,6 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.OptiTurretYaw;
   }
 
-  public static Rotation2d getRotationtoClosestHub() {
-    return BobotState.hubTracker.getRotationTarget();
-  }
-
   public static Trigger onTeamSide() {
     return new Trigger(
         () ->
@@ -226,15 +218,6 @@ public class BobotState extends VirtualSubsystem {
     //   Logger.recordOutput(
     //       calcLogRoot + "Type", getClosestAlignmentTracker().getClass().getSimpleName());
     // }
-
-    {
-      hubTracker.update();
-
-      String calcLogRoot = logRoot + "Hub/";
-      Logger.recordOutput(calcLogRoot + "Closest tag", FieldUtils.getClosestHub().tag);
-      Logger.recordOutput(
-          calcLogRoot + "Target Angle Deg", BobotState.getRotationtoClosestHub().getDegrees());
-    }
   }
 
   @Override

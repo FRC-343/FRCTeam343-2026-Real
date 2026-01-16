@@ -7,9 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Thisjustatestfr.TimeOfFlight;
+import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.vision2.VisionConstants;
 import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -94,6 +99,16 @@ public class Robot extends LoggedRobot {
     /*
      * This is importaint for our shooter calcs
      */
+
+    BobotState.updateToF(
+        TimeOfFlight.solveTime(
+            BobotState.getGlobalPose()
+                .transformBy(new Transform2d(2, 2, new Rotation2d()))
+                .getTranslation(),
+            BobotState.getGlobalPose().getTranslation(),
+            new Translation2d(5, 5.1),
+            new Translation2d(),
+            23));
 
     /*
      * This is importaint for our shooter calcs
