@@ -4,6 +4,7 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -72,14 +73,16 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                 .withFeedback(new FeedbackConfigs().withFusedCANcoder(magenc)));
     velocityVoltage.Slot = 0;
 
-    magenc.getConfigurator().apply(new CANcoderConfiguration());
+    magenc
+        .getConfigurator()
+        .apply(new CANcoderConfiguration().withMagnetSensor(new MagnetSensorConfigs()));
 
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
     talon.optimizeBusUtilization();
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {
-    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position);
+    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position, abspos);
     inputs.masterAppliedVolts = voltage.getValueAsDouble();
     inputs.masterVelocityRadPerSec = velocity.getValueAsDouble();
     inputs.masterPositionRad = position.getValueAsDouble();

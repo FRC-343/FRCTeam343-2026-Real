@@ -1,7 +1,6 @@
 package frc.robot.bobot_state2;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -73,7 +72,7 @@ public class BobotState extends VirtualSubsystem {
   private static double ShooterRPM;
 
   private static ChassisSpeeds roboChassisSpeeds;
-  
+
   private static double OptiTurretYaw;
 
   public static void updateWantedPose(boolean perpPoseWanted) {
@@ -134,11 +133,9 @@ public class BobotState extends VirtualSubsystem {
     BobotState.roboChassisSpeeds = speed;
   }
 
-  public static void updateOptiTurretYaw(double yaw){
+  public static void updateOptiTurretYaw(double yaw) {
     BobotState.OptiTurretYaw = yaw;
   }
-
-
 
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
@@ -170,11 +167,11 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.roboChassisSpeeds;
   }
 
-  public static double getTurretPosi(){
+  public static double getTurretPosi() {
     return BobotState.TurretPos;
   }
 
-  public static double getOptiTurretYaw(){
+  public static double getOptiTurretYaw() {
     return BobotState.OptiTurretYaw;
   }
 
