@@ -1,7 +1,10 @@
 package frc.robot.field;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.bobot_state2.BobotState;
+import java.util.List;
 
 public class FieldUtils {
   public static Alliance getAlliance() {
@@ -20,25 +23,25 @@ public class FieldUtils {
     return FieldUtils.isRedAlliance() ? -1 : 1;
   }
 
-  // public static ReefFace getClosestReef() {
-  //   List<ReefFace> reefTags =
-  //       FieldUtils.isBlueAlliance() ? FieldConstants.blueReefTags : FieldConstants.redReefTags;
-  //   Translation2d robotTranslation = BobotState.getGlobalPose().getTranslation();
+  public static HubFace getClosestHub() {
+    List<HubFace> HubTags =
+        FieldUtils.isBlueAlliance() ? FieldConstants.BLUEHUBTAGS : FieldConstants.REDHUBTAGS;
+    Translation2d robotTranslation = BobotState.getGlobalPose().getTranslation();
 
-  //   ReefFace closestReef =
-  //       reefTags.stream()
-  //           .reduce(
-  //               (ReefFace reef1, ReefFace reef2) ->
-  //                   robotTranslation.getDistance(
-  //                               reef1.tag.pose().getTranslation().toTranslation2d())
-  //                           < robotTranslation.getDistance(
-  //                               reef2.tag.pose().getTranslation().toTranslation2d())
-  //                       ? reef1
-  //                       : reef2)
-  //           .get();
+    HubFace closestReef =
+        HubTags.stream()
+            .reduce(
+                (HubFace reef1, HubFace reef2) ->
+                    robotTranslation.getDistance(
+                                reef1.tag.pose().getTranslation().toTranslation2d())
+                            < robotTranslation.getDistance(
+                                reef2.tag.pose().getTranslation().toTranslation2d())
+                        ? reef1
+                        : reef2)
+            .get();
 
-  //   return closestReef;
-  // }
+    return closestReef;
+  }
 
   // public static HPSFace getClosestHPSTag() {
   //   List<HPSFace> hpsTags =
