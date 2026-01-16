@@ -35,8 +35,8 @@ public final class Constants {
   }
 
   public static final class TurretConstants {
-    public static double minTurret = 0.0;
-    public static double maxTurret = 2.8;
+    public static final double TURRET_MIN_RAD = Math.toRadians(-135);
+    public static final double TURRET_MAX_RAD = Math.toRadians(135);
   }
 
   public static final class ShooterConstants {

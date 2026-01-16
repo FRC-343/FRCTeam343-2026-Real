@@ -32,6 +32,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
+import frc.robot.util.Meth;
 import frc.robot.util.Meth.HoodAim;
 import frc.robot.util.Meth.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -231,5 +232,8 @@ public class RobotContainer {
       BobotState.updateTurretYaw(yaw);
       BobotState.updateHoodAngle(hood);
     }
+
+    Meth.TurretYawLimiter.optimizeYaw(BobotState.getTurretYaw(), BobotState.getGlobalPose().getRotation().getRadians(), BobotState.getTurretPosi());
+
   }
 }

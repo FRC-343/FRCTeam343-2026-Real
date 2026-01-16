@@ -56,7 +56,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
     this.m_orchestra.addInstrument(talon);
     this.m_orchestra.loadMusic("output.chrp");
-
+  magenc.getConfigurator().apply(new CANcoderConfiguration());
     talon
         .getConfigurator()
         .apply(
@@ -72,7 +72,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                 .withFeedback(new FeedbackConfigs().withFusedCANcoder(magenc)));
     velocityVoltage.Slot = 0;
 
-    magenc.getConfigurator().apply(new CANcoderConfiguration());
+    
 
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
     talon.optimizeBusUtilization();

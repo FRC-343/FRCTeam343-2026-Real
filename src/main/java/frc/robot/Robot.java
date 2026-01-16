@@ -100,15 +100,6 @@ public class Robot extends LoggedRobot {
      * This is importaint for our shooter calcs
      */
 
-    BobotState.updateToF(
-        TimeOfFlight.solveTime(
-            BobotState.getGlobalPose()
-                .transformBy(new Transform2d(2, 2, new Rotation2d()))
-                .getTranslation(),
-            BobotState.getGlobalPose().getTranslation(),
-            new Translation2d(5, 5.1),
-            new Translation2d(),
-            23));
 
     /*
      * This is importaint for our shooter calcs
