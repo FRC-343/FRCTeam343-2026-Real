@@ -30,7 +30,6 @@ public class TurretMotorSim implements TurretMotorIO {
     inputs.masterCurrentAmps = sim.getCurrentDrawAmps();
     inputs.masterVelocityRadPerSec = sim.getAngularVelocityRPM() / 60 * kInchesPerRotation;
     inputs.masterPositionRad = sim.getAngularPositionRotations() * kInchesPerRotation;
-
   }
 
   @Override
