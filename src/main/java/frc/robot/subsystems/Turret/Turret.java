@@ -103,7 +103,7 @@ public class Turret extends SubsystemBase {
     // setpointVisualizer.update(this.setpointInches);
     // // I'm not quite sure how this works, it is semi working in sim.
 
-    BobotState.updateTurretPos(this.inputs.extentionAbsPos);
+    BobotState.updateTurretPos(this.inputs.masterPositionRad);
   }
 
   // These needs to be reorganized

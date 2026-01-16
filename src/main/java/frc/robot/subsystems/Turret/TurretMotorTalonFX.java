@@ -57,7 +57,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
     this.m_orchestra.addInstrument(talon);
     this.m_orchestra.loadMusic("output.chrp");
-
+    magenc.getConfigurator().apply(new CANcoderConfiguration());
     talon
         .getConfigurator()
         .apply(
