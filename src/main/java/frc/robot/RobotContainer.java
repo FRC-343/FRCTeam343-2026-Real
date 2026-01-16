@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
@@ -183,7 +182,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
-    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getOptiTurretYaw()));
+    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getTurretYaw()));
   }
 
   /**
@@ -234,10 +233,9 @@ public class RobotContainer {
       BobotState.updateHoodAngle(hood);
     }
 
-    BobotState.updateOptiTurretYaw(
-        Meth.TurretYawLimiter.optimizeYaw(
-            BobotState.getTurretYaw(),
-            BobotState.getGlobalPose().getRotation().getRadians(),
-            BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION));
+    Meth.TurretYawLimiter.optimizeYaw(
+        BobotState.getTurretYaw(),
+        BobotState.getGlobalPose().getRotation().getRadians(),
+        BobotState.getTurretPosi());
   }
 }

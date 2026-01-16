@@ -28,10 +28,10 @@ public class AprilTagIOPhoton implements AprilTagIO {
     robotToCamera = source.robotToCamera();
 
     estimator = new PhotonPoseEstimator(VisionConstants.fieldLayout, source.robotToCamera());
-    // new PhotonPoseEstimator(
-    //     VisionConstants.fieldLayout,
-    //     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-    //     source.robotToCamera());
+        // new PhotonPoseEstimator(
+        //     VisionConstants.fieldLayout,
+        //     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+        //     source.robotToCamera());
 
     // estimator. setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
   }
@@ -126,8 +126,7 @@ public class AprilTagIOPhoton implements AprilTagIO {
       // allLocalizedPoseObservations.addAll(localizedPoseObservations);
 
       // Pose Estimation
-      Optional<EstimatedRobotPose> maybeEstimatedPose =
-          estimator.estimateAverageBestTargetsPose(result);
+      Optional<EstimatedRobotPose> maybeEstimatedPose = estimator.estimateAverageBestTargetsPose(result);
 
       if (!maybeEstimatedPose.isPresent()) {
         continue;
