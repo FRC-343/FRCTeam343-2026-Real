@@ -40,7 +40,7 @@ public final class Constants {
 
     // Encoder rotations per turret rotation
     public static final double ENCODER_ROTATIONS_PER_TURRET_ROTATION =
-        32.0; // this is a temp number
+        10.0; // this is a temp number
 
     // Derived constants
     public static final double TURRET_ROTATIONS_PER_ENCODER_ROTATION =
