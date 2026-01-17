@@ -63,18 +63,18 @@ public class TurretMotorTalonFX implements TurretMotorIO {
             new TalonFXConfiguration()
                 .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
                 .withSlot0(
-                    new Slot0Configs().withKV(0.12).withKA(.01).withKP(20).withKI(0).withKD(0))
+                    new Slot0Configs().withKV(0.12).withKA(.01).withKP(2).withKI(0).withKD(.1))
                 .withMotionMagic(
                     new MotionMagicConfigs()
                         .withMotionMagicAcceleration(70)
                         .withMotionMagicCruiseVelocity(70)
                         .withMotionMagicJerk(200))
-                .withFeedback(new FeedbackConfigs().withFusedCANcoder(magenc)));
+                .withFeedback(new FeedbackConfigs().withRemoteCANcoder(magenc).withFeedbackRemoteSensorID(deviceId2)));
     velocityVoltage.Slot = 0;
 
     magenc.getConfigurator().apply(new CANcoderConfiguration());
 
-    StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
+    StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current, abspos);
     talon.optimizeBusUtilization();
   }
 
