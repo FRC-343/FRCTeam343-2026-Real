@@ -142,8 +142,8 @@ public class BobotState extends VirtualSubsystem {
     BobotState.roboChassisSpeeds = speed;
   }
 
-  public static void updateOptiTurretYaw(double yaw) {
-    BobotState.OptiTurretYaw = yaw;
+  public static void updateOptiTurretYaw(double test) {
+    BobotState.OptiTurretYaw = test;
   }
 
   public static void updateTurretTarget(Translation2d target) {

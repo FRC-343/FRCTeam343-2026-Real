@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
@@ -27,7 +26,6 @@ import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
 import frc.robot.field.HubFaces;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -37,7 +35,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.Meth;
 import frc.robot.util.Meth.HoodAim;
 import frc.robot.util.Meth.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -52,7 +49,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  private final Shooter shooter;
+  //   private final Shooter shooter;
 
   private final Turret turret;
 
@@ -85,7 +82,7 @@ public class RobotContainer {
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        shooter = new Shooter();
+        // shooter = new Shooter();
         turret = new Turret();
 
         break;
@@ -101,7 +98,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackRight));
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        shooter = new Shooter();
+        // shooter = new Shooter();
         turret = new Turret();
 
         break;
@@ -118,7 +115,7 @@ public class RobotContainer {
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        shooter = new Shooter();
+        // shooter = new Shooter();
         turret = new Turret();
 
         break;
@@ -187,7 +184,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
-    controller.rightBumper().whileTrue(turret.setTurretPosition(BobotState.getOptiTurretYaw()));
+    controller.rightBumper().whileTrue(turret.setTurretPosition());
   }
 
   /**
@@ -251,11 +248,5 @@ public class RobotContainer {
       BobotState.updateTurretYaw(yaw);
       BobotState.updateHoodAngle(hood);
     }
-
-    BobotState.updateOptiTurretYaw(
-        Meth.TurretYawLimiter.optimizeYaw(
-            BobotState.getTurretYaw(),
-            BobotState.getGlobalPose().getRotation().getRadians(),
-            BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION));
   }
 }
