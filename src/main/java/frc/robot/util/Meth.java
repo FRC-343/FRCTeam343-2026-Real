@@ -60,7 +60,7 @@ public class Meth {
     // Example: 270° total travel (-135° to +135° relative to robot forward)
 
     // Optional soft margin to avoid hard stops
-    public static final double SOFT_MARGIN_RAD = Math.toRadians(5);
+    public static final double SOFT_MARGIN_RAD = Math.toRadians(0);
 
     private TurretYawLimiter() {}
 

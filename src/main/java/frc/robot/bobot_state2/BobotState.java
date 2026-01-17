@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
 import frc.robot.field.FieldConstants;
@@ -231,6 +232,11 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Opti Turret Yaw", OptiTurretYaw);
 
     Logger.recordOutput(logRoot + "Turret Target", TurretTarget);
+
+    Logger.recordOutput(logRoot + "Turret Max limit", Constants.TurretConstants.TURRET_MAX_RAD);
+
+    Logger.recordOutput(logRoot + "Turret Min limit", Constants.TurretConstants.TURRET_MIN_RAD);
+
     // {
     //   String calcLogRoot = logRoot + "ClosestAlignment/";
     //   Logger.recordOutput(

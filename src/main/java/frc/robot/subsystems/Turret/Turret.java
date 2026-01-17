@@ -55,7 +55,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new TurretMotorTalonFX(21, 7);
+        io = new TurretMotorTalonFX(33, 34);
         beambreak = new BeambreakDigitalInput(9); // 3 and 2
         LimitSwitch = new LimitSwitchDigitalInput(0);
         LimitSwitchBackup = new LimitSwitchDigitalInput(1);
@@ -140,7 +140,7 @@ public class Turret extends SubsystemBase {
   public Command setTurretPosition(double position) {
     return new RunCommand(
         () ->
-            this.io.setVoltage(
+            this.io.setTurretPosition(
                 MathUtil.clamp(
                     position,
                     Constants.TurretConstants.TURRET_MIN_RAD,
