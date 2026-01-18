@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.bobot_state2.BobotState;
+import frc.robot.util.Meth;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -74,6 +76,13 @@ public class Turret extends SubsystemBase {
     // // I'm not quite sure how this works, it is semi working in sim.
 
     BobotState.updateTurretPos(this.inputs.masterPositionRad);
+
+    BobotState.updateOptiTurretYaw(
+        Meth.TurretYawLimiter.optimizeYaw(
+                BobotState.getTurretYaw(),
+                BobotState.getGlobalPose().getRotation().getRadians(),
+                BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION)
+            * (TurretConstants.ENCODER_ROTATIONS_PER_TURRET_ROTATION / 2));
   }
 
   // These needs to be reorganized

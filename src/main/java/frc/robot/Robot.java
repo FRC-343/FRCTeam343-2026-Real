@@ -10,10 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.TurretConstants;
-import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.vision2.VisionConstants;
-import frc.robot.util.Meth;
 import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -106,14 +103,6 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
-
-    robotContainer.MethCalcs();
-    BobotState.updateOptiTurretYaw(
-        Meth.TurretYawLimiter.optimizeYaw(
-                BobotState.getTurretYaw(),
-                BobotState.getGlobalPose().getRotation().getRadians(),
-                BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION)
-            * (TurretConstants.ENCODER_ROTATIONS_PER_TURRET_ROTATION / 2));
   }
 
   /** This function is called once when the robot is disabled. */
@@ -153,7 +142,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    robotContainer.MethCalcs();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override

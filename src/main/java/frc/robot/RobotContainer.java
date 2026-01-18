@@ -53,18 +53,20 @@ public class RobotContainer {
 
   private final Turret turret;
 
+  private final BobotState test;
+
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
 
-  private final DriverAutomationFactory m_Automation;
+  //   private final DriverAutomationFactory m_Automation;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    new BobotState();
+    test = new BobotState();
     new Vision();
 
     switch (Constants.currentMode) {
@@ -80,7 +82,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
         turret = new Turret();
@@ -96,7 +98,7 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
         turret = new Turret();
@@ -113,7 +115,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
         turret = new Turret();

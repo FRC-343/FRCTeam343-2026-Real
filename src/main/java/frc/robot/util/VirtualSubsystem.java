@@ -23,7 +23,7 @@ public abstract class VirtualSubsystem {
     for (VirtualSubsystem subsystem : virtualSubsystems) {
       String message =
           String.format(
-              "[robotzgarage] Connected Virtual Subsystem '%s'",
+              "[MeatlinMotion] Connected Virtual Subsystem '%s'",
               subsystem.getClass().getSimpleName());
       System.out.println(message);
     }
