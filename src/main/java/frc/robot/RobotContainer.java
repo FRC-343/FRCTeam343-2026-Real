@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Thisjustatestfr.TimeOfFlight;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.field.FieldConstants;
@@ -36,6 +35,7 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
 import frc.robot.util.Meth.HoodAim;
+import frc.robot.util.Meth.TimeOfFlight;
 import frc.robot.util.Meth.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
