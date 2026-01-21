@@ -34,9 +34,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.Meth.HoodAim;
-import frc.robot.util.Meth.TimeOfFlight;
-import frc.robot.util.Meth.TurretAim;
+import frc.robot.util.MathHelper.HoodAim;
+import frc.robot.util.MathHelper.TimeOfFlight;
+import frc.robot.util.MathHelper.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -198,19 +198,27 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  public void MethCalcs() {
+  public void ShooterCalcs() {
+
+    /* Field Speed converts robot speed to field speeds for easier math */
     ChassisSpeeds fieldSpeeds =
         ChassisSpeeds.fromRobotRelativeSpeeds(
             BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
 
+    /* Gets the robot velocity using the converted field speeds */
     Translation2d robotVelocityXY =
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
+    /* Gets the shooter position on the robot */
     Translation2d shooterXY =
         BobotState.getGlobalPose()
             .transformBy(
                 new Transform2d(Units.inchesToMeters(2), Units.inchesToMeters(2), new Rotation2d()))
             .getTranslation();
+
+    /* Gets the targerts position on the field
+     * Flips for different field side
+     */
     Translation2d targetXY =
         HubFaces.B.get()
             .tag
@@ -224,16 +232,26 @@ public class RobotContainer {
                         : -FieldConstants.tagToHub,
                     0.0));
 
-    BobotState.updateTurretTarget(targetXY);
+    BobotState.updateTurretTarget(
+        targetXY); // This mainly used for sim to show the position the turret/hood is targeting.
 
+    /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
         BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
 
+    /* Call for the calculation that gets an estimated time that the fuel will be in the air from any give position/speed */
     BobotState.updateToF(
-        TimeOfFlight.solveTime(shooterXY, robotVelocityXY, targetXY, new Translation2d(), 23));
-    double time = BobotState.getToF();
-    if (!Double.isNaN(time)) {
+        TimeOfFlight.solveTime(
+            shooterXY, robotVelocityXY, targetXY, new Translation2d(), shooterExitVelocity));
+
+    double time = BobotState.getToF(); // gives us an easier call for the TOF
+
+    if (!Double.isNaN(time)) { // If time is a real number do the calculations
+
+      /* Gives us an easier call for the turret YAW */
       double yaw =
+
+          /* Call to calculate turret YAW */
           TurretAim.calculateYaw(
               shooterXY,
               BobotState.getGlobalPose().getTranslation(),
@@ -241,12 +259,18 @@ public class RobotContainer {
               new Translation2d(),
               BobotState.getToF());
 
-      Translation2d intercept = targetXY.plus(robotVelocityXY.times(-time));
+      Translation2d intercept =
+          targetXY.plus(
+              robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the target
 
-      double distance = intercept.getDistance(shooterXY);
+      double distance =
+          intercept.getDistance(
+              shooterXY); // Gets the distance from the shooter to the intercept position.
 
-      double hood = HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity);
+      double hood =
+          HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood angle
 
+      /* updates our call for the hood and turret */
       BobotState.updateTurretYaw(yaw);
       BobotState.updateHoodAngle(hood);
     }

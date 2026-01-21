@@ -91,18 +91,11 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    /*
-     * This is importaint for our shooter calcs
-     */
-
-    /*
-     * This is importaint for our shooter calcs
-     */
-
     // Return to non-RT thread priority (do not modify the first argument)
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
+    robotContainer.ShooterCalcs();
   }
 
   /** This function is called once when the robot is disabled. */
@@ -142,9 +135,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    robotContainer.MethCalcs();
-  }
+  public void teleopPeriodic() {}
 
   /** This function is called once when test mode is enabled. */
   @Override

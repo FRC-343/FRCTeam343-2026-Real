@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.Meth;
+import frc.robot.util.MathHelper;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -77,8 +77,9 @@ public class Turret extends SubsystemBase {
 
     BobotState.updateTurretPos(this.inputs.masterPositionRad);
 
+    // Optimizes the wanted YAW because the turret to encoder ratio is not 1:1
     BobotState.updateOptiTurretYaw(
-        Meth.TurretYawLimiter.optimizeYaw(
+        MathHelper.TurretYawLimiter.optimizeYaw(
                 BobotState.getTurretYaw(),
                 BobotState.getGlobalPose().getRotation().getRadians(),
                 BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION)
@@ -109,14 +110,6 @@ public class Turret extends SubsystemBase {
         this);
   }
 
-  public Command setTurretPosition() {
-    return new RunCommand(() -> this.io.setTurretPosition(BobotState.getOptiTurretYaw()));
-    // MathUtil.clamp(
-    //     position,
-    //     Constants.TurretConstants.TURRET_MIN_RAD,
-    //     Constants.TurretConstants.TURRET_MAX_RAD)));
-  }
-
   public Command stopCommand() {
     return new InstantCommand(this.io::stop, this);
   }
@@ -142,5 +135,7 @@ public class Turret extends SubsystemBase {
    * at some point the above commands will be reorganized.
    * Triggers might also be separated at a later date, potentially added to BobotState
    */
-
+  public Command setTurretPosition() {
+    return new RunCommand(() -> this.io.setTurretPosition(BobotState.getOptiTurretYaw()));
+  }
 }

@@ -1,0 +1,5 @@
+1. Add Tag trackers for the rest of the field tags in @varc
+2. Add Tag util classes in @field and supporting info in FieldConstatns.java and FieldUtils.java
+3. COMMENT EVERYTHING -> anything you add, give it a comment even if its as simple as updating a value.
+    The only acceptable exclusions are constants that have apporpiate names for what they are.
+
