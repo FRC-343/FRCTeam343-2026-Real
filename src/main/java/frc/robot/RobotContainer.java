@@ -34,9 +34,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.MathHelper.HoodAim;
-import frc.robot.util.MathHelper.TimeOfFlight;
-import frc.robot.util.MathHelper.TurretAim;
+import frc.robot.util.ShooterHelper.HoodAim;
+import frc.robot.util.ShooterHelper.TimeOfFlight;
+import frc.robot.util.ShooterHelper.TurretAim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**

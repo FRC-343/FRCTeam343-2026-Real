@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.MathHelper;
+import frc.robot.util.ShooterHelper;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -79,7 +79,7 @@ public class Turret extends SubsystemBase {
 
     // Optimizes the wanted YAW because the turret to encoder ratio is not 1:1
     BobotState.updateOptiTurretYaw(
-        MathHelper.TurretYawLimiter.optimizeYaw(
+        ShooterHelper.TurretYawLimiter.optimizeYaw(
                 BobotState.getTurretYaw(),
                 BobotState.getGlobalPose().getRotation().getRadians(),
                 BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION)
