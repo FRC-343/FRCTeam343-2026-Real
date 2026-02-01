@@ -8,6 +8,7 @@ FIELD_IMAGE_PATH = "FieldImage.png"
 FIELD_LENGTH = 16.54  # meters
 FIELD_WIDTH  = 8.07   # meters
 # --------------------------------------------
+last_click = None  # (px, py)
 
 # NetworkTables init
 NetworkTables.initialize(server="127.0.0.2") # Sim with 127.0.0.2 Normal is 10.TE.AM.2 will eventually implement
@@ -32,12 +33,18 @@ running = True
 while running:
     screen.blit(field_image, (0, 0))
 
+    # draw persistent marker
+    if last_click is not None:
+        pygame.draw.circle(screen, (255, 0, 0), last_click, 6)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             px, py = pygame.mouse.get_pos()
+            last_click = (px, py)
+
             x, y = pixel_to_field(px, py)
 
             nt.putNumber("targetX", x)
@@ -45,10 +52,8 @@ while running:
 
             print(f"Sent target: X={x:.2f}m  Y={y:.2f}m")
 
-            # draw click marker
-            pygame.draw.circle(screen, (255, 0, 0), (px, py), 6)
-
     pygame.display.flip()
     clock.tick(60)
+
 
 pygame.quit()
