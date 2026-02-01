@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
 
-public class MathHelper {
+public class ShooterHelper {
 
   public final class TurretAim {
 
@@ -32,22 +32,30 @@ public class MathHelper {
       if (horizontalDistance < 0.05) return Double.NaN;
       if (exitVelocity < 0.1) return Double.NaN;
 
+      // term of gravity
       double g = 9.81;
+      // velocity squared term
       double v2 = exitVelocity * exitVelocity;
 
-      double term =
+      /*more self explanatory than was previously, simulates parabolic arc of grav on ball
+      and returns the y-position*/
+      double SimGravOnBall =
           v2 * v2 - g * (g * horizontalDistance * horizontalDistance + 2 * heightDifference * v2);
 
-      if (term < 0) return Double.NaN;
+      // if the y-position of the ball is less than 0 (below ground), return NaN
+      if (SimGravOnBall < 0) return Double.NaN;
 
-      double sqrt = Math.sqrt(term);
+      // self-explanatory
+      double SqrtOfGravOnBall = Math.sqrt(SimGravOnBall);
 
       // Prefer low arc, fall back to high arc
-      double low = Math.atan((v2 - sqrt) / (g * horizontalDistance));
+      double low = Math.atan((v2 - SqrtOfGravOnBall) / (g * horizontalDistance));
 
+      // if low exists and is more than 0, returns the low arc
       if (!Double.isNaN(low) && low > 0) return low;
 
-      return Math.atan((v2 + sqrt) / (g * horizontalDistance));
+      // returns the calculated high angle if low fails
+      return Math.atan((v2 + SqrtOfGravOnBall) / (g * horizontalDistance));
     }
   }
 

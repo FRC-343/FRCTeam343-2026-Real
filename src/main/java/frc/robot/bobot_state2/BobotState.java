@@ -44,6 +44,7 @@ public class BobotState extends VirtualSubsystem {
   // adding Tag Trackers here
   private static HubTagTracker hubTracker = new HubTagTracker();
 
+  // list of tags used to calculate where the hub is 
   private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
 
   /*
@@ -80,7 +81,7 @@ public class BobotState extends VirtualSubsystem {
 
   private static ChassisSpeeds roboChassisSpeeds;
 
-  private static double OptiTurretYaw;
+  private static double OptiTurretYaw; //optimized turret angle
 
   private static Translation2d TurretTarget;
 
@@ -114,6 +115,7 @@ public class BobotState extends VirtualSubsystem {
    *
    */
 
+   //ToF = Time of Flight
   public static void updateToF(Double ToF) {
     BobotState.ToF = ToF;
   }
