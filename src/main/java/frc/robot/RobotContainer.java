@@ -19,11 +19,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.TargetTest.DashboardTarget;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
-import frc.robot.field.FieldConstants;
-import frc.robot.field.FieldUtils;
-import frc.robot.field.HubFaces;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.drive.Drive;
@@ -55,6 +53,8 @@ public class RobotContainer {
 
   private final BobotState test;
 
+  private final DashboardTarget test2;
+
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
@@ -68,7 +68,7 @@ public class RobotContainer {
   public RobotContainer() {
     test = new BobotState();
     new Vision();
-
+    test2 = new DashboardTarget();
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -217,20 +217,10 @@ public class RobotContainer {
             .getTranslation();
 
     /* Gets the targerts position on the field
-     * Flips for different field side
+     *
      */
-    Translation2d targetXY =
-        HubFaces.B.get()
-            .tag
-            .pose()
-            .getTranslation()
-            .toTranslation2d()
-            .plus(
-                new Translation2d(
-                    FieldUtils.isBlueAlliance()
-                        ? FieldConstants.tagToHub
-                        : -FieldConstants.tagToHub,
-                    0.0));
+
+    Translation2d targetXY = test2.getTarget();
 
     BobotState.updateTurretTarget(
         targetXY); // This mainly used for sim to show the position the turret/hood is targeting.

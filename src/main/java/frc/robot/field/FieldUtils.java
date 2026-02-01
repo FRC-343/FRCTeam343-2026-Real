@@ -28,19 +28,19 @@ public class FieldUtils {
         FieldUtils.isBlueAlliance() ? FieldConstants.BLUEHUBTAGS : FieldConstants.REDHUBTAGS;
     Translation2d robotTranslation = BobotState.getGlobalPose().getTranslation();
 
-    HubFace closestReef =
+    HubFace closestHub =
         HubTags.stream()
             .reduce(
-                (HubFace reef1, HubFace reef2) ->
+                (HubFace hub1, HubFace hub2) ->
                     robotTranslation.getDistance(
-                                reef1.tag.pose().getTranslation().toTranslation2d())
+                                hub1.tag.pose().getTranslation().toTranslation2d())
                             < robotTranslation.getDistance(
-                                reef2.tag.pose().getTranslation().toTranslation2d())
-                        ? reef1
-                        : reef2)
+                                hub2.tag.pose().getTranslation().toTranslation2d())
+                        ? hub1
+                        : hub2)
             .get();
 
-    return closestReef;
+    return closestHub;
   }
 
   // public static HPSFace getClosestHPSTag() {
