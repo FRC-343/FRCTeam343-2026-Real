@@ -43,7 +43,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new TurretMotorTalonFX(33, 34);
+        io = new TurretMotorTalonFX(13, 17);
 
         break;
       case SIM:

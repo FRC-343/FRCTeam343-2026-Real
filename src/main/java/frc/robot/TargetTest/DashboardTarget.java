@@ -40,30 +40,34 @@ public class DashboardTarget {
   }
   // Get method for our selected position
   public Translation2d getTarget() {
-    double x = xEntry.getDouble(       HubFaces.B.get()
-            .tag
-            .pose()
-            .getTranslation()
-            .toTranslation2d()
-            .plus(
-                new Translation2d(
-                    FieldUtils.isBlueAlliance()
-                        ? FieldConstants.tagToHub
-                        : -FieldConstants.tagToHub,
-                    0.0))
-            .getX());
-    double y = yEntry.getDouble(HubFaces.B.get()
-            .tag
-            .pose()
-            .getTranslation()
-            .toTranslation2d()
-            .plus(
-                new Translation2d(
-                    FieldUtils.isBlueAlliance()
-                        ? FieldConstants.tagToHub
-                        : -FieldConstants.tagToHub,
-                    0.0))
-            .getY());
+    double x =
+        xEntry.getDouble(
+            HubFaces.B.get()
+                .tag
+                .pose()
+                .getTranslation()
+                .toTranslation2d()
+                .plus(
+                    new Translation2d(
+                        FieldUtils.isBlueAlliance()
+                            ? FieldConstants.tagToHub
+                            : -FieldConstants.tagToHub,
+                        0.0))
+                .getX());
+    double y =
+        yEntry.getDouble(
+            HubFaces.B.get()
+                .tag
+                .pose()
+                .getTranslation()
+                .toTranslation2d()
+                .plus(
+                    new Translation2d(
+                        FieldUtils.isBlueAlliance()
+                            ? FieldConstants.tagToHub
+                            : -FieldConstants.tagToHub,
+                        0.0))
+                .getY());
     return new Translation2d(x, y);
   }
 }

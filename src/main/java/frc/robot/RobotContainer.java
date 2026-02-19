@@ -8,7 +8,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,12 +16,13 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.TargetTest.DashboardTarget;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Kicker.Kicker;
+import frc.robot.subsystems.Spindexer.Spindexer;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -50,6 +50,10 @@ public class RobotContainer {
   //   private final Shooter shooter;
 
   private final Turret turret;
+
+  private final Spindexer spindexer;
+
+  private final Kicker kicker;
 
   private final BobotState test;
 
@@ -86,6 +90,8 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
+        spindexer = new Spindexer();
+        kicker = new Kicker();
 
         break;
 
@@ -102,6 +108,8 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
+        spindexer = new Spindexer();
+        kicker = new Kicker();
 
         break;
 
@@ -119,6 +127,8 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
+        spindexer = new Spindexer();
+        kicker = new Kicker();
 
         break;
     }
@@ -161,32 +171,38 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
+    // // Lock to 0° when A button is held
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         DriveCommands.joystickDriveAtAngle(
+    //             drive,
+    //             () -> -controller.getLeftY(),
+    //             () -> -controller.getLeftX(),
+    //             () -> Rotation2d.kZero));
+
+    // // Switch to X pattern when X button is pressed
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // // Reset gyro to 0° when B button is pressed
+    // controller
+    //     .b()
+    //     .onTrue(
+    //         Commands.runOnce(
+    //                 () ->
+    //                     drive.setPose(
+    //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+    //                 drive)
+    //             .ignoringDisable(true));
+
     controller
-        .a()
+        .leftBumper()
         .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+            spindexer
+                .setVelocityThenStopCommand(-35)
+                .alongWith(kicker.setVelocityThenStopCommand(35)));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
-
-    // controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
-    controller.rightBumper().whileTrue(turret.setTurretPosition());
+    // controller.rightBumper().whileTrue(turret.setTurretPosition());
   }
 
   /**

@@ -32,8 +32,7 @@ public class FieldUtils {
         HubTags.stream()
             .reduce(
                 (HubFace hub1, HubFace hub2) ->
-                    robotTranslation.getDistance(
-                                hub1.tag.pose().getTranslation().toTranslation2d())
+                    robotTranslation.getDistance(hub1.tag.pose().getTranslation().toTranslation2d())
                             < robotTranslation.getDistance(
                                 hub2.tag.pose().getTranslation().toTranslation2d())
                         ? hub1

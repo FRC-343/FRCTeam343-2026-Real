@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.Kicker;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -7,27 +7,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 // import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
 
-public class Intake extends SubsystemBase {
-  private final IntakeIO io;
+public class Kicker extends SubsystemBase {
+  private final KickerIO io;
 
-  private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+  private final KickerIOInputsAutoLogged inputs = new KickerIOInputsAutoLogged();
 
-  public Intake() {
+  public Kicker() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakeIOTalonFX(23, false);
+        io = new KickerIOTalonFX(16, false);
         break;
       case SIM:
-        io = new IntakeIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
+        io = new KickerIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
         break;
       case REPLAY:
       default:
-        io = new IntakeIO() {};
+        io = new KickerIO() {};
 
         break;
     }
@@ -38,16 +37,12 @@ public class Intake extends SubsystemBase {
     this.io.updateInputs(this.inputs);
     this.io.updateInputs(this.inputs);
 
-    Logger.processInputs("Intake", this.inputs);
+    Logger.processInputs("Kicker", this.inputs);
 
     // Make sure the motor actually stops when the robot disabled
     if (DriverStation.isDisabled()) {
       this.io.stop();
     }
-  }
-
-  public Command intakeWithNoStop() {
-    return new RunCommand(() -> this.io.setPercentOutput(-.1), this);
   }
 
   public Command setVelocityCommand(double velocityRotPerSecond) {
@@ -71,10 +66,6 @@ public class Intake extends SubsystemBase {
         .andThen(io::stop);
   }
 
-  public Command setVelocityBeambreakCommand(double velocityRotPerSecond) {
-    return new RunCommand(() -> this.io.setVelocity(velocityRotPerSecond), this);
-  }
-
   public Command setPercentOutputCommand(double velocityRotPerSecond) {
     return new InstantCommand(() -> this.io.setPercentOutput(velocityRotPerSecond), this);
   }
@@ -82,18 +73,6 @@ public class Intake extends SubsystemBase {
   public Command setPercentOutputThenStopCommand(double percentDecimal) {
     // playMusic();
     return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this).finallyDo(io::stop);
-  }
-
-  public Command setPercentOutputThenStopCommandT1(double percentDecimal) {
-    // playMusic();
-    return new RunCommand(() -> this.io.setPercentOutputT1(percentDecimal), this)
-        .finallyDo(io::stop);
-  }
-
-  public Command setPercentOutputBeambreakCommand(double percentDecimal, Trigger test) {
-    return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this)
-        .onlyWhile(test)
-        .andThen(stopCommand());
   }
 
   public Command stopCommand() {

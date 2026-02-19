@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems.Spindexer;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -12,22 +12,22 @@ import frc.robot.Constants;
 // import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
 
-public class Intake extends SubsystemBase {
-  private final IntakeIO io;
+public class Spindexer extends SubsystemBase {
+  private final SpindexerIO io;
 
-  private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+  private final SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
-  public Intake() {
+  public Spindexer() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakeIOTalonFX(23, false);
+        io = new SpindexerIOTalonFX(14, false);
         break;
       case SIM:
-        io = new IntakeIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
+        io = new SpindexerIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
         break;
       case REPLAY:
       default:
-        io = new IntakeIO() {};
+        io = new SpindexerIO() {};
 
         break;
     }
@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     this.io.updateInputs(this.inputs);
     this.io.updateInputs(this.inputs);
 
-    Logger.processInputs("Intake", this.inputs);
+    Logger.processInputs("Spindexer", this.inputs);
 
     // Make sure the motor actually stops when the robot disabled
     if (DriverStation.isDisabled()) {
@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public Command intakeWithNoStop() {
+  public Command SpindexerWithNoStop() {
     return new RunCommand(() -> this.io.setPercentOutput(-.1), this);
   }
 
