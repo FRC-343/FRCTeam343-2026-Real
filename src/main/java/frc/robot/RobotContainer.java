@@ -200,9 +200,9 @@ public class RobotContainer {
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-35)
-                .alongWith(kicker.setVelocityThenStopCommand(35)));
+                .alongWith(kicker.setVelocityThenStopCommand(40)));
 
-    // controller.rightBumper().whileTrue(turret.setTurretPosition());
+    controller.rightBumper().whileTrue(turret.setTurretPosition());
   }
 
   /**

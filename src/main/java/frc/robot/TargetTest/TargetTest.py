@@ -11,7 +11,7 @@ FIELD_WIDTH  = 8.07   # meters
 last_click = None  # (px, py)
 
 # NetworkTables init
-NetworkTables.initialize(server="127.0.0.2") # Sim with 127.0.0.2 Normal is 10.TE.AM.2 will eventually implement
+NetworkTables.initialize(server="10.3.43.2") # Sim with 127.0.0.2 Normal is 10.TE.AM.2 will eventually implement
 nt = NetworkTables.getTable("dashboard") # Network Table ID
 
 # Pygame init
