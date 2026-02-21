@@ -229,7 +229,8 @@ public class RobotContainer {
     Translation2d shooterXY =
         BobotState.getGlobalPose()
             .transformBy(
-                new Transform2d(Units.inchesToMeters(2), Units.inchesToMeters(2), new Rotation2d()))
+                new Transform2d(
+                    Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125), new Rotation2d()))
             .getTranslation();
 
     /* Gets the targerts position on the field

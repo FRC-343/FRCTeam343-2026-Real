@@ -39,8 +39,7 @@ public final class Constants {
     public static final double TURRET_MAX_RAD = Math.toRadians(150);
 
     // Encoder rotations per turret rotation
-    public static final double ENCODER_ROTATIONS_PER_TURRET_ROTATION =
-        10.0; // this is a temp number
+    public static final double ENCODER_ROTATIONS_PER_TURRET_ROTATION = 5; // this is a temp number
 
     // Derived constants
     public static final double TURRET_ROTATIONS_PER_ENCODER_ROTATION =

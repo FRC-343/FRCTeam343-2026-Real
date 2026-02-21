@@ -16,7 +16,7 @@ public class ShooterHelper {
         Translation2d targetVel,
         double time) {
 
-      Translation2d intercept = targetPos.plus(targetVel.minus(robotVel).times(time));
+      Translation2d intercept = targetPos.plus(targetVel.minus(robotVel));
 
       Translation2d delta = intercept.minus(shooterPos);
 
@@ -108,7 +108,7 @@ public class ShooterHelper {
         }
       }
 
-      return bestYaw; // NaN means "no valid solution"
+      return bestYaw / 2; // NaN means "no valid solution"
     }
   }
 
