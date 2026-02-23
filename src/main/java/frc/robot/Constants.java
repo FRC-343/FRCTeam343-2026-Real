@@ -35,20 +35,19 @@ public final class Constants {
   }
 
   public static final class TurretConstants {
+
     public static final double TURRET_MIN_RAD = Math.toRadians(-150);
     public static final double TURRET_MAX_RAD = Math.toRadians(150);
 
-    // Encoder rotations per turret rotation
-    public static final double ENCODER_ROTATIONS_PER_TURRET_ROTATION = 5; // this is a temp number
+    // ===== Gear Math =====
+    public static final int CRT_MOD_A = 17;
+    public static final int CRT_MOD_B = 13;
+    public static final int CRT_PERIOD = 221; // 17 * 13
 
-    // Derived constants
-    public static final double TURRET_ROTATIONS_PER_ENCODER_ROTATION =
-        1.0 / ENCODER_ROTATIONS_PER_TURRET_ROTATION;
+    // Motor rotations per turret rotation
+    public static final double MOTOR_ROT_PER_TURRET_ROT = 221.0 / 7.0;
 
-    public static final double RADIANS_PER_TURRET_ROTATION = 2.0 * Math.PI;
-
-    public static final double RADIANS_PER_ENCODER_ROTATION =
-        RADIANS_PER_TURRET_ROTATION * TURRET_ROTATIONS_PER_ENCODER_ROTATION;
+    public static final double RAD_PER_TURRET_ROT = 2.0 * Math.PI;
   }
 
   public static final class ShooterConstants {

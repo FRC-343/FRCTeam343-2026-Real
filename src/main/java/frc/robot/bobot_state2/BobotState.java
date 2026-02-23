@@ -77,6 +77,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static double TurretPos; // this will store the turret position
 
+  private static double TurretMotorPos; // this will store the turret position
+
   private static double ShooterRPM;
 
   private static ChassisSpeeds roboChassisSpeeds;
@@ -84,6 +86,16 @@ public class BobotState extends VirtualSubsystem {
   private static double OptiTurretYaw; // optimized turret angle
 
   private static Translation2d TurretTarget;
+
+  private static double r17;
+
+  private static double r13;
+
+  private static double motorTarget;
+
+  private static double r17AbsPos;
+
+  private static double r13AbsPos;
 
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
@@ -140,6 +152,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.TurretPos = pose;
   }
 
+  public static void updateTurretMotorPos(double pose) {
+    BobotState.TurretMotorPos = pose;
+  }
+
   public static void updateRoboChassisSpeed(ChassisSpeeds speed) {
     BobotState.roboChassisSpeeds = speed;
   }
@@ -150,6 +166,23 @@ public class BobotState extends VirtualSubsystem {
 
   public static void updateTurretTarget(Translation2d target) {
     BobotState.TurretTarget = target;
+  }
+
+  public static void updateTurretCRTTargets(double r17, double r13) {
+    BobotState.r17 = r17;
+    BobotState.r13 = r13;
+  }
+
+  public static void updateR13AbsPos(double r13) {
+    BobotState.r13AbsPos = r13;
+  }
+
+  public static void updateR17AbsPos(double r17) {
+    BobotState.r17AbsPos = r17;
+  }
+
+  public static void updateMotorTarget(double motorTarget) {
+    BobotState.motorTarget = motorTarget;
   }
 
   public static Pose2d getGlobalPose() {
@@ -186,12 +219,28 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.TurretPos;
   }
 
+  public static double getTurretMotorPosi() {
+    return BobotState.TurretMotorPos;
+  }
+
   public static double getOptiTurretYaw() {
     return BobotState.OptiTurretYaw;
   }
 
   public static Rotation2d getRotationtoClosestHub() {
     return BobotState.hubTracker.getRotationTarget();
+  }
+
+  public static double getMotorTarget() {
+    return BobotState.motorTarget;
+  }
+
+  public static double getR13AbsPos() {
+    return BobotState.r13AbsPos;
+  }
+
+  public static double getR17AbsPos() {
+    return BobotState.r17AbsPos;
   }
 
   public static Trigger onTeamSide() {
@@ -238,6 +287,18 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Turret Max limit", Constants.TurretConstants.TURRET_MAX_RAD);
 
     Logger.recordOutput(logRoot + "Turret Min limit", Constants.TurretConstants.TURRET_MIN_RAD);
+
+    Logger.recordOutput(logRoot + "Ratio 17 target", r17);
+
+    Logger.recordOutput(logRoot + "Ratio 13 target", r13);
+
+    Logger.recordOutput(logRoot + "Motor target", motorTarget);
+
+    Logger.recordOutput(logRoot + "Ratio 17 Abs position", r17AbsPos);
+
+    Logger.recordOutput(logRoot + "Ratio 13 Abs position", r13AbsPos);
+
+    Logger.recordOutput(logRoot + "Turret motor position", TurretMotorPos);
 
     // {
     //   String calcLogRoot = logRoot + "ClosestAlignment/";

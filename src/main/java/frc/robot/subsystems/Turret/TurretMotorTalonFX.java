@@ -3,7 +3,6 @@ package frc.robot.subsystems.Turret;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -22,7 +21,8 @@ import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
 
 public class TurretMotorTalonFX implements TurretMotorIO {
   private final TalonFX talon;
-  private final CANcoder magenc;
+  private final CANcoder r13;
+  private final CANcoder r17;
 
   // private final SparkBase encoder = new SparkMax(25, null);
   // private final AbsoluteEncoder absEnc;
@@ -33,7 +33,8 @@ public class TurretMotorTalonFX implements TurretMotorIO {
   private final StatusSignal<Angle> position;
   private final StatusSignal<Current> current;
 
-  private final StatusSignal<Angle> abspos;
+  private final StatusSignal<Angle> r13Abspos;
+  private final StatusSignal<Angle> r17Abspos;
 
   private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
@@ -42,21 +43,22 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
   private final Orchestra m_orchestra = new Orchestra();
 
-  public TurretMotorTalonFX(int deviceId, int deviceId2) {
+  public TurretMotorTalonFX(int deviceId, int deviceId2, int deviceId3) {
     talon = new TalonFX(deviceId);
-    magenc = new CANcoder(deviceId2);
+    r13 = new CANcoder(deviceId2);
+    r17 = new CANcoder(deviceId3);
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();
     position = talon.getPosition();
     current = talon.getStatorCurrent();
-    abspos = magenc.getAbsolutePosition();
+    r13Abspos = r13.getAbsolutePosition();
+    r17Abspos = r17.getAbsolutePosition();
 
     // absEnc = encoder.getAbsoluteEncoder();
 
     this.m_orchestra.addInstrument(talon);
     this.m_orchestra.loadMusic("output.chrp");
-    magenc.getConfigurator().apply(new CANcoderConfiguration());
     talon
         .getConfigurator()
         .apply(
@@ -68,28 +70,26 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                     new MotionMagicConfigs()
                         .withMotionMagicAcceleration(75)
                         .withMotionMagicCruiseVelocity(75)
-                        .withMotionMagicJerk(200))
-                .withFeedback(
-                    new FeedbackConfigs()
-                        .withFusedCANcoder(magenc)
-                        .withFeedbackRemoteSensorID(deviceId2)));
+                        .withMotionMagicJerk(200)));
     velocityVoltage.Slot = 0;
 
-    magenc.getConfigurator().apply(new CANcoderConfiguration());
+    r13.getConfigurator().apply(new CANcoderConfiguration());
+    r17.getConfigurator().apply(new CANcoderConfiguration());
 
     StatusSignal.setUpdateFrequencyForAll(
-        10, voltage, dutyCycle, velocity, position, current, abspos);
+        10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
     talon.optimizeBusUtilization();
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {
-    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position, abspos);
+    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position, r13Abspos, r17Abspos);
     inputs.masterAppliedVolts = voltage.getValueAsDouble();
     inputs.masterVelocityRadPerSec = velocity.getValueAsDouble();
     inputs.masterPositionRad = position.getValueAsDouble();
     inputs.masterCurrentAmps = current.getValueAsDouble();
 
-    inputs.extentionAbsPos = abspos.getValueAsDouble();
+    inputs.r13Abspos = r13Abspos.getValueAsDouble();
+    inputs.r17Abspos = r17Abspos.getValueAsDouble();
   }
 
   @Override

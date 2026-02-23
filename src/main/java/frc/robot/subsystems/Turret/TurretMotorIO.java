@@ -13,7 +13,8 @@ public interface TurretMotorIO {
     public double masterAppliedVolts = 0.0;
     public double masterCurrentAmps = 0.0;
 
-    public double extentionAbsPos = 0.0;
+    public double r13Abspos = 0.0;
+    public double r17Abspos = 0.0;
 
     public Rotation2d extentionPos = new Rotation2d();
   }

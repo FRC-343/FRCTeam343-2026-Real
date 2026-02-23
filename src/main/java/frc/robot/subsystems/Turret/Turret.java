@@ -11,9 +11,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.ShooterHelper;
+import frc.robot.util.ShooterHelper.TurretCRT;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -43,7 +42,7 @@ public class Turret extends SubsystemBase {
   public Turret() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new TurretMotorTalonFX(13, 17);
+        io = new TurretMotorTalonFX(13, 17, 18);
 
         break;
       case SIM:
@@ -75,15 +74,18 @@ public class Turret extends SubsystemBase {
     // setpointVisualizer.update(this.setpointInches);
     // // I'm not quite sure how this works, it is semi working in sim.
 
-    BobotState.updateTurretPos(this.inputs.masterPositionRad);
+    // BobotState.updateTurretPos(this.inputs.masterPositionRad);
 
-    // Optimizes the wanted YAW because the turret to encoder ratio is not 1:1
-    BobotState.updateOptiTurretYaw(
-        ShooterHelper.TurretYawLimiter.optimizeYaw(
-                BobotState.getTurretYaw(),
-                BobotState.getGlobalPose().getRotation().getRadians(),
-                BobotState.getTurretPosi() * TurretConstants.RADIANS_PER_ENCODER_ROTATION)
-            * (TurretConstants.ENCODER_ROTATIONS_PER_TURRET_ROTATION / 2));
+    BobotState.updateR13AbsPos(this.inputs.r13Abspos);
+    BobotState.updateR17AbsPos(this.inputs.r17Abspos);
+
+    double mod17 = BobotState.getR17AbsPos() * 17.0;
+    double mod13 = BobotState.getR13AbsPos() * 13.0;
+
+    double motorPosMod221 = TurretCRT.reconstruct(mod17, mod13);
+    double turretRad = TurretCRT.motorRotToTurretRad(motorPosMod221);
+
+    BobotState.updateTurretPos(turretRad);
   }
 
   // These needs to be reorganized
@@ -95,19 +97,6 @@ public class Turret extends SubsystemBase {
 
   public Command setSetpointCommand(double positionInches) {
     return new InstantCommand(() -> this.setSetpoint(positionInches));
-  }
-
-  public Command setSetpointCurrentCommand() {
-    return new InstantCommand(() -> this.setSetpoint(this.inputs.extentionAbsPos));
-  }
-
-  public Command pidCommand() {
-    return new RunCommand(
-        () -> {
-          double output = this.pidController.calculate(this.inputs.extentionAbsPos);
-          setVoltage(output);
-        },
-        this);
   }
 
   public Command stopCommand() {
@@ -137,6 +126,6 @@ public class Turret extends SubsystemBase {
    * Triggers might also be separated at a later date, potentially added to BobotState
    */
   public Command setTurretPosition() {
-    return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getOptiTurretYaw()));
+    return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getMotorTarget()));
   }
 }

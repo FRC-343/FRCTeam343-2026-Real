@@ -148,4 +148,57 @@ public class ShooterHelper {
       return Double.isFinite(t) ? t : Double.NaN;
     }
   }
+
+  public final class TurretCRT {
+
+    private static final int MOD_A = 17;
+    private static final int MOD_B = 13;
+    private static final int PERIOD = 221;
+
+    // Precomputed modular inverses
+    private static final int INV_13_MOD_17 = 4;
+    private static final int INV_17_MOD_13 = 10;
+
+    private TurretCRT() {}
+
+    /* ===== Angle ↔ Motor Conversion ===== */
+
+    public static double turretRadToMotorRot(double turretRad) {
+      double turretRot = turretRad / Constants.TurretConstants.RAD_PER_TURRET_ROT;
+
+      return turretRot * Constants.TurretConstants.MOTOR_ROT_PER_TURRET_ROT;
+    }
+
+    public static double motorRotToTurretRad(double motorRot) {
+      double turretRot = motorRot / Constants.TurretConstants.MOTOR_ROT_PER_TURRET_ROT;
+
+      return turretRot * Constants.TurretConstants.RAD_PER_TURRET_ROT;
+    }
+
+    /* ===== Chinese Remainder Reconstruction ===== */
+
+    public static double reconstruct(double mod17, double mod13) {
+
+      double x = (mod17 * 13 * INV_13_MOD_17 + mod13 * 17 * INV_17_MOD_13) % PERIOD;
+
+      if (x < 0) x += PERIOD;
+
+      return x; // motor rotations mod 221
+    }
+
+    /* ===== Reduce Motor Rotations to CRT Residues ===== */
+
+    public static double mod17(double motorRot) {
+      return positiveMod(motorRot, MOD_A);
+    }
+
+    public static double mod13(double motorRot) {
+      return positiveMod(motorRot, MOD_B);
+    }
+
+    private static double positiveMod(double value, double mod) {
+      double r = value % mod;
+      return (r < 0) ? r + mod : r;
+    }
+  }
 }

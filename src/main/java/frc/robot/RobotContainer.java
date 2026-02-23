@@ -35,6 +35,8 @@ import frc.robot.util.CommandCustomController;
 import frc.robot.util.ShooterHelper.HoodAim;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretAim;
+import frc.robot.util.ShooterHelper.TurretCRT;
+import frc.robot.util.ShooterHelper.TurretYawLimiter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -255,16 +257,21 @@ public class RobotContainer {
 
     if (!Double.isNaN(time)) { // If time is a real number do the calculations
 
-      /* Gives us an easier call for the turret YAW */
       double yaw =
+          TurretAim.calculateYaw(shooterXY, robotVelocityXY, targetXY, new Translation2d(), time);
 
-          /* Call to calculate turret YAW */
-          TurretAim.calculateYaw(
-              shooterXY,
-              BobotState.getGlobalPose().getTranslation(),
-              targetXY,
-              new Translation2d(),
-              BobotState.getToF());
+      double optimizedYaw =
+          TurretYawLimiter.optimizeYaw(
+              yaw,
+              BobotState.getGlobalPose().getRotation().getRadians(),
+              BobotState.getTurretPosi());
+
+      if (!Double.isNaN(optimizedYaw)) {
+
+        double motorTarget = TurretCRT.turretRadToMotorRot(optimizedYaw);
+
+        BobotState.updateMotorTarget(motorTarget);
+      }
 
       Translation2d intercept =
           targetXY.plus(
@@ -278,7 +285,7 @@ public class RobotContainer {
           HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood angle
 
       /* updates our call for the hood and turret */
-      BobotState.updateTurretYaw(yaw);
+      BobotState.updateTurretYaw(optimizedYaw);
       BobotState.updateHoodAngle(hood);
     }
   }
