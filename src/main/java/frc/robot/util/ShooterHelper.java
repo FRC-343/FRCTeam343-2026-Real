@@ -151,57 +151,35 @@ public class ShooterHelper {
 
   public final class TurretCRT {
 
-    private static final int MOD_A = 1071;
-    private static final int MOD_B = 819;
-    private static final int PERIOD = 13923;
+    private static final int MOD_A = 17; // from 13T encoder
+    private static final int MOD_B = 13; // from 17T encoder
+    private static final int PERIOD = 221; // 17 * 13
 
-    // Precomputed modular inverses
+    // Precomputed inverse of 13 mod 17
     private static final int INV_13_MOD_17 = 4;
+    // Precomputed inverse of 17 mod 13
     private static final int INV_17_MOD_13 = 10;
 
     private TurretCRT() {}
 
-    /* ===== Angle ↔ Motor Conversion ===== */
+    public static double reconstruct(double r17, double r13) {
 
-    public static double turretRadToMotorRot(double turretRad) {
-      double turretRot = turretRad / Constants.TurretConstants.RAD_PER_TURRET_ROT;
+      int a = mod(Math.round(r17), MOD_A);
+      int b = mod(Math.round(r13), MOD_B);
 
-      return turretRot * Constants.TurretConstants.MOTOR_ROT_PER_TURRET_ROT;
+      // Standard CRT formula
+      int x = (int) ((a * MOD_B * INV_13_MOD_17 + b * MOD_A * INV_17_MOD_13) % PERIOD);
+
+      return mod(x, PERIOD);
     }
 
-    public static double motorRotToTurretRad(double motorRot) {
-      double turretRot = motorRot / Constants.TurretConstants.MOTOR_ROT_PER_TURRET_ROT;
-
-      return turretRot * Constants.TurretConstants.RAD_PER_TURRET_ROT;
+    private static int mod(long x, int m) {
+      int r = (int) (x % m);
+      return (r < 0) ? r + m : r;
     }
 
-    /* ===== Chinese Remainder Reconstruction ===== */
-
-    public static double reconstruct(double r51, double r39) {
-
-      // Solve using generalized CRT
-      for (int k = 0; k < PERIOD; k++) {
-        if (k % MOD_A == Math.round(r51) % MOD_A && k % MOD_B == Math.round(r39) % MOD_B) {
-          return k;
-        }
-      }
-
-      return 0; // fallback (should not happen)
-    }
-
-    /* ===== Reduce Motor Rotations to CRT Residues ===== */
-
-    public static double mod17(double motorRot) {
-      return positiveMod(motorRot, MOD_A);
-    }
-
-    public static double mod13(double motorRot) {
-      return positiveMod(motorRot, MOD_B);
-    }
-
-    private static double positiveMod(double value, double mod) {
-      double r = value % mod;
-      return (r < 0) ? r + mod : r;
+    public static double turretRotToRadians(double turretRot) {
+      return turretRot * 2.0 * Math.PI;
     }
   }
 }

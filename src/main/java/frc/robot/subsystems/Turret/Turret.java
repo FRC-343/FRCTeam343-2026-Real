@@ -79,11 +79,20 @@ public class Turret extends SubsystemBase {
     BobotState.updateR13AbsPos(this.inputs.r13Abspos);
     BobotState.updateR17AbsPos(this.inputs.r17Abspos);
 
-    double mod17 = BobotState.getR17AbsPos() * 1071.0;
-    double mod13 = BobotState.getR13AbsPos() * 819.0;
+    double r17 = BobotState.getR13AbsPos() * 17.0; // 13T gear → mod 17
+    double r13 = BobotState.getR17AbsPos() * 13.0; // 17T gear → mod 13
 
-    double motorPosMod221 = TurretCRT.reconstruct(mod17, mod13);
-    double turretRad = TurretCRT.motorRotToTurretRad(motorPosMod221);
+    // Reconstruct X in [0,221)
+    double X = TurretCRT.reconstruct(r17, r13);
+
+    // Convert to turret rotations
+    double turretRot = X / 221.0;
+
+    // Convert to radians
+    double turretRad = TurretCRT.turretRotToRadians(turretRot);
+
+    // Apply zero offset (store once at calibration)
+    // turretRad -= TURRET_ZERO_OFFSET_RAD;
 
     BobotState.updateTurretPos(turretRad);
   }
@@ -121,9 +130,11 @@ public class Turret extends SubsystemBase {
     return new RunCommand(() -> this.io.setPercentOutput(velocityRotPerSecond), this);
   }
 
-  /* Adding new commands down here to ease readability,
+  /*
+   * Adding new commands down here to ease readability,
    * at some point the above commands will be reorganized.
-   * Triggers might also be separated at a later date, potentially added to BobotState
+   * Triggers might also be separated at a later date, potentially added to
+   * BobotState
    */
   public Command setTurretPosition() {
     return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getMotorTarget()));

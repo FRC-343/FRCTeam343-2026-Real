@@ -203,7 +203,7 @@ public class RobotContainer {
 
     controller
         .leftBumper()
-        .whileTrue( 
+        .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-25)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
@@ -272,7 +272,7 @@ public class RobotContainer {
               BobotState.getGlobalPose().getRotation().getRadians(),
               BobotState.getTurretPosi());
 
-      double motorTarget = TurretCRT.turretRadToMotorRot(optimizedYaw);
+      double motorTarget = TurretCRT.turretRotToRadians(optimizedYaw);
 
       BobotState.updateMotorTarget(motorTarget);
       System.out.print("Motor target");
