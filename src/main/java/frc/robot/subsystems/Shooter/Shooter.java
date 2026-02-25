@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
@@ -48,19 +47,21 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public Command ShooterWithNoStop() {
-    return new RunCommand(() -> this.io.setPercentOutput(-.1), this);
-  }
-
-  public Command setVelocityCommand(double velocityRotPerSecond) {
-    return new InstantCommand(() -> this.io.setVelocity(velocityRotPerSecond), this);
-  }
-
   public Command setVelocityThenStopCommand(double velocityRotPerSecond) {
     return new RunCommand(() -> this.io.setVelocity(velocityRotPerSecond), this)
         .finallyDo(io::stop);
   }
 
+  public Command setPercentOutputThenStopCommand(double percentDecimal) {
+    // playMusic();
+    return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this).finallyDo(io::stop);
+  }
+
+  public Command stopCommand() {
+    return new InstantCommand(this.io::stop, this);
+  }
+
+  // Leaving these here for now, will see if we need them for auto later
   public Command runForTime(double speed, double time) { // -.5 for out .5 for in
     return new RunCommand(() -> this.io.setPercentOutput(speed), this)
         .withTimeout(time)
@@ -71,44 +72,5 @@ public class Shooter extends SubsystemBase {
     return new RunCommand(() -> this.io.setPercentOutputT1(speed), this)
         .withTimeout(time)
         .andThen(io::stop);
-  }
-
-  public Command setVelocityBeambreakCommand(double velocityRotPerSecond) {
-    return new RunCommand(() -> this.io.setVelocity(velocityRotPerSecond), this);
-  }
-
-  public Command setPercentOutputCommand(double velocityRotPerSecond) {
-    return new InstantCommand(() -> this.io.setPercentOutput(velocityRotPerSecond), this);
-  }
-
-  public Command setPercentOutputThenStopCommand(double percentDecimal) {
-    // playMusic();
-    return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this).finallyDo(io::stop);
-  }
-
-  public Command setPercentOutputThenStopCommandT1(double percentDecimal) {
-    // playMusic();
-    return new RunCommand(() -> this.io.setPercentOutputT1(percentDecimal), this)
-        .finallyDo(io::stop);
-  }
-
-  public Command setPercentOutputBeambreakCommand(double percentDecimal, Trigger test) {
-    return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this)
-        .onlyWhile(test)
-        .andThen(stopCommand());
-  }
-
-  public Command stopCommand() {
-    return new InstantCommand(this.io::stop, this);
-  }
-
-  // For testing and sim
-
-  public void playMusic() {
-    this.io.playMusic();
-  }
-
-  public void pauseMusic() {
-    this.io.pauseMusic();
   }
 }

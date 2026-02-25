@@ -45,15 +45,16 @@ public class Kicker extends SubsystemBase {
     }
   }
 
-  public Command setVelocityCommand(double velocityRotPerSecond) {
-    return new InstantCommand(() -> this.io.setVelocity(velocityRotPerSecond), this);
-  }
-
   public Command setVelocityThenStopCommand(double velocityRotPerSecond) {
     return new RunCommand(() -> this.io.setVelocity(velocityRotPerSecond), this)
         .finallyDo(io::stop);
   }
 
+  public Command stopCommand() {
+    return new InstantCommand(this.io::stop, this);
+  }
+
+  // Leaving these here for now, will see if we need them for auto later
   public Command runForTime(double speed, double time) { // -.5 for out .5 for in
     return new RunCommand(() -> this.io.setPercentOutput(speed), this)
         .withTimeout(time)
@@ -64,28 +65,5 @@ public class Kicker extends SubsystemBase {
     return new RunCommand(() -> this.io.setPercentOutputT1(speed), this)
         .withTimeout(time)
         .andThen(io::stop);
-  }
-
-  public Command setPercentOutputCommand(double velocityRotPerSecond) {
-    return new InstantCommand(() -> this.io.setPercentOutput(velocityRotPerSecond), this);
-  }
-
-  public Command setPercentOutputThenStopCommand(double percentDecimal) {
-    // playMusic();
-    return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this).finallyDo(io::stop);
-  }
-
-  public Command stopCommand() {
-    return new InstantCommand(this.io::stop, this);
-  }
-
-  // For testing and sim
-
-  public void playMusic() {
-    this.io.playMusic();
-  }
-
-  public void pauseMusic() {
-    this.io.pauseMusic();
   }
 }
