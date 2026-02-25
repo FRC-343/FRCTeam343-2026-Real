@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.ShooterHelper;
 import frc.robot.util.ShooterHelper.TurretCRT1;
 import frc.robot.util.ShooterHelper.TurretCRT2;
-
 import org.littletonrobotics.junction.Logger;
 
 /*
