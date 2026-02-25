@@ -108,7 +108,7 @@ public class ShooterHelper {
         }
       }
 
-      return bestYaw / 2; // NaN means "no valid solution"
+      return bestYaw; // NaN means "no valid solution"
     }
   }
 
@@ -151,9 +151,9 @@ public class ShooterHelper {
 
   public final class TurretCRT {
 
-    private static final int MOD_A = 17;
-    private static final int MOD_B = 13;
-    private static final int PERIOD = 221;
+    private static final int MOD_A = 1071;
+    private static final int MOD_B = 819;
+    private static final int PERIOD = 13923;
 
     // Precomputed modular inverses
     private static final int INV_13_MOD_17 = 4;
@@ -177,13 +177,16 @@ public class ShooterHelper {
 
     /* ===== Chinese Remainder Reconstruction ===== */
 
-    public static double reconstruct(double mod17, double mod13) {
+    public static double reconstruct(double r51, double r39) {
 
-      double x = (mod17 * 13 * INV_13_MOD_17 + mod13 * 17 * INV_17_MOD_13) % PERIOD;
+      // Solve using generalized CRT
+      for (int k = 0; k < PERIOD; k++) {
+        if (k % MOD_A == Math.round(r51) % MOD_A && k % MOD_B == Math.round(r39) % MOD_B) {
+          return k;
+        }
+      }
 
-      if (x < 0) x += PERIOD;
-
-      return x; // motor rotations mod 221
+      return 0; // fallback (should not happen)
     }
 
     /* ===== Reduce Motor Rotations to CRT Residues ===== */

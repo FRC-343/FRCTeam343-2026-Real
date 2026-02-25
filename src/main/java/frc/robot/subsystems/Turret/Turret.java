@@ -79,8 +79,8 @@ public class Turret extends SubsystemBase {
     BobotState.updateR13AbsPos(this.inputs.r13Abspos);
     BobotState.updateR17AbsPos(this.inputs.r17Abspos);
 
-    double mod17 = BobotState.getR17AbsPos() * 17.0;
-    double mod13 = BobotState.getR13AbsPos() * 13.0;
+    double mod17 = BobotState.getR17AbsPos() * 1071.0;
+    double mod13 = BobotState.getR13AbsPos() * 819.0;
 
     double motorPosMod221 = TurretCRT.reconstruct(mod17, mod13);
     double turretRad = TurretCRT.motorRotToTurretRad(motorPosMod221);

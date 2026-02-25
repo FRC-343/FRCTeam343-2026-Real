@@ -45,8 +45,8 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
   public TurretMotorTalonFX(int deviceId, int deviceId2, int deviceId3) {
     talon = new TalonFX(deviceId);
-    r13 = new CANcoder(deviceId2);
-    r17 = new CANcoder(deviceId3);
+    r13 = new CANcoder(deviceId3);
+    r17 = new CANcoder(deviceId2);
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();

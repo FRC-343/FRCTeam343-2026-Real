@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakeIOTalonFX(23, false);
+        io = new IntakeIOTalonFX(19, 20, true);
         break;
       case SIM:
         io = new IntakeIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));

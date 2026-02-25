@@ -40,9 +40,9 @@ public final class Constants {
     public static final double TURRET_MAX_RAD = Math.toRadians(150);
 
     // ===== Gear Math =====
-    public static final int CRT_MOD_A = 17;
-    public static final int CRT_MOD_B = 13;
-    public static final int CRT_PERIOD = 221; // 17 * 13
+    public static final int CRT_MOD_A = 1071;
+    public static final int CRT_MOD_B = 819;
+    public static final int CRT_PERIOD = 13923; // 17 * 13
 
     // Motor rotations per turret rotation
     public static final double MOTOR_ROT_PER_TURRET_ROT = 221.0 / 7.0;

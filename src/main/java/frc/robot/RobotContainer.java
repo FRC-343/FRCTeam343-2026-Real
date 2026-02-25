@@ -21,6 +21,7 @@ import frc.robot.TargetTest.DashboardTarget;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.Spindexer.Spindexer;
 import frc.robot.subsystems.Turret.Turret;
@@ -59,6 +60,8 @@ public class RobotContainer {
 
   private final BobotState test;
 
+  private final Intake intake;
+
   private final DashboardTarget test2;
 
   // Controller
@@ -94,6 +97,7 @@ public class RobotContainer {
         turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
+        intake = new Intake();
 
         break;
 
@@ -112,7 +116,7 @@ public class RobotContainer {
         turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
-
+        intake = new Intake();
         break;
 
       default:
@@ -131,7 +135,7 @@ public class RobotContainer {
         turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
-
+        intake = new Intake();
         break;
     }
 
@@ -199,12 +203,14 @@ public class RobotContainer {
 
     controller
         .leftBumper()
-        .whileTrue(
+        .whileTrue( 
             spindexer
-                .setVelocityThenStopCommand(-35)
+                .setVelocityThenStopCommand(-25)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
 
     controller.rightBumper().whileTrue(turret.setTurretPosition());
+
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
 
   /**
@@ -266,12 +272,10 @@ public class RobotContainer {
               BobotState.getGlobalPose().getRotation().getRadians(),
               BobotState.getTurretPosi());
 
-      if (!Double.isNaN(optimizedYaw)) {
+      double motorTarget = TurretCRT.turretRadToMotorRot(optimizedYaw);
 
-        double motorTarget = TurretCRT.turretRadToMotorRot(optimizedYaw);
-
-        BobotState.updateMotorTarget(motorTarget);
-      }
+      BobotState.updateMotorTarget(motorTarget);
+      System.out.print("Motor target");
 
       Translation2d intercept =
           targetXY.plus(
