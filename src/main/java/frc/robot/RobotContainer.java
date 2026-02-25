@@ -36,7 +36,8 @@ import frc.robot.util.CommandCustomController;
 import frc.robot.util.ShooterHelper.HoodAim;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretAim;
-import frc.robot.util.ShooterHelper.TurretCRT;
+import frc.robot.util.ShooterHelper.TurretCRT1;
+import frc.robot.util.ShooterHelper.TurretCRT2;
 import frc.robot.util.ShooterHelper.TurretYawLimiter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -201,14 +202,22 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
+    // controller
+    //     .leftBumper()
+    //     .whileTrue(
+    //         spindexer
+    //             .setVelocityThenStopCommand(-25)
+    //             .alongWith(kicker.setVelocityThenStopCommand(40)));
+
+    controller.rightBumper().whileTrue(turret.setTurretPosition1());
     controller
         .leftBumper()
         .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-25)
-                .alongWith(kicker.setVelocityThenStopCommand(40)));
-
-    controller.rightBumper().whileTrue(turret.setTurretPosition());
+            turret.setTurretPosition2(
+                TurretCRT2.calculateTurretSetpointRadians(
+                    test2.getTarget(),
+                    BobotState.getGlobalPose(),
+                    Rotation2d.fromRotations(BobotState.getTurretPosi2()))));
 
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
@@ -270,11 +279,11 @@ public class RobotContainer {
           TurretYawLimiter.optimizeYaw(
               yaw,
               BobotState.getGlobalPose().getRotation().getRadians(),
-              BobotState.getTurretPosi());
+              BobotState.getTurretPosi1());
 
-      double motorTarget = TurretCRT.turretRotToRadians(optimizedYaw);
+      double motorTarget1 = TurretCRT1.turretRotToRadians(optimizedYaw);
 
-      BobotState.updateMotorTarget(motorTarget);
+      BobotState.updateMotorTarget1(motorTarget1);
       System.out.print("Motor target");
 
       Translation2d intercept =

@@ -48,11 +48,11 @@ public class BobotState extends VirtualSubsystem {
   private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
 
   /*
-   *  Adding new Tracking info below this
+   * Adding new Tracking info below this
    *
-   *  This will not have the update calls
-   *  those will be added below the other update calls
-   *  and it will have a section similar to this
+   * This will not have the update calls
+   * those will be added below the other update calls
+   * and it will have a section similar to this
    *
    */
 
@@ -75,7 +75,9 @@ public class BobotState extends VirtualSubsystem {
 
   private static double HoodPos; // this will store the hood position
 
-  private static double TurretPos; // this will store the turret position
+  private static double TurretPos1; // this will store the turret position
+
+  private static double TurretPos2; // this will store the turret position
 
   private static double TurretMotorPos; // this will store the turret position
 
@@ -91,11 +93,15 @@ public class BobotState extends VirtualSubsystem {
 
   private static double r13;
 
-  private static double motorTarget;
+  private static double motorTarget1;
+
+  private static double motorTarget2;
 
   private static double r17AbsPos;
 
   private static double r13AbsPos;
+
+  private static double rotVel;
 
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
@@ -119,6 +125,10 @@ public class BobotState extends VirtualSubsystem {
 
   public static void updateGlobalPose(Pose2d pose) {
     BobotState.globalPose = pose;
+  }
+
+  public static void updateAngVelo(double rate) {
+    BobotState.rotVel = rate;
   }
 
   /*
@@ -148,8 +158,12 @@ public class BobotState extends VirtualSubsystem {
     BobotState.ShooterRPM = RPM;
   }
 
-  public static void updateTurretPos(double pose) {
-    BobotState.TurretPos = pose;
+  public static void updateTurretPos1(double pose) {
+    BobotState.TurretPos1 = pose;
+  }
+
+  public static void updateTurretPos2(double pose) {
+    BobotState.TurretPos2 = pose;
   }
 
   public static void updateTurretMotorPos(double pose) {
@@ -181,12 +195,20 @@ public class BobotState extends VirtualSubsystem {
     BobotState.r17AbsPos = r17;
   }
 
-  public static void updateMotorTarget(double motorTarget) {
-    BobotState.motorTarget = motorTarget;
+  public static void updateMotorTarget1(double motorTarget) {
+    BobotState.motorTarget1 = motorTarget;
+  }
+
+  public static void updateMotorTarget2(double motorTarget) {
+    BobotState.motorTarget2 = motorTarget;
   }
 
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
+  }
+
+  public static double getRobotRotVelo() {
+    return BobotState.rotVel;
   }
 
   /*
@@ -215,8 +237,12 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.roboChassisSpeeds;
   }
 
-  public static double getTurretPosi() {
-    return BobotState.TurretPos;
+  public static double getTurretPosi1() {
+    return BobotState.TurretPos1;
+  }
+
+  public static double getTurretPosi2() {
+    return BobotState.TurretPos2;
   }
 
   public static double getTurretMotorPosi() {
@@ -231,8 +257,12 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.hubTracker.getRotationTarget();
   }
 
-  public static double getMotorTarget() {
-    return BobotState.motorTarget;
+  public static double getMotorTarget1() {
+    return BobotState.motorTarget1;
+  }
+
+  public static double getMotorTarget2() {
+    return BobotState.motorTarget2;
   }
 
   public static double getR13AbsPos() {
@@ -252,9 +282,9 @@ public class BobotState extends VirtualSubsystem {
   }
 
   // public static TargetAngleTracker getClosestAlignmentTracker() {
-  //   return autoAlignmentTrackers.stream()
-  //       .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)
-  //       .get();
+  // return autoAlignmentTrackers.stream()
+  // .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)
+  // .get();
   // }
 
   @Override
@@ -276,7 +306,9 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "RobotPose", globalPose);
 
-    Logger.recordOutput(logRoot + "Turret Active Position", TurretPos);
+    Logger.recordOutput(logRoot + "Turret Active Position 1", TurretPos1);
+
+    Logger.recordOutput(logRoot + "Turret Active Position 2", TurretPos2);
 
     Logger.recordOutput(logRoot + "Robot Speed", roboChassisSpeeds);
 
@@ -284,15 +316,19 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Turret Target", TurretTarget);
 
-    Logger.recordOutput(logRoot + "Turret Max limit", Constants.TurretConstants.TURRET_MAX_RAD);
+    Logger.recordOutput(
+        logRoot + "Turret Max limit", Constants.TurretConstants.FORWARDLIMITDEGREES);
 
-    Logger.recordOutput(logRoot + "Turret Min limit", Constants.TurretConstants.TURRET_MIN_RAD);
+    Logger.recordOutput(
+        logRoot + "Turret Min limit", Constants.TurretConstants.REVERSELIMITDEGREES);
 
     Logger.recordOutput(logRoot + "Ratio 17 target", r17);
 
     Logger.recordOutput(logRoot + "Ratio 13 target", r13);
 
-    Logger.recordOutput(logRoot + "Motor target", motorTarget);
+    Logger.recordOutput(logRoot + "Motor target 1", motorTarget1);
+
+    Logger.recordOutput(logRoot + "Motor target 2", motorTarget2);
 
     Logger.recordOutput(logRoot + "Ratio 17 Abs position", r17AbsPos);
 
@@ -300,10 +336,13 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Turret motor position", TurretMotorPos);
 
+    Logger.recordOutput(logRoot + "Robot rotational velocity", rotVel);
+
     // {
-    //   String calcLogRoot = logRoot + "ClosestAlignment/";
-    //   Logger.recordOutput(
-    //       calcLogRoot + "Type", getClosestAlignmentTracker().getClass().getSimpleName());
+    // String calcLogRoot = logRoot + "ClosestAlignment/";
+    // Logger.recordOutput(
+    // calcLogRoot + "Type",
+    // getClosestAlignmentTracker().getClass().getSimpleName());
     // }
 
     {

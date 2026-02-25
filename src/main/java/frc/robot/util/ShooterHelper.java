@@ -1,8 +1,13 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
+import frc.robot.bobot_state2.BobotState;
 
 public class ShooterHelper {
 
@@ -37,8 +42,11 @@ public class ShooterHelper {
       // velocity squared term
       double v2 = exitVelocity * exitVelocity;
 
-      /*more self explanatory than was previously, simulates parabolic arc of grav on ball
-      and returns the y-position*/
+      /*
+       * more self explanatory than was previously, simulates parabolic arc of grav on
+       * ball
+       * and returns the y-position
+       */
       double SimGravOnBall =
           v2 * v2 - g * (g * horizontalDistance * horizontalDistance + 2 * heightDifference * v2);
 
@@ -96,8 +104,8 @@ public class ShooterHelper {
       for (double candidate : candidates) {
 
         // Enforce hard + soft limits
-        if (candidate < Constants.TurretConstants.TURRET_MIN_RAD + SOFT_MARGIN_RAD) continue;
-        if (candidate > Constants.TurretConstants.TURRET_MAX_RAD - SOFT_MARGIN_RAD) continue;
+        if (candidate < Constants.TurretConstants.REVERSELIMITDEGREES + SOFT_MARGIN_RAD) continue;
+        if (candidate > Constants.TurretConstants.FORWARDLIMITDEGREES - SOFT_MARGIN_RAD) continue;
 
         // Cost = smallest movement from current turret angle
         double cost = Math.abs(MathUtil.angleModulus(candidate - currentTurretRad));
@@ -149,7 +157,7 @@ public class ShooterHelper {
     }
   }
 
-  public final class TurretCRT {
+  public final class TurretCRT1 {
 
     private static final int MOD_A = 17; // from 13T encoder
     private static final int MOD_B = 13; // from 17T encoder
@@ -160,7 +168,7 @@ public class ShooterHelper {
     // Precomputed inverse of 17 mod 13
     private static final int INV_17_MOD_13 = 10;
 
-    private TurretCRT() {}
+    private TurretCRT1() {}
 
     public static double reconstruct(double r17, double r13) {
 
@@ -180,6 +188,95 @@ public class ShooterHelper {
 
     public static double turretRotToRadians(double turretRot) {
       return turretRot * 2.0 * Math.PI;
+    }
+  }
+
+  public final class TurretCRT2 {
+    public static double calculateTurretAngleFromCANCoderDegrees(double e1, double e2) {
+      double difference = e2 - e1;
+      if (difference > 250) {
+        difference -= 360;
+      }
+      if (difference < -250) {
+        difference += 360;
+      }
+      difference *= TurretConstants.SLOPE;
+
+      double e1Rotations =
+          (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT)
+              / 360.0;
+      double e1RotationsFloored = Math.floor(e1Rotations);
+      double turretAngle =
+          (e1RotationsFloored * 360.0 + e1)
+              * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
+      if (turretAngle - difference < -100) {
+        turretAngle +=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      } else if (turretAngle - difference > 100) {
+        turretAngle -=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      }
+      return turretAngle;
+    }
+
+    public static double convertToClosestBoundedTurretAngleRadians(double targetAngleDegrees) {
+      return Units.degreesToRadians(
+          convertToClosestBoundedTurretAngleDegrees(
+              targetAngleDegrees, Rotation2d.fromRotations(BobotState.getTurretPosi2())));
+    }
+
+    public static double calculateTurretSetpointRadians(
+        Translation2d fieldTarget, Pose2d robotPose, Rotation2d currentTurretAngle) {
+
+      Translation2d robotToTarget = fieldTarget.minus(robotPose.getTranslation());
+
+      Rotation2d fieldAngle = new Rotation2d(robotToTarget.getX(), robotToTarget.getY());
+
+      Rotation2d robotRelative = fieldAngle.minus(robotPose.getRotation());
+
+      double baseTargetRad = robotRelative.getRadians();
+
+      double k = 0.213; // tune this
+      double compensatedTargetRad = baseTargetRad + (k * BobotState.getRobotRotVelo());
+
+      return convertToClosestBoundedTurretAngleRadians(
+          Units.radiansToDegrees(compensatedTargetRad));
+    }
+
+    public static double convertToClosestBoundedTurretAngleDegrees(
+        double targetAngleDegrees, Rotation2d current) {
+
+      double currentTotalRadians = current.getRotations() * 2 * Math.PI;
+
+      double targetRadians = Units.degreesToRadians(targetAngleDegrees);
+      double currentWrapped = current.getRadians();
+
+      double closestOffset = targetRadians - currentWrapped;
+
+      // Wrap to [-π, π]
+      closestOffset = Math.atan2(Math.sin(closestOffset), Math.cos(closestOffset));
+
+      double finalRadians = currentTotalRadians + closestOffset;
+
+      // Enforce ±350°
+      double forwardLimit = Units.degreesToRadians(TurretConstants.FORWARDLIMITDEGREES);
+      double reverseLimit = Units.degreesToRadians(TurretConstants.REVERSELIMITDEGREES);
+
+      if (finalRadians > forwardLimit) {
+        finalRadians = forwardLimit;
+      } else if (finalRadians < reverseLimit) {
+        finalRadians = reverseLimit;
+      }
+
+      return Units.radiansToDegrees(finalRadians);
+    }
+
+    public static double turretRadiansToMotorRotations(double turretRadians) {
+      return (turretRadians / (2 * Math.PI)) * TurretConstants.MOTOR_TO_TURRET_RATIO;
+    }
+
+    public static double motorRotationsToTurretRadians(double motorRotations) {
+      return (motorRotations / TurretConstants.MOTOR_TO_TURRET_RATIO) * (2 * Math.PI);
     }
   }
 }

@@ -216,6 +216,7 @@ public class Drive extends SubsystemBase {
 
     BobotState.updateGlobalPose(getPose());
     BobotState.updateRoboChassisSpeed(getChassisSpeeds());
+    BobotState.updateAngVelo(gyroInputs.yawVelocityRadPerSec);
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }

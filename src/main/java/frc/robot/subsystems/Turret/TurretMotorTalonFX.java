@@ -18,6 +18,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
+import frc.robot.util.ShooterHelper.TurretCRT2;
 
 public class TurretMotorTalonFX implements TurretMotorIO {
   private final TalonFX talon;
@@ -79,13 +80,20 @@ public class TurretMotorTalonFX implements TurretMotorIO {
     StatusSignal.setUpdateFrequencyForAll(
         10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
     talon.optimizeBusUtilization();
+
+    double startAngle =
+        TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
+            r17.getAbsolutePosition().getValueAsDouble(),
+            r13.getAbsolutePosition().getValueAsDouble());
+
+    setStatorPosition(startAngle);
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {
     StatusSignal.refreshAll(velocity, dutyCycle, voltage, position, r13Abspos, r17Abspos);
     inputs.masterAppliedVolts = voltage.getValueAsDouble();
     inputs.masterVelocityRadPerSec = velocity.getValueAsDouble();
-    inputs.masterPositionRad = position.getValueAsDouble();
+    inputs.masterPositionRot = position.getValueAsDouble();
     inputs.masterCurrentAmps = current.getValueAsDouble();
 
     inputs.r13Abspos = r13Abspos.getValueAsDouble();
@@ -123,5 +131,10 @@ public class TurretMotorTalonFX implements TurretMotorIO {
   @Override
   public void resetEncoder() {
     talon.setPosition(0);
+  }
+
+  @Override
+  public void setStatorPosition(double position) {
+    talon.setPosition(position, 0.010);
   }
 }

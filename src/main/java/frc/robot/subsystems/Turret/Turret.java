@@ -8,7 +8,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.ShooterHelper.TurretCRT;
+import frc.robot.util.ShooterHelper;
+import frc.robot.util.ShooterHelper.TurretCRT1;
+import frc.robot.util.ShooterHelper.TurretCRT2;
+
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -53,18 +56,19 @@ public class Turret extends SubsystemBase {
     double r13 = BobotState.getR17AbsPos() * 13.0; // 17T gear → mod 13
 
     // Reconstruct X in [0,221)
-    double X = TurretCRT.reconstruct(r17, r13);
+    double X = TurretCRT1.reconstruct(r17, r13);
 
     // Convert to turret rotations
     double turretRot = X / 221.0;
 
     // Convert to radians
-    double turretRad = TurretCRT.turretRotToRadians(turretRot);
+    double turretRad = TurretCRT1.turretRotToRadians(turretRot);
 
     // Apply zero offset (store once at calibration)
     // turretRad -= TURRET_ZERO_OFFSET_RAD;
 
-    BobotState.updateTurretPos(turretRad);
+    BobotState.updateTurretPos1(turretRad);
+    BobotState.updateTurretPos2(this.inputs.masterPositionRot);
   }
 
   // Command to stop the motor
@@ -76,7 +80,12 @@ public class Turret extends SubsystemBase {
     return new InstantCommand(this.io::resetEncoder, this);
   }
 
-  public Command setTurretPosition() {
-    return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getMotorTarget()));
+  public Command setTurretPosition1() {
+    return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getMotorTarget1()));
+  }
+
+  public Command setTurretPosition2(double target) {
+    double targetRot = TurretCRT2.turretRadiansToMotorRotations(target);
+    return new RunCommand(() -> this.io.setTurretPosition(-targetRot));
   }
 }
