@@ -103,6 +103,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static double rotVel;
 
+  private static double difference;
+
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
   }
@@ -203,6 +205,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.motorTarget2 = motorTarget;
   }
 
+  public static void updateDifference(double difference) {
+    BobotState.difference = difference;
+  }
+
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
   }
@@ -273,6 +279,14 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.r17AbsPos;
   }
 
+  public static Translation2d getTurretTarget() {
+    return BobotState.TurretTarget;
+  }
+
+  public static double getDifference() {
+    return BobotState.difference;
+  }
+
   public static Trigger onTeamSide() {
     return new Trigger(
         () ->
@@ -337,6 +351,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Turret motor position", TurretMotorPos);
 
     Logger.recordOutput(logRoot + "Robot rotational velocity", rotVel);
+
+    Logger.recordOutput(logRoot + "Encoder difference", difference);
 
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";

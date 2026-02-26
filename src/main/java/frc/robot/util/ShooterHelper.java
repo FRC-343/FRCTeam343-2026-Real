@@ -193,13 +193,15 @@ public class ShooterHelper {
 
   public final class TurretCRT2 {
     public static double calculateTurretAngleFromCANCoderDegrees(double e1, double e2) {
-      double difference = e2 - e1;
+      double difference = Units.rotationsToDegrees(e2) - Units.rotationsToDegrees(e1);
       if (difference > 250) {
         difference -= 360;
       }
       if (difference < -250) {
         difference += 360;
       }
+      BobotState.updateDifference(difference);
+
       difference *= TurretConstants.SLOPE;
 
       double e1Rotations =
@@ -209,20 +211,23 @@ public class ShooterHelper {
       double turretAngle =
           (e1RotationsFloored * 360.0 + e1)
               * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
-      if (turretAngle - difference < -100) {
-        turretAngle +=
-            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-      } else if (turretAngle - difference > 100) {
-        turretAngle -=
-            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-      }
-      return turretAngle;
+      // if (turretAngle - difference < -100) {
+      //   turretAngle +=
+      //       TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      // } else if (turretAngle - difference > 100) {
+      //   turretAngle -=
+      //       TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      // }
+      return Units.degreesToRotations(turretAngle);
     }
 
-    public static double convertToClosestBoundedTurretAngleRadians(double targetAngleDegrees) {
+    public static double convertToClosestBoundedTurretAngleRadians(
+        double targetAngleDegrees, Rotation2d currentRotation) {
+      // System.out.println(targetAngleDegrees);
       return Units.degreesToRadians(
-          convertToClosestBoundedTurretAngleDegrees(
-              targetAngleDegrees, Rotation2d.fromRotations(BobotState.getTurretPosi2())));
+          // convertToClosestBoundedTurretAngleDegrees(
+          targetAngleDegrees);
+      // , currentRotation));
     }
 
     public static double calculateTurretSetpointRadians(
@@ -236,11 +241,10 @@ public class ShooterHelper {
 
       double baseTargetRad = robotRelative.getRadians();
 
-      double k = 0.213; // tune this
-      double compensatedTargetRad = baseTargetRad + (k * BobotState.getRobotRotVelo());
+      // double k = 0.213; // tune this
+      // double compensatedTargetRad = baseTargetRad + (k * BobotState.getRobotRotVelo());
 
-      return convertToClosestBoundedTurretAngleRadians(
-          Units.radiansToDegrees(compensatedTargetRad));
+      return baseTargetRad;
     }
 
     public static double convertToClosestBoundedTurretAngleDegrees(
@@ -263,11 +267,10 @@ public class ShooterHelper {
       double reverseLimit = Units.degreesToRadians(TurretConstants.REVERSELIMITDEGREES);
 
       if (finalRadians > forwardLimit) {
-        finalRadians = forwardLimit;
+        finalRadians = forwardLimit - .5;
       } else if (finalRadians < reverseLimit) {
-        finalRadians = reverseLimit;
+        finalRadians = reverseLimit + .5;
       }
-
       return Units.radiansToDegrees(finalRadians);
     }
 

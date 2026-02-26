@@ -12,11 +12,13 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
 import frc.robot.util.ShooterHelper.TurretCRT2;
 
@@ -64,7 +66,10 @@ public class TurretMotorTalonFX implements TurretMotorIO {
         .getConfigurator()
         .apply(
             new TalonFXConfiguration()
-                .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake))
+                .withMotorOutput(
+                    new MotorOutputConfigs()
+                        .withNeutralMode(NeutralModeValue.Brake)
+                        .withInverted(InvertedValue.Clockwise_Positive))
                 .withSlot0(
                     new Slot0Configs().withKV(0.12).withKA(.01).withKP(10).withKI(0).withKD(.1))
                 .withMotionMagic(
@@ -87,6 +92,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
             r13.getAbsolutePosition().getValueAsDouble());
 
     setStatorPosition(startAngle);
+    BobotState.updateMotorTarget1(startAngle);
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {

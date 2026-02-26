@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.bobot_state2.BobotState;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
 import frc.robot.field.HubFaces;
@@ -66,6 +67,7 @@ public class DashboardTarget {
                         : -FieldConstants.tagToHub,
                     0.0))
             .getY();
+    BobotState.updateTurretTarget(new Translation2d(x, y));
     return new Translation2d(x, y);
   }
 }

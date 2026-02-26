@@ -8,7 +8,7 @@ public interface TurretMotorIO {
   @AutoLog
   public static class TurretMotorIOInputs {
     public boolean masterConnected;
-    public double masterPositionRot = 0.0;
+    public double masterPositionRot;
     public double masterVelocityRadPerSec = 0.0;
     public double masterAppliedVolts = 0.0;
     public double masterCurrentAmps = 0.0;

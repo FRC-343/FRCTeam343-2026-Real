@@ -9,10 +9,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,12 +29,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAim;
-import frc.robot.util.ShooterHelper.TimeOfFlight;
-import frc.robot.util.ShooterHelper.TurretAim;
-import frc.robot.util.ShooterHelper.TurretCRT1;
 import frc.robot.util.ShooterHelper.TurretCRT2;
-import frc.robot.util.ShooterHelper.TurretYawLimiter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -202,22 +193,15 @@ public class RobotContainer {
     //                 drive)
     //             .ignoringDisable(true));
 
-    // controller
-    //     .leftBumper()
-    //     .whileTrue(
-    //         spindexer
-    //             .setVelocityThenStopCommand(-25)
-    //             .alongWith(kicker.setVelocityThenStopCommand(40)));
-
-    controller.rightBumper().whileTrue(turret.setTurretPosition1());
     controller
         .leftBumper()
         .whileTrue(
-            turret.setTurretPosition2(
-                TurretCRT2.calculateTurretSetpointRadians(
-                    test2.getTarget(),
-                    BobotState.getGlobalPose(),
-                    Rotation2d.fromRotations(BobotState.getTurretPosi2()))));
+            spindexer
+                .setVelocityThenStopCommand(-25)
+                .alongWith(kicker.setVelocityThenStopCommand(40)));
+
+    // controller.rightBumper().whileTrue(turret.setTurretPosition1());
+    controller.rightBumper().whileTrue(turret.setTurretPosition2());
 
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
@@ -233,73 +217,85 @@ public class RobotContainer {
 
   public void ShooterCalcs() {
 
-    /* Field Speed converts robot speed to field speeds for easier math */
-    ChassisSpeeds fieldSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
+    // /* Field Speed converts robot speed to field speeds for easier math */
+    // ChassisSpeeds fieldSpeeds =
+    //     ChassisSpeeds.fromRobotRelativeSpeeds(
+    //         BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
 
-    /* Gets the robot velocity using the converted field speeds */
-    Translation2d robotVelocityXY =
-        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+    // /* Gets the robot velocity using the converted field speeds */
+    // Translation2d robotVelocityXY =
+    //     new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
-    /* Gets the shooter position on the robot */
-    Translation2d shooterXY =
-        BobotState.getGlobalPose()
-            .transformBy(
-                new Transform2d(
-                    Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125), new Rotation2d()))
-            .getTranslation();
+    // /* Gets the shooter position on the robot */
+    // Translation2d shooterXY =
+    //     BobotState.getGlobalPose()
+    //         .transformBy(
+    //             new Transform2d(
+    //                 Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125), new
+    // Rotation2d()))
+    //         .getTranslation();
 
-    /* Gets the targerts position on the field
-     *
-     */
+    // /* Gets the targerts position on the field
+    //  *
+    //  */
 
-    Translation2d targetXY = test2.getTarget();
+    // Translation2d targetXY = test2.getTarget();
 
-    BobotState.updateTurretTarget(
-        targetXY); // This mainly used for sim to show the position the turret/hood is targeting.
+    // BobotState.updateTurretTarget(
+    //     targetXY); // This mainly used for sim to show the position the turret/hood is targeting.
 
-    /* Gets the fuel exit velocity this is used for the hood calculations */
-    double shooterExitVelocity =
-        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
+    // /* Gets the fuel exit velocity this is used for the hood calculations */
+    // double shooterExitVelocity =
+    //     BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
 
-    /* Call for the calculation that gets an estimated time that the fuel will be in the air from any give position/speed */
-    BobotState.updateToF(
-        TimeOfFlight.solveTime(
-            shooterXY, robotVelocityXY, targetXY, new Translation2d(), shooterExitVelocity));
+    // /* Call for the calculation that gets an estimated time that the fuel will be in the air from
+    // any give position/speed */
+    // BobotState.updateToF(
+    //     TimeOfFlight.solveTime(
+    //         shooterXY, robotVelocityXY, targetXY, new Translation2d(), shooterExitVelocity));
 
-    double time = BobotState.getToF(); // gives us an easier call for the TOF
+    // double time = BobotState.getToF(); // gives us an easier call for the TOF
 
-    if (!Double.isNaN(time)) { // If time is a real number do the calculations
+    // if (!Double.isNaN(time)) { // If time is a real number do the calculations
 
-      double yaw =
-          TurretAim.calculateYaw(shooterXY, robotVelocityXY, targetXY, new Translation2d(), time);
+    //   double yaw =
+    //       TurretAim.calculateYaw(shooterXY, robotVelocityXY, targetXY, new Translation2d(),
+    // time);
 
-      double optimizedYaw =
-          TurretYawLimiter.optimizeYaw(
-              yaw,
-              BobotState.getGlobalPose().getRotation().getRadians(),
-              BobotState.getTurretPosi1());
+    //   double optimizedYaw =
+    //       TurretYawLimiter.optimizeYaw(
+    //           yaw,
+    //           BobotState.getGlobalPose().getRotation().getRadians(),
+    //           BobotState.getTurretPosi1());
 
-      double motorTarget1 = TurretCRT1.turretRotToRadians(optimizedYaw);
+    //   double motorTarget1 = TurretCRT1.turretRotToRadians(optimizedYaw);
 
-      BobotState.updateMotorTarget1(motorTarget1);
-      System.out.print("Motor target");
+    //   BobotState.updateMotorTarget1(motorTarget1);
+    //   System.out.print("Motor target");
 
-      Translation2d intercept =
-          targetXY.plus(
-              robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the target
+    //   Translation2d intercept =
+    //       targetXY.plus(
+    //           robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the
+    // target
 
-      double distance =
-          intercept.getDistance(
-              shooterXY); // Gets the distance from the shooter to the intercept position.
+    //   double distance =
+    //       intercept.getDistance(
+    //           shooterXY); // Gets the distance from the shooter to the intercept position.
 
-      double hood =
-          HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood angle
+    //   double hood =
+    //       HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood
+    // angle
 
-      /* updates our call for the hood and turret */
-      BobotState.updateTurretYaw(optimizedYaw);
-      BobotState.updateHoodAngle(hood);
-    }
+    //   /* updates our call for the hood and turret */
+    //   BobotState.updateTurretYaw(optimizedYaw);
+    //   BobotState.updateHoodAngle(hood);
+    BobotState.updateTurretTarget(test2.getTarget());
+    BobotState.updateOptiTurretYaw(
+        TurretCRT2.turretRadiansToMotorRotations(
+            TurretCRT2.calculateTurretSetpointRadians(
+                BobotState.getTurretTarget(),
+                BobotState.getGlobalPose(),
+                Rotation2d.fromRotations(BobotState.getTurretPosi2()))));
   }
 }
+// }

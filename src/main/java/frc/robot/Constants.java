@@ -36,9 +36,9 @@ public final class Constants {
 
   public static final class TurretConstants {
 
-    public static final double FORWARDLIMITDEGREES = 350;
-    public static final double REVERSELIMITDEGREES = -350;
-    public static final double MOTOR_TO_TURRET_RATIO = 31.5714;
+    public static final double FORWARDLIMITDEGREES = 180;
+    public static final double REVERSELIMITDEGREES = -180;
+    public static final double MOTOR_TO_TURRET_RATIO = 221 / 21 * 3;
 
     // ===== Gear Math =====
     public static final int CRT_MOD_A = 17;
