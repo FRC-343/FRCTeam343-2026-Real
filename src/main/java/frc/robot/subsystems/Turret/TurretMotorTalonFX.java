@@ -14,6 +14,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -88,8 +90,8 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
     double startAngle =
         TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
-            r17.getAbsolutePosition().getValueAsDouble(),
-            r13.getAbsolutePosition().getValueAsDouble());
+            Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
+            Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
 
     setStatorPosition(startAngle);
     BobotState.updateMotorTarget1(startAngle);

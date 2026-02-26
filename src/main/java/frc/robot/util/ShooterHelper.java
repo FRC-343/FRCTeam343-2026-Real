@@ -157,50 +157,49 @@ public class ShooterHelper {
     }
   }
 
-  public final class TurretCRT1 {
+  // public final class TurretCRT1 {
 
-    private static final int MOD_A = 17; // from 13T encoder
-    private static final int MOD_B = 13; // from 17T encoder
-    private static final int PERIOD = 221; // 17 * 13
+  //   private static final int MOD_A = 17; // from 13T encoder
+  //   private static final int MOD_B = 13; // from 17T encoder
+  //   private static final int PERIOD = 221; // 17 * 13
 
-    // Precomputed inverse of 13 mod 17
-    private static final int INV_13_MOD_17 = 4;
-    // Precomputed inverse of 17 mod 13
-    private static final int INV_17_MOD_13 = 10;
+  //   // Precomputed inverse of 13 mod 17
+  //   private static final int INV_13_MOD_17 = 4;
+  //   // Precomputed inverse of 17 mod 13
+  //   private static final int INV_17_MOD_13 = 10;
 
-    private TurretCRT1() {}
+  //   private TurretCRT1() {}
 
-    public static double reconstruct(double r17, double r13) {
+  //   public static double reconstruct(double r17, double r13) {
 
-      int a = mod(Math.round(r17), MOD_A);
-      int b = mod(Math.round(r13), MOD_B);
+  //     int a = mod(Math.round(r17), MOD_A);
+  //     int b = mod(Math.round(r13), MOD_B);
 
-      // Standard CRT formula
-      int x = (int) ((a * MOD_B * INV_13_MOD_17 + b * MOD_A * INV_17_MOD_13) % PERIOD);
+  //     // Standard CRT formula
+  //     int x = (int) ((a * MOD_B * INV_13_MOD_17 + b * MOD_A * INV_17_MOD_13) % PERIOD);
 
-      return mod(x, PERIOD);
-    }
+  //     return mod(x, PERIOD);
+  //   }
 
-    private static int mod(long x, int m) {
-      int r = (int) (x % m);
-      return (r < 0) ? r + m : r;
-    }
+  //   private static int mod(long x, int m) {
+  //     int r = (int) (x % m);
+  //     return (r < 0) ? r + m : r;
+  //   }
 
-    public static double turretRotToRadians(double turretRot) {
-      return turretRot * 2.0 * Math.PI;
-    }
-  }
+  //   public static double turretRotToRadians(double turretRot) {
+  //     return turretRot * 2.0 * Math.PI;
+  //   }
+  // }
 
   public final class TurretCRT2 {
     public static double calculateTurretAngleFromCANCoderDegrees(double e1, double e2) {
-      double difference = Units.rotationsToDegrees(e2) - Units.rotationsToDegrees(e1);
+      double difference = e2 - e1;
       if (difference > 250) {
         difference -= 360;
       }
       if (difference < -250) {
         difference += 360;
       }
-      BobotState.updateDifference(difference);
 
       difference *= TurretConstants.SLOPE;
 
@@ -211,24 +210,16 @@ public class ShooterHelper {
       double turretAngle =
           (e1RotationsFloored * 360.0 + e1)
               * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
-      // if (turretAngle - difference < -100) {
-      //   turretAngle +=
-      //       TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-      // } else if (turretAngle - difference > 100) {
-      //   turretAngle -=
-      //       TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-      // }
+      if (turretAngle - difference < -100) {
+        turretAngle +=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      } else if (turretAngle - difference > 100) {
+        turretAngle -=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      }
       return Units.degreesToRotations(turretAngle);
     }
 
-    public static double convertToClosestBoundedTurretAngleRadians(
-        double targetAngleDegrees, Rotation2d currentRotation) {
-      // System.out.println(targetAngleDegrees);
-      return Units.degreesToRadians(
-          // convertToClosestBoundedTurretAngleDegrees(
-          targetAngleDegrees);
-      // , currentRotation));
-    }
 
     public static double calculateTurretSetpointRadians(
         Translation2d fieldTarget, Pose2d robotPose, Rotation2d currentTurretAngle) {
@@ -241,37 +232,8 @@ public class ShooterHelper {
 
       double baseTargetRad = robotRelative.getRadians();
 
-      // double k = 0.213; // tune this
-      // double compensatedTargetRad = baseTargetRad + (k * BobotState.getRobotRotVelo());
 
       return baseTargetRad;
-    }
-
-    public static double convertToClosestBoundedTurretAngleDegrees(
-        double targetAngleDegrees, Rotation2d current) {
-
-      double currentTotalRadians = current.getRotations() * 2 * Math.PI;
-
-      double targetRadians = Units.degreesToRadians(targetAngleDegrees);
-      double currentWrapped = current.getRadians();
-
-      double closestOffset = targetRadians - currentWrapped;
-
-      // Wrap to [-π, π]
-      closestOffset = Math.atan2(Math.sin(closestOffset), Math.cos(closestOffset));
-
-      double finalRadians = currentTotalRadians + closestOffset;
-
-      // Enforce ±350°
-      double forwardLimit = Units.degreesToRadians(TurretConstants.FORWARDLIMITDEGREES);
-      double reverseLimit = Units.degreesToRadians(TurretConstants.REVERSELIMITDEGREES);
-
-      if (finalRadians > forwardLimit) {
-        finalRadians = forwardLimit - .5;
-      } else if (finalRadians < reverseLimit) {
-        finalRadians = reverseLimit + .5;
-      }
-      return Units.radiansToDegrees(finalRadians);
     }
 
     public static double turretRadiansToMotorRotations(double turretRadians) {
