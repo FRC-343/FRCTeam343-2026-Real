@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
-import frc.robot.bobot_state2.BobotState;
 
 public class ShooterHelper {
 
@@ -220,7 +219,6 @@ public class ShooterHelper {
       return Units.degreesToRotations(turretAngle);
     }
 
-
     public static double calculateTurretSetpointRadians(
         Translation2d fieldTarget, Pose2d robotPose, Rotation2d currentTurretAngle) {
 
@@ -231,7 +229,6 @@ public class ShooterHelper {
       Rotation2d robotRelative = fieldAngle.minus(robotPose.getRotation());
 
       double baseTargetRad = robotRelative.getRadians();
-
 
       return baseTargetRad;
     }
