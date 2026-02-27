@@ -18,6 +18,7 @@ public interface TurretMotorIO {
 
     public Rotation2d extentionPos = new Rotation2d();
   }
+
   /** Updates the set of loggable inputs. */
   public default void updateInputs(TurretMotorIOInputs inputs) {}
 

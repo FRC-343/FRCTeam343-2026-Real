@@ -55,8 +55,8 @@ public final class Constants {
     public static final double GEAR_2_TOOTH_COUNT = 13.0;
 
     public static final double SLOPE =
-        (GEAR_2_TOOTH_COUNT * GEAR_1_TOOTH_COUNT)
-            / ((GEAR_1_TOOTH_COUNT - GEAR_2_TOOTH_COUNT) * GEAR_0_TOOTH_COUNT);
+        ((GEAR_2_TOOTH_COUNT * GEAR_1_TOOTH_COUNT)
+            / ((GEAR_1_TOOTH_COUNT - GEAR_2_TOOTH_COUNT) * GEAR_0_TOOTH_COUNT));
   }
 
   public static final class ShooterConstants {

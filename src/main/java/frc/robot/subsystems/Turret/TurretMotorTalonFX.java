@@ -21,12 +21,14 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
-import frc.robot.util.ShooterHelper.TurretCRT2;
+import frc.robot.util.ShooterHelper.TurretCRT3;
 
 public class TurretMotorTalonFX implements TurretMotorIO {
   private final TalonFX talon;
   private final CANcoder r13;
   private final CANcoder r17;
+
+  // private final EasyCRT easyCRT;
 
   // private final SparkBase encoder = new SparkMax(25, null);
   // private final AbsoluteEncoder absEnc;
@@ -80,20 +82,27 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                         .withMotionMagicJerk(200)));
     velocityVoltage.Slot = 0;
 
-    r13.getConfigurator().apply(new CANcoderConfiguration());
-    r17.getConfigurator().apply(new CANcoderConfiguration());
+    r13.getConfigurator().apply(new CANcoderConfiguration().MagnetSensor.withMagnetOffset(.229));
+    r17.getConfigurator().apply(new CANcoderConfiguration().MagnetSensor.withMagnetOffset(-.496));
 
     StatusSignal.setUpdateFrequencyForAll(
         10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
     talon.optimizeBusUtilization();
 
-    double startAngle =
-        TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
-            Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
-            Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
+    double[] r17angle =
+        TurretCRT3.R17Enc(Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
+    double[] r13angle =
+        TurretCRT3.R13Enc(Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
 
-    setStatorPosition(startAngle);
-    BobotState.updateMotorTarget1(startAngle);
+    System.out.println(r17angle[2]);
+    System.out.println(r13angle[3]);
+
+    // TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
+    //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
+    //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
+
+    // setStatorPosition(-startAngle * 31.571428571);
+    BobotState.updateMotorTarget1(0);
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {

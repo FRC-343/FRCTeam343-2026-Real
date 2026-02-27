@@ -2,6 +2,7 @@ package frc.robot.subsystems.Turret;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -46,8 +47,8 @@ public class Turret extends SubsystemBase {
 
     Logger.processInputs("Turret", this.inputs);
 
-    BobotState.updateR13AbsPos(this.inputs.r13Abspos);
-    BobotState.updateR17AbsPos(this.inputs.r17Abspos);
+    BobotState.updateR13AbsPos(Units.rotationsToDegrees(this.inputs.r13Abspos));
+    BobotState.updateR17AbsPos(Units.rotationsToDegrees(this.inputs.r17Abspos));
 
     // double r17 = BobotState.getR13AbsPos() * 17.0; // 13T gear → mod 17
     // double r13 = BobotState.getR17AbsPos() * 13.0; // 17T gear → mod 13
@@ -70,7 +71,7 @@ public class Turret extends SubsystemBase {
     double startAngle =
         TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
             BobotState.getR17AbsPos(), BobotState.getR13AbsPos());
-    BobotState.updateMotorTarget1(startAngle);
+    BobotState.updateMotorTarget1(-startAngle * 31.571428571);
   }
 
   // Command to stop the motor

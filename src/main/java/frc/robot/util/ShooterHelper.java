@@ -241,4 +241,26 @@ public class ShooterHelper {
       return (motorRotations / TurretConstants.MOTOR_TO_TURRET_RATIO) * (2 * Math.PI);
     }
   }
+
+  public final class TurretCRT3 {
+    public static double[] R17Enc(double enc) {
+      double[] solutions = new double[222];
+      for (int i = 0; i <= 221; i++) {
+        double solution = (i + (enc % 360)) * 13;
+        solutions[i] = solution;
+      }
+
+      return solutions;
+    }
+
+    public static double[] R13Enc(double enc) {
+      double[] solutions = new double[222];
+      for (int i = 0; i <= 221; i++) {
+        double solution = (i + (enc % 360)) * 17;
+        solutions[i] = solution;
+      }
+
+      return solutions;
+    }
+  }
 }
