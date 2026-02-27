@@ -89,14 +89,8 @@ public class TurretMotorTalonFX implements TurretMotorIO {
         10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
     talon.optimizeBusUtilization();
 
-    double[] r17angle =
-        TurretCRT3.R17Enc(Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
-    double[] r13angle =
-        TurretCRT3.R13Enc(Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
 
-    System.out.println(r17angle[2]);
-    System.out.println(r13angle[3]);
-
+    TurretCRT3.calculateTurretRotations(Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()), Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
     // TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
     //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
     //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));

@@ -243,24 +243,48 @@ public class ShooterHelper {
   }
 
   public final class TurretCRT3 {
-    public static double[] R17Enc(double enc) {
-      double[] solutions = new double[222];
-      for (int i = 0; i <= 221; i++) {
-        double solution = (i + (enc % 360)) * 13;
-        solutions[i] = solution;
-      }
+    public static double calculateTurretRotations(
+            double e1ValDegrees,
+            double e2ValDegrees) {
 
-      return solutions;
+        int e1Teeth = 13;
+        int e2Teeth = 17;
+        int tTeeth = 221;
+
+        double bestMatch = -1;
+        double tolerance = 1e-4;
+
+        // n1 goes 0 to e2Teeth - 1
+        for (int n1 = 0; n1 < e2Teeth; n1++) {
+
+            double turretFromE1 =
+                    (n1 + e1ValDegrees / 360.0) * e1Teeth / tTeeth;
+
+            // n2 goes 0 to e1Teeth - 1
+            for (int n2 = 0; n2 < e1Teeth; n2++) {
+
+                double turretFromE2 =
+                        (n2 + e2ValDegrees / 360.0) * e2Teeth / tTeeth;
+
+                if (Math.abs(turretFromE1 - turretFromE2) < tolerance) {
+                    bestMatch = turretFromE1;
+                    return bestMatch;
+                }
+            }
+        }
+
+        return -1; // no solution found (should not happen if gears are co-prime)
     }
 
-    public static double[] R13Enc(double enc) {
-      double[] solutions = new double[222];
-      for (int i = 0; i <= 221; i++) {
-        double solution = (i + (enc % 360)) * 17;
-        solutions[i] = solution;
-      }
-
-      return solutions;
+    /**
+     * Returns turret aiming angle (0–360 degrees).
+     */
+    public static double getTurretAimAngle(double turretRotations) {
+        double fractional = turretRotations % 1.0;
+        if (fractional < 0) {
+            fractional += 1.0;
+        }
+        return fractional * 360.0;
     }
   }
 }
