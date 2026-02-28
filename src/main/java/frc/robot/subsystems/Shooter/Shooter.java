@@ -19,7 +19,8 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new ShooterIOTalonFx(29, false);
+        io = new ShooterIOTalonFx(22, 23, true);
+        // 22 is inverted
         break;
       case SIM:
         io = new ShooterIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));

@@ -14,14 +14,11 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.bobot_state2.BobotState;
 import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
-import frc.robot.util.ShooterHelper.TurretCRT3;
 
 public class TurretMotorTalonFX implements TurretMotorIO {
   private final TalonFX talon;
@@ -82,21 +79,36 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                         .withMotionMagicJerk(200)));
     velocityVoltage.Slot = 0;
 
-    r13.getConfigurator().apply(new CANcoderConfiguration().MagnetSensor.withMagnetOffset(.229));
-    r17.getConfigurator().apply(new CANcoderConfiguration().MagnetSensor.withMagnetOffset(-.496));
+    r13.getConfigurator()
+        .apply(
+            new CANcoderConfiguration()
+                .MagnetSensor.withMagnetOffset(0.09228515625)
+                    .withAbsoluteSensorDiscontinuityPoint(0));
+    r17.getConfigurator()
+        .apply(
+            new CANcoderConfiguration()
+                .MagnetSensor.withMagnetOffset(0.31689453125)
+                    .withAbsoluteSensorDiscontinuityPoint(0));
 
     StatusSignal.setUpdateFrequencyForAll(
         10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
     talon.optimizeBusUtilization();
 
-
-    TurretCRT3.calculateTurretRotations(Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()), Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
+    // TurretCRT3.calculateTurretRotations(
+    //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
+    //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
     // TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
     //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
     //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
 
-    // setStatorPosition(-startAngle * 31.571428571);
-    BobotState.updateMotorTarget1(0);
+    // setStatorPosition(
+    //     TurretCRT3.calculateTurretRotations(
+    //         Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
+    //         Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble())));
+    // BobotState.updateMotorTarget1(
+    //     TurretCRT3.calculateTurretRotations(
+    //         Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
+    //         Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble())));
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {

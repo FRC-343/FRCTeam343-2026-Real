@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public class ShooterIOTalonFx implements ShooterIO {
   private final TalonFX talon;
+  private final TalonFX follower;
   private final StatusSignal<Voltage> voltage;
   private final StatusSignal<Double> dutyCycle;
   private final StatusSignal<AngularVelocity> velocity;
@@ -24,8 +25,9 @@ public class ShooterIOTalonFx implements ShooterIO {
 
   private final Orchestra m_orchestra = new Orchestra();
 
-  public ShooterIOTalonFx(int deviceId, boolean isInverted) {
+  public ShooterIOTalonFx(int deviceId, int deviceId2, boolean isInverted) {
     talon = new TalonFX(deviceId);
+    follower = new TalonFX(deviceId2);
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();
@@ -39,18 +41,23 @@ public class ShooterIOTalonFx implements ShooterIO {
             new TalonFXConfiguration()
                 .withMotorOutput(
                     new MotorOutputConfigs()
-                        .withNeutralMode(NeutralModeValue.Brake)
+                        .withNeutralMode(NeutralModeValue.Coast)
                         .withInverted(
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
                 .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
+    follower
+        .getConfigurator()
+        .apply(
+            new TalonFXConfiguration()
+                .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
+                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
     velocityVoltage.Slot = 0;
 
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity);
     talon.optimizeBusUtilization();
-
-    // talon2.setControl(new Follower(talon.getDeviceID(), true));
+    follower.optimizeBusUtilization();
   }
 
   public void updateInputs(ShooterIOInputs inputs) {
@@ -63,6 +70,7 @@ public class ShooterIOTalonFx implements ShooterIO {
   @Override
   public void setVelocity(double velocityRotPerSecond) {
     talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
+    follower.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
   }
 
   @Override
@@ -88,5 +96,6 @@ public class ShooterIOTalonFx implements ShooterIO {
   @Override
   public void setVoltage(double voltage) {
     talon.setVoltage(voltage);
+    follower.setVoltage(voltage);
   }
 }

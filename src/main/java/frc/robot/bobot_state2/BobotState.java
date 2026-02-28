@@ -209,6 +209,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.difference = difference;
   }
 
+  public static void updateHood(double pos) {
+    BobotState.HoodPos = pos;
+  }
+
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
   }
@@ -287,6 +291,10 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.difference;
   }
 
+  public static double getHoodPos() {
+    return BobotState.HoodPos;
+  }
+
   public static Trigger onTeamSide() {
     return new Trigger(
         () ->
@@ -353,6 +361,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Robot rotational velocity", rotVel);
 
     Logger.recordOutput(logRoot + "Encoder difference", difference);
+
+    Logger.recordOutput(logRoot + "Hood Position", HoodPos);
 
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";

@@ -156,40 +156,6 @@ public class ShooterHelper {
     }
   }
 
-  // public final class TurretCRT1 {
-
-  //   private static final int MOD_A = 17; // from 13T encoder
-  //   private static final int MOD_B = 13; // from 17T encoder
-  //   private static final int PERIOD = 221; // 17 * 13
-
-  //   // Precomputed inverse of 13 mod 17
-  //   private static final int INV_13_MOD_17 = 4;
-  //   // Precomputed inverse of 17 mod 13
-  //   private static final int INV_17_MOD_13 = 10;
-
-  //   private TurretCRT1() {}
-
-  //   public static double reconstruct(double r17, double r13) {
-
-  //     int a = mod(Math.round(r17), MOD_A);
-  //     int b = mod(Math.round(r13), MOD_B);
-
-  //     // Standard CRT formula
-  //     int x = (int) ((a * MOD_B * INV_13_MOD_17 + b * MOD_A * INV_17_MOD_13) % PERIOD);
-
-  //     return mod(x, PERIOD);
-  //   }
-
-  //   private static int mod(long x, int m) {
-  //     int r = (int) (x % m);
-  //     return (r < 0) ? r + m : r;
-  //   }
-
-  //   public static double turretRotToRadians(double turretRot) {
-  //     return turretRot * 2.0 * Math.PI;
-  //   }
-  // }
-
   public final class TurretCRT2 {
     public static double calculateTurretAngleFromCANCoderDegrees(double e1, double e2) {
       double difference = e2 - e1;
@@ -243,48 +209,42 @@ public class ShooterHelper {
   }
 
   public final class TurretCRT3 {
-    public static double calculateTurretRotations(
-            double e1ValDegrees,
-            double e2ValDegrees) {
+    public static double calculateTurretRotations(double e1ValDegrees, double e2ValDegrees) {
 
-        int e1Teeth = 13;
-        int e2Teeth = 17;
-        int tTeeth = 221;
+      int e1Teeth = 13;
+      int e2Teeth = 17;
+      int tTeeth = 221;
 
-        double bestMatch = -1;
-        double tolerance = 1e-4;
+      double bestMatch = -1;
+      double tolerance = 1e-4;
 
-        // n1 goes 0 to e2Teeth - 1
-        for (int n1 = 0; n1 < e2Teeth; n1++) {
+      // n1 goes 0 to e2Teeth - 1
+      for (int n1 = 0; n1 < e2Teeth; n1++) {
 
-            double turretFromE1 =
-                    (n1 + e1ValDegrees / 360.0) * e1Teeth / tTeeth;
+        double turretFromE1 = (n1 + e1ValDegrees / 360.0) * e1Teeth / tTeeth;
 
-            // n2 goes 0 to e1Teeth - 1
-            for (int n2 = 0; n2 < e1Teeth; n2++) {
+        // n2 goes 0 to e1Teeth - 1
+        for (int n2 = 0; n2 < e1Teeth; n2++) {
 
-                double turretFromE2 =
-                        (n2 + e2ValDegrees / 360.0) * e2Teeth / tTeeth;
+          double turretFromE2 = (n2 + e2ValDegrees / 360.0) * e2Teeth / tTeeth;
 
-                if (Math.abs(turretFromE1 - turretFromE2) < tolerance) {
-                    bestMatch = turretFromE1;
-                    return bestMatch;
-                }
-            }
+          if (Math.abs(turretFromE1 - turretFromE2) < tolerance) {
+            bestMatch = turretFromE1;
+            return bestMatch;
+          }
         }
+      }
 
-        return -1; // no solution found (should not happen if gears are co-prime)
+      return -1; // no solution found (should not happen if gears are co-prime)
     }
 
-    /**
-     * Returns turret aiming angle (0–360 degrees).
-     */
+    /** Returns turret aiming angle (0–360 degrees). */
     public static double getTurretAimAngle(double turretRotations) {
-        double fractional = turretRotations % 1.0;
-        if (fractional < 0) {
-            fractional += 1.0;
-        }
-        return fractional * 360.0;
+      double fractional = turretRotations % 1.0;
+      if (fractional < 0) {
+        fractional += 1.0;
+      }
+      return fractional * 360.0;
     }
   }
 }

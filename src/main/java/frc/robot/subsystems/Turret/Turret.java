@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.util.ShooterHelper.TurretCRT2;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -67,11 +66,6 @@ public class Turret extends SubsystemBase {
 
     // BobotState.updateTurretPos1(turretRad);
     BobotState.updateTurretPos2(this.inputs.masterPositionRot);
-
-    double startAngle =
-        TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
-            BobotState.getR17AbsPos(), BobotState.getR13AbsPos());
-    BobotState.updateMotorTarget1(-startAngle * 31.571428571);
   }
 
   // Command to stop the motor
