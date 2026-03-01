@@ -6,9 +6,11 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
@@ -19,6 +21,10 @@ public class ShooterIOTalonFx implements ShooterIO {
   private final StatusSignal<Voltage> voltage;
   private final StatusSignal<Double> dutyCycle;
   private final StatusSignal<AngularVelocity> velocity;
+
+  private final StatusSignal<Voltage> followerVoltage;
+  private final StatusSignal<Double> followerDutyCycle;
+  private final StatusSignal<AngularVelocity> followerVelocity;
 
   private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
@@ -31,6 +37,9 @@ public class ShooterIOTalonFx implements ShooterIO {
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();
+    followerVoltage = follower.getMotorVoltage();
+    followerDutyCycle = follower.getDutyCycle();
+    followerVelocity = follower.getVelocity();
 
     this.m_orchestra.addInstrument(talon);
     this.m_orchestra.loadMusic("output2.chrp");
@@ -46,22 +55,28 @@ public class ShooterIOTalonFx implements ShooterIO {
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
+                .withSlot0(
+                    new Slot0Configs().withKV(0.12).withKP(.1).withKI(0).withKD(0).withKS(.1)));
     follower
         .getConfigurator()
         .apply(
             new TalonFXConfiguration()
                 .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
+                .withSlot0(
+                    new Slot0Configs().withKV(0.12).withKP(.1).withKI(0).withKD(0).withKS(.6)));
     velocityVoltage.Slot = 0;
 
-    StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity);
+    StatusSignal.setUpdateFrequencyForAll(
+        10, voltage, dutyCycle, velocity, followerVoltage, followerDutyCycle, followerVelocity);
     talon.optimizeBusUtilization();
     follower.optimizeBusUtilization();
+
+    follower.setControl(new Follower(talon.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 
   public void updateInputs(ShooterIOInputs inputs) {
-    StatusSignal.refreshAll(velocity, dutyCycle, voltage);
+    StatusSignal.refreshAll(
+        velocity, dutyCycle, voltage, followerVoltage, followerDutyCycle, followerVelocity);
     inputs.appliedVoltage = voltage.getValueAsDouble();
     inputs.appliedDutyCycle = dutyCycle.getValueAsDouble();
     inputs.velocityRotPerSecond = velocity.getValueAsDouble() / 3.0;
@@ -70,7 +85,7 @@ public class ShooterIOTalonFx implements ShooterIO {
   @Override
   public void setVelocity(double velocityRotPerSecond) {
     talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
-    follower.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
+    // follower.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
   }
 
   @Override
@@ -96,6 +111,6 @@ public class ShooterIOTalonFx implements ShooterIO {
   @Override
   public void setVoltage(double voltage) {
     talon.setVoltage(voltage);
-    follower.setVoltage(voltage);
+    // follower.setVoltage(voltage);
   }
 }

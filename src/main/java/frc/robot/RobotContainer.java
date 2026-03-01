@@ -169,6 +169,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    configureOpButtons();
   }
 
   /**
@@ -186,43 +187,22 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // // Lock to 0° when A button is held
-    // controller
-    //     .a()
-    //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
-    //             drive,
-    //             () -> -controller.getLeftY(),
-    //             () -> -controller.getLeftX(),
-    //             () -> Rotation2d.kZero));
+    // controller.rightBumper().whileTrue(turret.setTurretPosition2());
 
-    // // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.45));
+  }
 
-    // // Reset gyro to 0° when B button is pressed
-    // controller
-    //     .b()
-    //     .onTrue(
-    //         Commands.runOnce(
-    //                 () ->
-    //                     drive.setPose(
-    //                         new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-    //                 drive)
-    //             .ignoringDisable(true));
-
-    controller
+  private void configureOpButtons() {
+    controller2
+        .a()
+        .whileTrue(shooter.setVelocityThenStopCommand(20).alongWith(hood.setHoodPosition()));
+    controller2
         .leftBumper()
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-25)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
-
-    // controller.rightBumper().whileTrue(turret.setTurretPosition1());
-    controller.rightBumper().whileTrue(turret.setTurretPosition2());
-
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
-
-    controller.a().whileTrue(shooter.setVelocityThenStopCommand(25));
   }
 
   /**

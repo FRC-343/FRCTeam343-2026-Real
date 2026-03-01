@@ -36,7 +36,6 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     this.io.updateInputs(this.inputs);
-    this.io.updateInputs(this.inputs);
 
     BobotState.updateShooterRPM(this.inputs.velocityRotPerSecond * 60);
 
@@ -54,7 +53,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setPercentOutputThenStopCommand(double percentDecimal) {
-    // playMusic();
     return new RunCommand(() -> this.io.setPercentOutput(percentDecimal), this).finallyDo(io::stop);
   }
 

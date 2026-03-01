@@ -96,12 +96,14 @@ public class Hood extends SubsystemBase {
         this);
   }
 
-  public Command setHoodPosition(double position) {
+  public Command setHoodPosition() {
     return new RunCommand(
         () ->
             this.io.setHoodPosition(
                 MathUtil.clamp(
-                    position, Constants.HoodConstants.minHood, Constants.HoodConstants.maxHood)));
+                    30,
+                    Constants.HoodConstants.minHood,
+                    Constants.HoodConstants.maxHood)));
   }
 
   public Command stopCommand() {
