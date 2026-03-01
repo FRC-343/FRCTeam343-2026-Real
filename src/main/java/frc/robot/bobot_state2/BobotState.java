@@ -295,6 +295,10 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodPos;
   }
 
+  public static double getWantedHood() {
+    return BobotState.HoodCalc;
+  }
+
   public static Trigger onTeamSide() {
     return new Trigger(
         () ->
