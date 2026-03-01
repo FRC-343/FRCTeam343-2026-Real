@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -60,6 +61,10 @@ public final class Constants {
   }
 
   public static final class ShooterConstants {
-    public static double WheelCir = 12;
+    public static double WHEELDIAM = 4; // 4 inches
+    public static double WHEELDIAMMETER = Units.inchesToMeters(WHEELDIAM);
+
+    public static double CIRCUMFERENCE = Math.PI * WHEELDIAMMETER;
+
   }
 }
