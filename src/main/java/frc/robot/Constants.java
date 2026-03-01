@@ -65,6 +65,5 @@ public final class Constants {
     public static double WHEELDIAMMETER = Units.inchesToMeters(WHEELDIAM);
 
     public static double CIRCUMFERENCE = Math.PI * WHEELDIAMMETER;
-
   }
 }

@@ -256,7 +256,7 @@ public class RobotContainer {
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
-        (BobotState.getShooterRPM()/60) * Constants.ShooterConstants.WHEELDIAMMETER * .3;
+        (BobotState.getShooterRPM() / 60) * Constants.ShooterConstants.WHEELDIAMMETER * .3;
 
     /* Call for the calculation that gets an estimated time that the fuel will be in the air from
     any give position/speed */
@@ -283,7 +283,8 @@ public class RobotContainer {
       // position.
 
       double hood =
-          HoodAim.calculateHoodAngle(distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+          HoodAim.calculateHoodAngle(
+              distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
       /* updates our call for the hood and turret */
       BobotState.updateHoodAngle(hood);
