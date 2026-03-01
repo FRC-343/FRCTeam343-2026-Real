@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -302,7 +303,7 @@ public class RobotContainer {
       // position.
 
       double hood =
-          HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood
+          HoodAim.calculateHoodAngle(distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
       /* updates our call for the hood and turret */
       BobotState.updateHoodAngle(hood);
