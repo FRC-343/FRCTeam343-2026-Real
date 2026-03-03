@@ -57,7 +57,7 @@ public class RobotContainer {
 
   private final Kicker kicker;
 
-  private final BobotState test;
+  private final BobotState bobot;
 
   private final Intake intake;
 
@@ -78,7 +78,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    test = new BobotState();
+    bobot = new BobotState();
     new Vision();
     test2 = new DashboardTarget();
     switch (Constants.currentMode) {
@@ -255,7 +255,7 @@ public class RobotContainer {
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
-        (BobotState.getShooterRPM()) * Constants.ShooterConstants.WHEELDIAMMETER * .3;
+        (BobotState.getShooterRPM()) * Constants.ShooterConstants.CIRCUMFERENCE;
 
     /* Call for the calculation that gets an estimated time that the fuel will be in the air from
     any give position/speed */
@@ -283,7 +283,7 @@ public class RobotContainer {
 
       double hood =
           HoodAim.calculateHoodAngle(
-              Units.inchesToMeters(distance),
+              distance,
               Units.inchesToMeters(55),
               shooterExitVelocity); // Gets the hood
 
