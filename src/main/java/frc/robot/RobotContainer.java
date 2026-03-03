@@ -194,15 +194,14 @@ public class RobotContainer {
   }
 
   private void configureOpButtons() {
-    controller2
-        .a()
-        .whileTrue(shooter.setVelocityThenStopCommand(20).alongWith(hood.setHoodPosition()));
+    controller2.a().whileTrue(shooter.setVelocityThenStopCommand(20));
     controller2
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-25)
+                .setVelocityThenStopCommand(-15)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
+    controller2.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
 
   /**
@@ -256,7 +255,7 @@ public class RobotContainer {
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
-        (BobotState.getShooterRPM()/60) * Constants.ShooterConstants.WHEELDIAMMETER * .3;
+        (BobotState.getShooterRPM()) * Constants.ShooterConstants.WHEELDIAMMETER * .3;
 
     /* Call for the calculation that gets an estimated time that the fuel will be in the air from
     any give position/speed */
@@ -283,10 +282,13 @@ public class RobotContainer {
       // position.
 
       double hood =
-          HoodAim.calculateHoodAngle(distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+          HoodAim.calculateHoodAngle(
+              Units.inchesToMeters(distance),
+              Units.inchesToMeters(55),
+              shooterExitVelocity); // Gets the hood
 
       /* updates our call for the hood and turret */
-      BobotState.updateHoodAngle(hood);
+      BobotState.updateHoodAngle(Units.radiansToRotations(hood));
     }
   }
 }

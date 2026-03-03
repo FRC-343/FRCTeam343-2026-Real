@@ -79,12 +79,12 @@ public class ShooterIOTalonFx implements ShooterIO {
         velocity, dutyCycle, voltage, followerVoltage, followerDutyCycle, followerVelocity);
     inputs.appliedVoltage = voltage.getValueAsDouble();
     inputs.appliedDutyCycle = dutyCycle.getValueAsDouble();
-    inputs.velocityRotPerSecond = velocity.getValueAsDouble() / 3.0;
+    inputs.velocityRotPerSecond = velocity.getValueAsDouble();
   }
 
   @Override
   public void setVelocity(double velocityRotPerSecond) {
-    talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
+    talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond));
     // follower.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
   }
 
