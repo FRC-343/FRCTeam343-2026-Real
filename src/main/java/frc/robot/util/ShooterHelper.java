@@ -33,10 +33,8 @@ public class ShooterHelper {
     /** Calculates hood angle in radians. Returns NaN if unreachable. */
     public static double calculateHoodAngle(
         double horizontalDistance, double heightDifference, double exitVelocity) {
-      if (horizontalDistance < 0.05)
-        return Double.NaN;
-      if (exitVelocity < 0.1)
-        return Double.NaN;
+      if (horizontalDistance < 0.05) return Double.NaN;
+      if (exitVelocity < 0.1) return Double.NaN;
 
       // term of gravity
       double g = 9.81;
@@ -48,30 +46,30 @@ public class ShooterHelper {
        * ball
        * and returns the y-position
        */
-      double SimGravOnBall = v2 * v2 - g * (g * horizontalDistance * horizontalDistance + 2 * heightDifference * v2);
+      double SimGravOnBall =
+          v2 * v2 - g * (g * horizontalDistance * horizontalDistance + 2 * heightDifference * v2);
 
       // if the y-position of the ball is less than 0 (below ground), return NaN
-      if (SimGravOnBall < 0)
-        return Double.NaN;
+      if (SimGravOnBall < 0) return Double.NaN;
 
       // self-explanatory
       double SqrtOfGravOnBall = Math.sqrt(SimGravOnBall);
 
       // Prefer low arc, fall back to high arc
-      double low = (Math.atan((v2 - SqrtOfGravOnBall) / (g * horizontalDistance)) / (2 * Math.PI)) * 344.0;
+      double low =
+          (Math.atan((v2 - SqrtOfGravOnBall) / (g * horizontalDistance)) / (2 * Math.PI)) * 344.0;
 
       // if low exists and is more than 0, returns the low arc
-      if (!Double.isNaN(low) && low > 0)
-        return low;
+      if (!Double.isNaN(low) && low > 0) return low;
 
       // returns the calculated high angle if low fails
-      return (Math.atan((v2 + SqrtOfGravOnBall) / (g * horizontalDistance)) / (2 * Math.PI)) * 344.0;
+      return (Math.atan((v2 + SqrtOfGravOnBall) / (g * horizontalDistance)) / (2 * Math.PI))
+          * 344.0;
     }
   }
 
   /**
-   * Handles limited-rotation turret optimization (ex: 270° sweep). Works for real
-   * turrets OR
+   * Handles limited-rotation turret optimization (ex: 270° sweep). Works for real turrets OR
    * "robot-as-turret".
    */
   public final class TurretYawLimiter {
@@ -81,12 +79,11 @@ public class ShooterHelper {
     // Optional soft margin to avoid hard stops
     public static final double SOFT_MARGIN_RAD = Math.toRadians(5);
 
-    private TurretYawLimiter() {
-    }
+    private TurretYawLimiter() {}
 
     /**
-     * @param fieldYawRad      Desired yaw in FIELD coordinates (from solver)
-     * @param robotYawRad      Current robot heading (gyro / pose)
+     * @param fieldYawRad Desired yaw in FIELD coordinates (from solver)
+     * @param robotYawRad Current robot heading (gyro / pose)
      * @param currentTurretRad Current turret angle relative to robot
      * @return Best legal turret yaw (robot-relative), or NaN if unreachable
      */
@@ -97,9 +94,10 @@ public class ShooterHelper {
       double desiredRobotYaw = MathUtil.angleModulus(fieldYawRad - robotYawRad);
 
       // Generate equivalent angles (wrap handling)
-      double[] candidates = new double[] {
-          desiredRobotYaw, desiredRobotYaw + 2.0 * Math.PI, desiredRobotYaw - 2.0 * Math.PI
-      };
+      double[] candidates =
+          new double[] {
+            desiredRobotYaw, desiredRobotYaw + 2.0 * Math.PI, desiredRobotYaw - 2.0 * Math.PI
+          };
 
       double bestYaw = Double.NaN;
       double bestCost = Double.POSITIVE_INFINITY;
@@ -107,10 +105,8 @@ public class ShooterHelper {
       for (double candidate : candidates) {
 
         // Enforce hard + soft limits
-        if (candidate < Constants.TurretConstants.REVERSELIMITDEGREES + SOFT_MARGIN_RAD)
-          continue;
-        if (candidate > Constants.TurretConstants.FORWARDLIMITDEGREES - SOFT_MARGIN_RAD)
-          continue;
+        if (candidate < Constants.TurretConstants.REVERSELIMITDEGREES + SOFT_MARGIN_RAD) continue;
+        if (candidate > Constants.TurretConstants.FORWARDLIMITDEGREES - SOFT_MARGIN_RAD) continue;
 
         // Cost = smallest movement from current turret angle
         double cost = Math.abs(MathUtil.angleModulus(candidate - currentTurretRad));
@@ -127,9 +123,7 @@ public class ShooterHelper {
 
   public class TimeOfFlight {
 
-    /**
-     * Solves time of intercept in the XY plane. Returns NaN if no solution exists.
-     */
+    /** Solves time of intercept in the XY plane. Returns NaN if no solution exists. */
     public static double solveTime(
         Translation2d shooterPos,
         Translation2d robotVel,
@@ -150,18 +144,15 @@ public class ShooterHelper {
       double c = rx * rx + ry * ry;
 
       double disc = b * b - 4 * a * c;
-      if (disc < 0)
-        return Double.NaN;
+      if (disc < 0) return Double.NaN;
 
       double sqrtD = Math.sqrt(disc);
       double t1 = (-b - sqrtD) / (2 * a);
       double t2 = (-b + sqrtD) / (2 * a);
 
       double t = Double.POSITIVE_INFINITY;
-      if (t1 > 0)
-        t = t1;
-      if (t2 > 0 && t2 < t)
-        t = t2;
+      if (t1 > 0) t = t1;
+      if (t2 > 0 && t2 < t) t = t2;
 
       return Double.isFinite(t) ? t : Double.NaN;
     }
@@ -179,15 +170,19 @@ public class ShooterHelper {
 
       difference *= TurretConstants.SLOPE;
 
-      double e1Rotations = (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT)
-          / 360.0;
+      double e1Rotations =
+          (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT)
+              / 360.0;
       double e1RotationsFloored = Math.floor(e1Rotations);
-      double turretAngle = (e1RotationsFloored * 360.0 + e1)
-          * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
+      double turretAngle =
+          (e1RotationsFloored * 360.0 + e1)
+              * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
       if (turretAngle - difference < -100) {
-        turretAngle += TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+        turretAngle +=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
       } else if (turretAngle - difference > 100) {
-        turretAngle -= TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+        turretAngle -=
+            TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
       }
       return Units.degreesToRotations(turretAngle);
     }

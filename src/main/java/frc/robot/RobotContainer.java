@@ -187,21 +187,23 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // controller.rightBumper().whileTrue(turret.setTurretPosition2());
+    controller.rightBumper().whileTrue(turret.setTurretPosition2());
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.45));
+    // controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
+    // controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.45));
   }
 
   private void configureOpButtons() {
-    controller2.a().whileTrue(shooter.setVelocityThenStopCommand(20));
-    controller2
-        .leftBumper()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-15)
-                .alongWith(kicker.setVelocityThenStopCommand(40)));
-    controller2.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
+    // controller2
+    //     .a()
+    //     .whileTrue(shooter.setVelocityThenStopCommand(60).alongWith(hood.setHoodPosition()));
+    // controller2
+    //     .leftBumper()
+    //     .whileTrue(
+    //         spindexer
+    //             .setVelocityThenStopCommand(-15)
+    //             .alongWith(kicker.setVelocityThenStopCommand(40)));
+    // controller2.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
 
   /**
@@ -283,12 +285,10 @@ public class RobotContainer {
 
       double hood =
           HoodAim.calculateHoodAngle(
-              distance,
-              Units.inchesToMeters(55),
-              shooterExitVelocity); // Gets the hood
+              distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
       /* updates our call for the hood and turret */
-      BobotState.updateHoodAngle(Units.radiansToRotations(hood));
+      BobotState.updateHoodAngle(hood);
     }
   }
 }

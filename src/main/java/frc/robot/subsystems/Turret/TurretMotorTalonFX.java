@@ -2,7 +2,6 @@ package frc.robot.subsystems.Turret;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -80,16 +79,16 @@ public class TurretMotorTalonFX implements TurretMotorIO {
     // try fused cancoder with the rotor to sensor and sensor to mech set
     velocityVoltage.Slot = 0;
 
-    r13.getConfigurator()
-        .apply(
-            new CANcoderConfiguration()
-                .MagnetSensor.withMagnetOffset(0.09228515625)
-                    .withAbsoluteSensorDiscontinuityPoint(0));
-    r17.getConfigurator()
-        .apply(
-            new CANcoderConfiguration()
-                .MagnetSensor.withMagnetOffset(0.31689453125)
-                    .withAbsoluteSensorDiscontinuityPoint(0));
+    // r13.getConfigurator()
+    //     .apply(
+    //         new CANcoderConfiguration()
+    //             .MagnetSensor.withMagnetOffset(0.09228515625)
+    //                 .withAbsoluteSensorDiscontinuityPoint(0));
+    // r17.getConfigurator()
+    //     .apply(
+    //         new CANcoderConfiguration()
+    //             .MagnetSensor.withMagnetOffset(0.31689453125)
+    //                 .withAbsoluteSensorDiscontinuityPoint(0));
 
     StatusSignal.setUpdateFrequencyForAll(
         10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
