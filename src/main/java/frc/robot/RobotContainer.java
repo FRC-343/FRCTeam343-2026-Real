@@ -34,7 +34,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAim;
+import frc.robot.util.ShooterHelper.ShooterSolver;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretCRT2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -196,14 +196,13 @@ public class RobotContainer {
   private void configureOpButtons() {
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand(60).alongWith(hood.setHoodPosition()));
+        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition()));
     controller2
         .leftBumper()
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-15)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
-    controller2.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.45));
   }
 
   /**
@@ -236,19 +235,6 @@ public class RobotContainer {
     /* Gets the robot velocity using the converted field speeds */
     Translation2d robotVelocityXY =
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
-
-    // /* Gets the shooter position on the robot */
-    // Translation2d shooterXY =
-    //     BobotState.getGlobalPose()
-    //         .transformBy(
-    //             new Transform2d(
-    //                 Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125), new
-    // Rotation2d()))
-    //         .getTranslation();
-
-    /* Gets the targerts position on the field
-     *
-     */
 
     Translation2d targetXY = test2.getTarget();
 
@@ -283,12 +269,25 @@ public class RobotContainer {
                   .getTranslation()); // Gets the distance from the shooter to the intercept
       // position.
 
-      double hood =
-          HoodAim.calculateHoodAngle(
-              distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+      //   double hood =
+      //       HoodAim.calculateHoodAngle(
+      //           distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
-      /* updates our call for the hood and turret */
-      BobotState.updateHoodAngle(hood);
+      //   /* updates our call for the hood and turret */
+      //   BobotState.updateHoodAngle(hood);
+
+      ShooterSolver.Solution solution =
+          ShooterSolver.solve(
+              distance,
+              Units.inchesToMeters(55),
+              Constants.ShooterConstants.CIRCUMFERENCE,
+              Constants.HoodConstants.MINHOOD,
+              Constants.HoodConstants.MAXHOOD);
+
+      if (solution != null) {
+        BobotState.updateHoodAngle(solution.hoodRotations);
+        BobotState.updateWantedShooterRPS(solution.shooterRPS);
+      }
     }
   }
 }

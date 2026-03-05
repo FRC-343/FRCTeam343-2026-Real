@@ -102,8 +102,8 @@ public class Hood extends SubsystemBase {
             this.io.setHoodPosition(
                 MathUtil.clamp(
                     BobotState.getWantedHood(),
-                    Constants.HoodConstants.minHood,
-                    Constants.HoodConstants.maxHood)));
+                    Constants.HoodConstants.MINHOOD,
+                    Constants.HoodConstants.MAXHOOD)));
   }
 
   public Command stopCommand() {

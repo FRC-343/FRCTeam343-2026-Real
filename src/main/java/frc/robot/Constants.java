@@ -31,8 +31,8 @@ public final class Constants {
   }
 
   public static final class HoodConstants {
-    public static double minHood = 0.1;
-    public static double maxHood = 34.3;
+    public static double MINHOOD = 0.1;
+    public static double MAXHOOD = 34.3;
   }
 
   public static final class TurretConstants {

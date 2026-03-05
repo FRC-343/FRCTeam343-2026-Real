@@ -67,7 +67,9 @@ public class BobotState extends VirtualSubsystem {
 
   private static double TurretCalc; // the number that the turret calc spits out
 
-  private static double ShooterVelo;
+  private static double ShooterRPS;
+
+  private static double ShooterWantedRPS;
 
   /*
    * Highlighting small section importaint for our shooter calcs
@@ -152,12 +154,16 @@ public class BobotState extends VirtualSubsystem {
     BobotState.HoodCalc = Yaw;
   }
 
-  public static void updateShooterVelo(double velo) {
-    BobotState.ShooterVelo = velo;
+  public static void updateShooterRPS(double RPS) {
+    BobotState.ShooterRPS = RPS;
   }
 
   public static void updateShooterRPM(Double RPM) {
     BobotState.ShooterRPM = RPM;
+  }
+
+  public static void updateWantedShooterRPS(double RPS) {
+    BobotState.ShooterWantedRPS = RPS;
   }
 
   public static void updateTurretPos1(double pose) {
@@ -231,12 +237,16 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.ToF;
   }
 
-  public static double getShooterVelo() {
-    return BobotState.ShooterVelo;
+  public static double getShooterRPS() {
+    return BobotState.ShooterRPS;
   }
 
   public static double getShooterRPM() {
     return BobotState.ShooterRPM;
+  }
+
+  public static double getWantedShooterRPS() {
+    return BobotState.ShooterWantedRPS;
   }
 
   public static double getTurretYaw() {
@@ -324,7 +334,11 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Time of Flight", ToF);
 
-    Logger.recordOutput(logRoot + "Shooter Exit velo", ShooterVelo);
+    Logger.recordOutput(logRoot + "Shooter RPS", ShooterRPS);
+
+    Logger.recordOutput(logRoot + "Shooter Wanted RPS", ShooterWantedRPS);
+
+    Logger.recordOutput(logRoot + "Shooter RPM", ShooterRPM);
 
     Logger.recordOutput(logRoot + "Turret Wanted Yaw", TurretCalc);
 

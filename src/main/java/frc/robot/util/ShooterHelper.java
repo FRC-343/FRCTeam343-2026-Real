@@ -5,10 +5,76 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.Constants.TurretConstants;
+import java.util.Optional;
 
 public class ShooterHelper {
+  public final class TrasnitionTime {
+
+    public static boolean isHubActive() {
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+      // If we have no alliance, we cannot be enabled, therefore no hub.
+      if (alliance.isEmpty()) {
+        return false;
+      }
+      // Hub is always enabled in autonomous.
+      if (DriverStation.isAutonomousEnabled()) {
+        return true;
+      }
+      // At this point, if we're not teleop enabled, there is no hub.
+      if (!DriverStation.isTeleopEnabled()) {
+        return false;
+      }
+
+      // We're teleop enabled, compute.
+      double matchTime = DriverStation.getMatchTime();
+      String gameData = DriverStation.getGameSpecificMessage();
+      // If we have no game data, we cannot compute, assume hub is active, as its likely early in
+      // teleop.
+      if (gameData.isEmpty()) {
+        return true;
+      }
+      boolean redInactiveFirst = false;
+      switch (gameData.charAt(0)) {
+        case 'R' -> redInactiveFirst = true;
+        case 'B' -> redInactiveFirst = false;
+        default -> {
+          // If we have invalid game data, assume hub is active.
+          return true;
+        }
+      }
+
+      // Shift was is active for blue if red won auto, or red if blue won auto.
+      boolean shift1Active =
+          switch (alliance.get()) {
+            case Red -> !redInactiveFirst;
+            case Blue -> redInactiveFirst;
+          };
+
+      if (matchTime > 130) {
+        // Transition shift, hub is active.
+        return true;
+      } else if (matchTime > 105) {
+        // Shift 1
+        return shift1Active;
+      } else if (matchTime > 80) {
+        // Shift 2
+        return !shift1Active;
+      } else if (matchTime > 55) {
+        // Shift 3
+        return shift1Active;
+      } else if (matchTime > 30) {
+        // Shift 4
+        return !shift1Active;
+      } else {
+        // End game, hub always active.
+        return true;
+      }
+    }
+  }
 
   public final class TurretAim {
 
@@ -68,6 +134,56 @@ public class ShooterHelper {
     }
   }
 
+  public final class ShooterSolver {
+
+    public static class Solution {
+      public final double hoodRotations;
+      public final double shooterRPS;
+
+      public Solution(double hoodRotations, double shooterRPS) {
+        this.hoodRotations = hoodRotations;
+        this.shooterRPS = shooterRPS;
+      }
+    }
+
+    public static Solution solve(
+        double distance,
+        double heightDifference,
+        double wheelCircumference,
+        double minHoodRot,
+        double maxHoodRot) {
+
+      double g = 9.81;
+
+      double bestVelocity = Double.POSITIVE_INFINITY;
+      double bestHood = Double.NaN;
+
+      for (double hood = minHoodRot; hood <= maxHoodRot; hood += 0.002) {
+
+        double theta = hood / 344.0 * 2.0 * Math.PI;
+
+        double cos = Math.cos(theta);
+        double tan = Math.tan(theta);
+
+        double denom = 2 * cos * cos * (distance * tan - heightDifference);
+
+        if (denom <= 0) continue;
+
+        double velocity = Math.sqrt((g * distance * distance) / denom);
+
+        if (velocity < bestVelocity) {
+          bestVelocity = velocity;
+          bestHood = hood;
+        }
+      }
+
+      if (Double.isInfinite(bestVelocity)) return null;
+
+      double rps = bestVelocity / wheelCircumference;
+
+      return new Solution(bestHood, rps);
+    }
+  }
   /**
    * Handles limited-rotation turret optimization (ex: 270° sweep). Works for real turrets OR
    * "robot-as-turret".

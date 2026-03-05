@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
     this.io.updateInputs(this.inputs);
 
     BobotState.updateShooterRPM(this.inputs.velocityRotPerSecond * 60);
+    BobotState.updateShooterRPS(this.inputs.velocityRotPerSecond);
 
     Logger.processInputs("Shooter", this.inputs);
 
@@ -47,8 +48,8 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public Command setVelocityThenStopCommand(double velocityRotPerSecond) {
-    return new RunCommand(() -> this.io.setVelocity(velocityRotPerSecond), this)
+  public Command setVelocityThenStopCommand() {
+    return new RunCommand(() -> this.io.setVelocity(BobotState.getWantedShooterRPS()), this)
         .finallyDo(io::stop);
   }
 
