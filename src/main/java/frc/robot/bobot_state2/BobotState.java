@@ -309,19 +309,31 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodCalc;
   }
 
-  public static Trigger onTeamSide() {
-    return new Trigger(
-        () ->
-            FieldUtils.getAlliance() == Alliance.Blue
-                ? getGlobalPose().getX() < FieldConstants.fieldLength / 2.0
-                : getGlobalPose().getX() > FieldConstants.fieldLength / 2.0);
-  }
-
   // public static TargetAngleTracker getClosestAlignmentTracker() {
   // return autoAlignmentTrackers.stream()
   // .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)
   // .get();
   // }
+
+  // Adding Triggers here
+
+  public static Trigger onBottomHalf() {
+    return new Trigger(
+        () -> getGlobalPose().getY() <= FieldConstants.centerZoneWidthBottom ? true : false);
+  }
+
+  public static Trigger onTopHalf() {
+    return new Trigger(
+        () -> getGlobalPose().getY() >= FieldConstants.centerZoneWidthTop ? true : false);
+  }
+
+  public static Trigger onTeamSide() {
+    return new Trigger(
+        () ->
+            FieldUtils.getAlliance() == Alliance.Blue
+                ? getGlobalPose().getX() < FieldConstants.fieldLength / 2.0 // fix this
+                : getGlobalPose().getX() > FieldConstants.fieldLength / 2.0);
+  }
 
   @Override
   public void periodic() {
@@ -381,6 +393,11 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Encoder difference", difference);
 
     Logger.recordOutput(logRoot + "Hood Position", HoodPos);
+
+    Logger.recordOutput(logRoot + "Bottom Side Trigger", onBottomHalf());
+
+    Logger.recordOutput(logRoot + "Top Side Trigger", onTopHalf());
+    Logger.recordOutput(logRoot + "Team Side Trigger", onTeamSide());
 
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";

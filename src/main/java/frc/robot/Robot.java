@@ -92,13 +92,13 @@ public class Robot extends LoggedRobot {
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    robotContainer.TurretCalcs();
-    robotContainer.HoodCalcs();
 
     // Return to non-RT thread priority (do not modify the first argument)
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
+    robotContainer.TurretCalcs();
+    robotContainer.HoodCalcs();
   }
 
   /** This function is called once when the robot is disabled. */

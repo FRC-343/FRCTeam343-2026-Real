@@ -49,7 +49,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  //   private final Shooter shooter;
+  // private final Shooter shooter;
 
   private final Turret turret;
 
@@ -71,15 +71,14 @@ public class RobotContainer {
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
 
-  //   private final DriverAutomationFactory m_Automation;
+  // private final DriverAutomationFactory m_Automation;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    bobot = new BobotState();
-    new Vision();
+
     test2 = new DashboardTarget();
     switch (Constants.currentMode) {
       case REAL:
@@ -103,6 +102,8 @@ public class RobotContainer {
         intake = new Intake();
         hood = new Hood();
         shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
 
         break;
 
@@ -124,6 +125,8 @@ public class RobotContainer {
         intake = new Intake();
         hood = new Hood();
         shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
         break;
 
       default:
@@ -145,6 +148,8 @@ public class RobotContainer {
         intake = new Intake();
         hood = new Hood();
         shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
         break;
     }
 
@@ -239,14 +244,19 @@ public class RobotContainer {
     Translation2d targetXY = test2.getTarget();
 
     BobotState.updateTurretTarget(
-        targetXY); // This mainly used for sim to show the position the turret/hood is targeting.
+        targetXY); // This mainly used for sim to show the position the turret/hood is
+    // targeting.
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
         (BobotState.getShooterRPM()) * Constants.ShooterConstants.CIRCUMFERENCE;
 
-    /* Call for the calculation that gets an estimated time that the fuel will be in the air from
-    any give position/speed */
+    /*
+     * Call for the calculation that gets an estimated time that the fuel will be in
+     * the air
+     * from
+     * any give position/speed
+     */
     BobotState.updateToF(
         TimeOfFlight.solveTime(
             BobotState.getGlobalPose().getTranslation(),
@@ -269,12 +279,12 @@ public class RobotContainer {
                   .getTranslation()); // Gets the distance from the shooter to the intercept
       // position.
 
-      //   double hood =
-      //       HoodAim.calculateHoodAngle(
-      //           distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+      // double hood =
+      // HoodAim.calculateHoodAngle(
+      // distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
-      //   /* updates our call for the hood and turret */
-      //   BobotState.updateHoodAngle(hood);
+      // /* updates our call for the hood and turret */
+      // BobotState.updateHoodAngle(hood);
 
       ShooterSolver.Solution solution =
           ShooterSolver.solve(

@@ -14,16 +14,19 @@ public class FieldConstants {
 
   public static final double distanceToTag = Units.inchesToMeters(10);
 
-  public static final double tagToCageRight = Units.inchesToMeters(44.18);
-  public static final double tagToCageCenter = Units.inchesToMeters(1.25);
-  public static final double tagToCageLeft = Units.inchesToMeters(-41.7);
-
   public static final double fieldLength = Units.inchesToMeters(690.876);
   public static final double fieldWidth = Units.inchesToMeters(317);
   public static final double startingLineX = Units.inchesToMeters(299.438);
 
+  public static final double centerZoneWidth = Units.inchesToMeters(50);
+
   /** Used for calculating HPS zoning */
   public static final double halfFieldWidth = fieldWidth / 2;
+
+  public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(30);
+  public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(30);
+
+  public static final double distanceToTrench = Units.inchesToMeters(182.1);
 
   /*
    * April Tag Lookup

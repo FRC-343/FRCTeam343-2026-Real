@@ -32,7 +32,7 @@ public class VisionConstants {
           ? Optional.of(new VisionSystemSim("AprilTagSim"))
           : Optional.empty();
 
-  private static final List<AprilTagCameraConfig> riptideConfigs =
+  private static final List<AprilTagCameraConfig> warrigConfigs =
       List.of(
           // FLO
           new AprilTagCameraConfig(
@@ -40,12 +40,43 @@ public class VisionConstants {
                   "FLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(4.059), // forward+
-                          Units.inchesToMeters(13.242), // left+
-                          Units.inchesToMeters(12.897)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(30)))),
+                          Units.inchesToMeters(-6.729289), // forward+
+                          Units.inchesToMeters(12.365818), // left+
+                          Units.inchesToMeters(6.729289)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(-15)))),
+              SimCameraConfig.ARDUCAM_OV9281_70),
+          new AprilTagCameraConfig(
+              new VisionSource(
+                  "BLeft",
+                  new Transform3d(
+                      new Translation3d(
+                          Units.inchesToMeters(-11.634214), // forward+
+                          Units.inchesToMeters(11.537525), // left+
+                          Units.inchesToMeters(5.144769)), // up+
+                      new Rotation3d(
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-195)))),
+              SimCameraConfig.ARDUCAM_OV9281_70),
+          new AprilTagCameraConfig(
+              new VisionSource(
+                  "FRight",
+                  new Transform3d(
+                      new Translation3d(
+                          Units.inchesToMeters(-6.729278), // forward+
+                          Units.inchesToMeters(-12.330815), // left+
+                          Units.inchesToMeters(14.532704)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
+              SimCameraConfig.ARDUCAM_OV9281_70),
+          new AprilTagCameraConfig(
+              new VisionSource(
+                  "BRight",
+                  new Transform3d(
+                      new Translation3d(
+                          Units.inchesToMeters(-11.634180), // forward+
+                          Units.inchesToMeters(-11.537534), // left+
+                          Units.inchesToMeters(5.144769)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(195)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
-  public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = riptideConfigs;
+  public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
   public static final double ambiguityCutoff = 0.06;
   public static final double singleTagPoseCutoffMeters = 4;
