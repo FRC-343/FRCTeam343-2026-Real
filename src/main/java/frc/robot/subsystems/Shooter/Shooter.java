@@ -48,9 +48,8 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  public Command setVelocityThenStopCommand() {
-    return new RunCommand(() -> this.io.setVelocity(BobotState.getWantedShooterRPS()), this)
-        .finallyDo(io::stop);
+  public Command setVelocityThenStopCommand(double RPS) {
+    return new RunCommand(() -> this.io.setVelocity(RPS), this).finallyDo(io::stop);
   }
 
   public Command setPercentOutputThenStopCommand(double percentDecimal) {

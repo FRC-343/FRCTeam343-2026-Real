@@ -34,7 +34,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.ShooterSolver;
+import frc.robot.util.ShooterHelper.HoodAim;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretCRT2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -201,12 +201,12 @@ public class RobotContainer {
   private void configureOpButtons() {
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition()));
+        .whileTrue(shooter.setVelocityThenStopCommand(20).alongWith(hood.setHoodPosition()));
     controller2
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-15)
+                .setVelocityThenStopCommand(-10)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
   }
 
@@ -277,27 +277,26 @@ public class RobotContainer {
           intercept.getDistance(
               BobotState.getGlobalPose()
                   .getTranslation()); // Gets the distance from the shooter to the intercept
-      // position.
+      //   position.
 
-      // double hood =
-      // HoodAim.calculateHoodAngle(
-      // distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+      double hood =
+          HoodAim.calculateHoodAngle(
+              distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
 
-      // /* updates our call for the hood and turret */
-      // BobotState.updateHoodAngle(hood);
+      /* updates our call for the hood and turret */
+      BobotState.updateHoodAngle(hood);
 
-      ShooterSolver.Solution solution =
-          ShooterSolver.solve(
-              distance,
-              Units.inchesToMeters(55),
-              Constants.ShooterConstants.CIRCUMFERENCE,
-              Constants.HoodConstants.MINHOOD,
-              Constants.HoodConstants.MAXHOOD);
+      //   ShooterSolver.Solution solution =
+      //       ShooterSolver.solve(
+      //           distance,
+      //           Units.inchesToMeters(55),
+      //           Constants.ShooterConstants.CIRCUMFERENCE,
+      //           Constants.HoodConstants.MINHOOD,
+      //           Constants.HoodConstants.MAXHOOD);
 
-      if (solution != null) {
-        BobotState.updateHoodAngle(solution.hoodRotations);
-        BobotState.updateWantedShooterRPS(solution.shooterRPS);
-      }
+      //   if (solution != null) {
+      //     BobotState.updateHoodAngle(solution.hoodRotations);
+      //     BobotState.updateWantedShooterRPS(solution.shooterRPS);
     }
   }
 }
