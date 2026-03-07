@@ -26,7 +26,8 @@ public class FieldConstants {
   public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(30);
   public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(30);
 
-  public static final double distanceToTrench = Units.inchesToMeters(182.1);
+  public static final double distanceToBlueTrench = Units.inchesToMeters(182.1);
+  public static final double distanceToRedTrench = fieldLength - distanceToBlueTrench;
 
   /*
    * April Tag Lookup

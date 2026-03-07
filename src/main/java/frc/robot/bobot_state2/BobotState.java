@@ -331,8 +331,8 @@ public class BobotState extends VirtualSubsystem {
     return new Trigger(
         () ->
             FieldUtils.getAlliance() == Alliance.Blue
-                ? getGlobalPose().getX() < FieldConstants.fieldLength / 2.0 // fix this
-                : getGlobalPose().getX() > FieldConstants.fieldLength / 2.0);
+                ? getGlobalPose().getX() < FieldConstants.distanceToBlueTrench // fix this
+                : getGlobalPose().getX() > FieldConstants.distanceToRedTrench);
   }
 
   @Override
