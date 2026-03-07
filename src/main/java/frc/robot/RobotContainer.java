@@ -201,12 +201,12 @@ public class RobotContainer {
   private void configureOpButtons() {
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand(20).alongWith(hood.setHoodPosition()));
+        .whileTrue(shooter.setVelocityThenStopCommand(25).alongWith(hood.setHoodPosition()));
     controller2
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-10)
+                .setVelocityThenStopCommand(-25)
                 .alongWith(kicker.setVelocityThenStopCommand(40)));
   }
 

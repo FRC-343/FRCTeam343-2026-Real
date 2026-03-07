@@ -42,7 +42,7 @@ public class VisionConstants {
                       new Translation3d(
                           Units.inchesToMeters(-6.729289), // forward+
                           Units.inchesToMeters(12.365818), // left+
-                          Units.inchesToMeters(6.729289)), // up+
+                          Units.inchesToMeters(7.575789)), // up+
                       new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(-15)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
