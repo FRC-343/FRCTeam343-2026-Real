@@ -92,7 +92,7 @@ public class Vision extends VirtualSubsystem {
       rejectedAprilTagPoses.addAll(Arrays.asList(cam.inputs.rejectedAprilTagPoses));
 
       for (PoseObservation observation : cam.inputs.validPoseObservations) {
-        // BobotState.offerVisionObservation(observation);
+        BobotState.offerVisionObservation(observation);
       }
     }
 

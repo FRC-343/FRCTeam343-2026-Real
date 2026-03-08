@@ -63,6 +63,8 @@ public class BobotState extends VirtualSubsystem {
   private static double
       ToF; // this will hold the Time of flight info needed for turret and hood calcs
 
+  private static double distance;
+
   private static double HoodCalc; // the number that the hood calc spits out
 
   private static double TurretCalc; // the number that the turret calc spits out
@@ -140,7 +142,9 @@ public class BobotState extends VirtualSubsystem {
    * Section that we are adding updates too
    *
    */
-
+  public static void updateDistance(double distance) {
+    BobotState.distance = distance;
+  }
   // ToF = Time of Flight
   public static void updateToF(Double ToF) {
     BobotState.ToF = ToF;
@@ -232,6 +236,9 @@ public class BobotState extends VirtualSubsystem {
    * Section we are adding get methods to
    *
    */
+  public static double getDistance() {
+    return BobotState.distance;
+  }
 
   public static double getToF() {
     return BobotState.ToF;
@@ -398,6 +405,8 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Top Side Trigger", onTopHalf());
     Logger.recordOutput(logRoot + "Team Side Trigger", onTeamSide());
+
+    Logger.recordOutput(logRoot + "Distance", distance);
 
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";

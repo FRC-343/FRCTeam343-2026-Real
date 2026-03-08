@@ -27,11 +27,11 @@ public class AprilTagIOPhoton implements AprilTagIO {
 
     robotToCamera = source.robotToCamera();
 
-    estimator = // new PhotonPoseEstimator(VisionConstants.fieldLayout, source.robotToCamera());
-        new PhotonPoseEstimator(
-            VisionConstants.fieldLayout,
-            PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-            source.robotToCamera());
+    estimator = new PhotonPoseEstimator(VisionConstants.fieldLayout, source.robotToCamera());
+    // new PhotonPoseEstimator(
+    //     VisionConstants.fieldLayout,
+    //     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+    //     source.robotToCamera());
 
     estimator.setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
   }
