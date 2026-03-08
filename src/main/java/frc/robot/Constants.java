@@ -40,24 +40,6 @@ public final class Constants {
     public static final double FORWARDLIMITDEGREES = 180;
     public static final double REVERSELIMITDEGREES = -180;
     public static final double MOTOR_TO_TURRET_RATIO = 221 / 21 * 3;
-
-    // ===== Gear Math =====
-    public static final int CRT_MOD_A = 17;
-    public static final int CRT_MOD_B = 13;
-    public static final int CRT_PERIOD = 221; // 17 * 13
-
-    // Motor rotations per turret rotation
-    public static final double MOTOR_ROT_PER_TURRET_ROT = 221.0 / 7.0;
-
-    public static final double RAD_PER_TURRET_ROT = 2.0 * Math.PI;
-
-    public static final double GEAR_0_TOOTH_COUNT = 221.0;
-    public static final double GEAR_1_TOOTH_COUNT = 17.0;
-    public static final double GEAR_2_TOOTH_COUNT = 13.0;
-
-    public static final double SLOPE =
-        ((GEAR_2_TOOTH_COUNT * GEAR_1_TOOTH_COUNT)
-            / ((GEAR_1_TOOTH_COUNT - GEAR_2_TOOTH_COUNT) * GEAR_0_TOOTH_COUNT));
   }
 
   public static final class ShooterConstants {

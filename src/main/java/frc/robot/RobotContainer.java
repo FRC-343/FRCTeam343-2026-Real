@@ -8,6 +8,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -34,9 +36,13 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
+import frc.robot.util.ShooterHelper.BallisticSolver;
 import frc.robot.util.ShooterHelper.HoodAim;
+import frc.robot.util.ShooterHelper.HoodAimTest;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretCRT2;
+import frc.robot.util.ShooterHelper.TurretCalc;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -249,7 +255,7 @@ public class RobotContainer {
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
-        (BobotState.getShooterRPM()) * Constants.ShooterConstants.CIRCUMFERENCE;
+        (BobotState.getShooterRPS()) * Constants.ShooterConstants.CIRCUMFERENCE;
 
     /*
      * Call for the calculation that gets an estimated time that the fuel will be in
@@ -287,18 +293,92 @@ public class RobotContainer {
 
       /* updates our call for the hood and turret */
       BobotState.updateHoodAngle(hood);
-
-      //   ShooterSolver.Solution solution =
-      //       ShooterSolver.solve(
-      //           distance,
-      //           Units.inchesToMeters(55),
-      //           Constants.ShooterConstants.CIRCUMFERENCE,
-      //           Constants.HoodConstants.MINHOOD,
-      //           Constants.HoodConstants.MAXHOOD);
-
-      //   if (solution != null) {
-      //     BobotState.updateHoodAngle(solution.hoodRotations);
-      //     BobotState.updateWantedShooterRPS(solution.shooterRPS);
     }
   }
+
+
+public void ShootCalcs() {
+
+  ChassisSpeeds fieldSpeeds =
+      ChassisSpeeds.fromRobotRelativeSpeeds(
+          BobotState.getRoboSpeed(),
+          BobotState.getGlobalPose().getRotation());
+
+  Translation2d robotVelocity =
+      new Translation2d(
+          fieldSpeeds.vxMetersPerSecond,
+          fieldSpeeds.vyMetersPerSecond);
+
+  Translation2d target = test2.getTarget();
+
+  Translation2d robotPos =
+      BobotState.getGlobalPose().getTranslation();
+
+  double distance =
+      robotPos.getDistance(target);
+
+  BobotState.updateDistance(distance);
+
+  double hood =
+      HoodAimTest.chooseHoodAngle(distance);
+
+  double velocity =
+      HoodAimTest.requiredVelocity(
+          distance,
+          Units.inchesToMeters(55),
+          hood);
+
+  double shooterRPS =
+      velocity / Constants.ShooterConstants.CIRCUMFERENCE;
+
+  double horizontalVelocity =
+      velocity * Math.cos(Math.toRadians(hood));
+
+  double time =
+      TimeOfFlight.solveTime(
+          robotPos,
+          robotVelocity,
+          target,
+          new Translation2d(),
+          horizontalVelocity);
+
+  if (!Double.isNaN(time)) {
+
+    Translation2d leadTarget =
+        target.plus(robotVelocity.times(-time));
+
+    double turretRadians =
+        TurretCalc.calculateTurretSetpointRadians(
+            leadTarget,
+            BobotState.getGlobalPose());
+
+    double turretRotations =
+        TurretCalc.turretRadiansToMotorRotations(
+            turretRadians);
+
+    BobotState.updateOptiTurretYaw(turretRotations);
+  }
+
+  BobotState.updateShooterRPS(shooterRPS);
+  BobotState.updateHoodAngle(hood);
+}
+
+public void ballisticTest(){
+    
+  Translation2d target = test2.getTarget();
+
+  Translation2d robotPos =
+      BobotState.getGlobalPose().getTranslation();
+
+  double distance =
+      robotPos.getDistance(target);
+    BallisticSolver.Solution sol =
+    BallisticSolver.solve(distance, Units.inchesToMeters(55));
+
+double hood = sol.hood;
+double velocity = sol.velocity;
+
+  BobotState.updateShooterRPS(velocity);
+  BobotState.updateHoodAngle(hood);
+}
 }
