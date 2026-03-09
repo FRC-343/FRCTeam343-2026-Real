@@ -40,30 +40,30 @@ public class VisionConstants {
                   "FLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-6.729289), // forward+
-                          Units.inchesToMeters(12.330815), // left+
-                          Units.inchesToMeters(15.379204)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(-15)))),
+                          Units.inchesToMeters(-6.979), // forward+
+                          Units.inchesToMeters(12.331), // left+
+                          Units.inchesToMeters(18.033)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
                   "BLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-11.634180), // forward+
-                          Units.inchesToMeters(11.537534), // left+
-                          Units.inchesToMeters(5.144769)), // up+
+                          Units.inchesToMeters(-11.629), // forward+
+                          Units.inchesToMeters(11.529), // left+
+                          Units.inchesToMeters(7.899)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-195)))),
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
                   "FRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-6.729289), // forward+
-                          Units.inchesToMeters(-12.365818), // left+
-                          Units.inchesToMeters(17.032839)), // up+
+                          Units.inchesToMeters(-6.979), // forward+
+                          Units.inchesToMeters(-12.331), // left+
+                          Units.inchesToMeters(19.533)), // up+
                       new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
@@ -71,10 +71,10 @@ public class VisionConstants {
                   "BRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-11.634214), // forward+
-                          Units.inchesToMeters(-11.537525), // left+
-                          Units.inchesToMeters(5.144769)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(195)))),
+                          Units.inchesToMeters(-11.634), // forward+
+                          Units.inchesToMeters(-11.547), // left+
+                          Units.inchesToMeters(7.899)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
