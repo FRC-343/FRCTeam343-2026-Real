@@ -8,8 +8,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,7 +16,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.TargetTest.DashboardTarget;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
@@ -36,13 +33,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.BallisticSolver;
 import frc.robot.util.ShooterHelper.HoodAim;
-import frc.robot.util.ShooterHelper.HoodAimTest;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretCRT2;
-import frc.robot.util.ShooterHelper.TurretCalc;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -67,8 +60,6 @@ public class RobotContainer {
 
   private final Intake intake;
 
-  private final DashboardTarget test2;
-
   private final Shooter shooter;
 
   private final Hood hood;
@@ -85,7 +76,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    test2 = new DashboardTarget();
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -207,7 +197,10 @@ public class RobotContainer {
   private void configureOpButtons() {
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand(40).alongWith(hood.setHoodPosition()));
+        .whileTrue(
+            shooter
+                .setVelocityThenStopCommand(40)
+                .alongWith(hood.setHoodPosition().onlyWhile(BobotState.canShoot())));
     controller2
         .leftBumper()
         .whileTrue(
@@ -227,7 +220,6 @@ public class RobotContainer {
 
   public void TurretCalcs() {
 
-    BobotState.updateTurretTarget(test2.getTarget());
     BobotState.updateOptiTurretYaw(
         TurretCRT2.turretRadiansToMotorRotations(
             TurretCRT2.calculateTurretSetpointRadians(
@@ -247,11 +239,11 @@ public class RobotContainer {
     Translation2d robotVelocityXY =
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
-    Translation2d targetXY = test2.getTarget();
+    Translation2d targetXY = BobotState.getTurretTarget();
 
-    BobotState.updateTurretTarget(
-        targetXY); // This mainly used for sim to show the position the turret/hood is
-    // targeting.
+    // BobotState.updateTurretTarget(
+    //     targetXY); // This mainly used for sim to show the position the turret/hood is
+    // // targeting.
 
     /* Gets the fuel exit velocity this is used for the hood calculations */
     double shooterExitVelocity =
@@ -296,89 +288,92 @@ public class RobotContainer {
     }
   }
 
+  // public void ShootCalcs() {
 
-public void ShootCalcs() {
+  //   ChassisSpeeds fieldSpeeds =
+  //       ChassisSpeeds.fromRobotRelativeSpeeds(
+  //           BobotState.getRoboSpeed(),
+  //           BobotState.getGlobalPose().getRotation());
 
-  ChassisSpeeds fieldSpeeds =
-      ChassisSpeeds.fromRobotRelativeSpeeds(
-          BobotState.getRoboSpeed(),
-          BobotState.getGlobalPose().getRotation());
+  //   Translation2d robotVelocity =
+  //       new Translation2d(
+  //           fieldSpeeds.vxMetersPerSecond,
+  //           fieldSpeeds.vyMetersPerSecond);
 
-  Translation2d robotVelocity =
-      new Translation2d(
-          fieldSpeeds.vxMetersPerSecond,
-          fieldSpeeds.vyMetersPerSecond);
+  //   Translation2d target = test2.getTarget();
 
-  Translation2d target = test2.getTarget();
+  //   Translation2d robotPos =
+  //       BobotState.getGlobalPose().getTranslation();
 
-  Translation2d robotPos =
-      BobotState.getGlobalPose().getTranslation();
+  //   double distance =
+  //       robotPos.getDistance(target);
 
-  double distance =
-      robotPos.getDistance(target);
+  //   BobotState.updateDistance(distance);
 
-  BobotState.updateDistance(distance);
+  //   double hood =
+  //       HoodAimTest.chooseHoodAngle(distance);
 
-  double hood =
-      HoodAimTest.chooseHoodAngle(distance);
+  //   double velocity =
+  //       HoodAimTest.requiredVelocity(
+  //           distance,
+  //           Units.inchesToMeters(55),
+  //           hood);
 
-  double velocity =
-      HoodAimTest.requiredVelocity(
-          distance,
-          Units.inchesToMeters(55),
-          hood);
+  //   double shooterRPS =
+  //       velocity / Constants.ShooterConstants.CIRCUMFERENCE;
 
-  double shooterRPS =
-      velocity / Constants.ShooterConstants.CIRCUMFERENCE;
+  //   double horizontalVelocity =
+  //       velocity * Math.cos(Math.toRadians(hood));
 
-  double horizontalVelocity =
-      velocity * Math.cos(Math.toRadians(hood));
+  //   double time =
+  //       TimeOfFlight.solveTime(
+  //           robotPos,
+  //           robotVelocity,
+  //           target,
+  //           new Translation2d(),
+  //           horizontalVelocity);
 
-  double time =
-      TimeOfFlight.solveTime(
-          robotPos,
-          robotVelocity,
-          target,
-          new Translation2d(),
-          horizontalVelocity);
+  //   if (!Double.isNaN(time)) {
 
-  if (!Double.isNaN(time)) {
+  //     Translation2d leadTarget =
+  //         target.plus(robotVelocity.times(-time));
 
-    Translation2d leadTarget =
-        target.plus(robotVelocity.times(-time));
+  //     double turretRadians =
+  //         TurretCalc.calculateTurretSetpointRadians(
+  //             leadTarget,
+  //             BobotState.getGlobalPose());
 
-    double turretRadians =
-        TurretCalc.calculateTurretSetpointRadians(
-            leadTarget,
-            BobotState.getGlobalPose());
+  //     double turretRotations =
+  //         TurretCalc.turretRadiansToMotorRotations(
+  //             turretRadians);
 
-    double turretRotations =
-        TurretCalc.turretRadiansToMotorRotations(
-            turretRadians);
+  //     BobotState.updateOptiTurretYaw(turretRotations);
+  //   }
 
-    BobotState.updateOptiTurretYaw(turretRotations);
+  //   BobotState.updateShooterRPS(shooterRPS);
+  //   BobotState.updateHoodAngle(hood);
+  // }
+
+  // public void ballisticTest(){
+
+  //   Translation2d target = test2.getTarget();
+
+  //   Translation2d robotPos =
+  //       BobotState.getGlobalPose().getTranslation();
+
+  //   double distance =
+  //       robotPos.getDistance(target);
+  //     BallisticSolver.Solution sol =
+  //     BallisticSolver.solve(distance, Units.inchesToMeters(55));
+
+  // double hood = sol.hood;
+  // double velocity = sol.velocity;
+
+  //   BobotState.updateShooterRPS(velocity);
+  //   BobotState.updateHoodAngle(hood);
+  // }
+
+  public void Automation() {
+    BobotState.updateTurretTarget(BobotState.targrtLocation());
   }
-
-  BobotState.updateShooterRPS(shooterRPS);
-  BobotState.updateHoodAngle(hood);
-}
-
-public void ballisticTest(){
-    
-  Translation2d target = test2.getTarget();
-
-  Translation2d robotPos =
-      BobotState.getGlobalPose().getTranslation();
-
-  double distance =
-      robotPos.getDistance(target);
-    BallisticSolver.Solution sol =
-    BallisticSolver.solve(distance, Units.inchesToMeters(55));
-
-double hood = sol.hood;
-double velocity = sol.velocity;
-
-  BobotState.updateShooterRPS(velocity);
-  BobotState.updateHoodAngle(hood);
-}
 }

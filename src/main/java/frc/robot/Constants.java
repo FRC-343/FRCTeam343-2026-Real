@@ -7,8 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.field.FieldConstants;
+import frc.robot.field.FieldUtils;
+import frc.robot.field.HubFaces;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -47,5 +51,50 @@ public final class Constants {
     public static double WHEELDIAMMETER = Units.inchesToMeters(WHEELDIAM);
 
     public static double CIRCUMFERENCE = Math.PI * WHEELDIAMMETER;
+  }
+
+  public static final class TargetLocations {
+    public static Translation2d getHubTarget() {
+      double x =
+          HubFaces.B.get()
+              .tag
+              .pose()
+              .getTranslation()
+              .toTranslation2d()
+              .plus(
+                  new Translation2d(
+                      FieldUtils.isBlueAlliance()
+                          ? FieldConstants.tagToHub
+                          : -FieldConstants.tagToHub,
+                      0.0))
+              .getX();
+      double y =
+          HubFaces.B.get()
+              .tag
+              .pose()
+              .getTranslation()
+              .toTranslation2d()
+              .plus(
+                  new Translation2d(
+                      FieldUtils.isBlueAlliance()
+                          ? FieldConstants.tagToHub
+                          : -FieldConstants.tagToHub,
+                      0.0))
+              .getY();
+
+      return new Translation2d(x, y);
+    }
+
+    public static Translation2d getBottomTarget() {
+      double x = FieldUtils.isRedAlliance() ? 14.78 : .91;
+      double y = FieldUtils.isRedAlliance() ? 1.72 : 1.72;
+      return new Translation2d(x, y);
+    }
+
+    public static Translation2d getTopTarget() {
+      double x = FieldUtils.isRedAlliance() ? 14.78 : .91;
+      double y = FieldUtils.isRedAlliance() ? 6.46 : 6.46;
+      return new Translation2d(x, y);
+    }
   }
 }

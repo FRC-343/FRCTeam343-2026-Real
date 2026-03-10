@@ -43,7 +43,8 @@ public class VisionConstants {
                           Units.inchesToMeters(-6.979), // forward+
                           Units.inchesToMeters(12.331), // left+
                           Units.inchesToMeters(18.033)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
+                      new Rotation3d(
+                          0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
@@ -74,7 +75,8 @@ public class VisionConstants {
                           Units.inchesToMeters(-11.634), // forward+
                           Units.inchesToMeters(-11.547), // left+
                           Units.inchesToMeters(7.899)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
+                      new Rotation3d(
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
@@ -84,5 +86,5 @@ public class VisionConstants {
   // The standard deviations of our vision estimated poses, which affect correction rate
   // (Fake values. Experiment and determine estimation noise on an actual robot.)
   public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
-  public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+  public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(2, 2, 4);
 }
