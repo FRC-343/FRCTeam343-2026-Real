@@ -9,7 +9,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -21,8 +20,6 @@ import frc.robot.subsystems.Turret.TurretMotorIO.TurretMotorIOInputs;
 
 public class TurretMotorTalonFX implements TurretMotorIO {
   private final TalonFX talon;
-  private final CANcoder r13;
-  private final CANcoder r17;
 
   // private final EasyCRT easyCRT;
 
@@ -35,9 +32,6 @@ public class TurretMotorTalonFX implements TurretMotorIO {
   private final StatusSignal<Angle> position;
   private final StatusSignal<Current> current;
 
-  private final StatusSignal<Angle> r13Abspos;
-  private final StatusSignal<Angle> r17Abspos;
-
   private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
@@ -45,17 +39,13 @@ public class TurretMotorTalonFX implements TurretMotorIO {
 
   private final Orchestra m_orchestra = new Orchestra();
 
-  public TurretMotorTalonFX(int deviceId, int deviceId2, int deviceId3) {
+  public TurretMotorTalonFX(int deviceId) {
     talon = new TalonFX(deviceId);
-    r13 = new CANcoder(deviceId3);
-    r17 = new CANcoder(deviceId2);
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();
     position = talon.getPosition();
     current = talon.getStatorCurrent();
-    r13Abspos = r13.getAbsolutePosition();
-    r17Abspos = r17.getAbsolutePosition();
 
     // absEnc = encoder.getAbsoluteEncoder();
 
@@ -90,8 +80,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
     //             .MagnetSensor.withMagnetOffset(0.31689453125)
     //                 .withAbsoluteSensorDiscontinuityPoint(0));
 
-    StatusSignal.setUpdateFrequencyForAll(
-        10, voltage, dutyCycle, velocity, position, current, r13Abspos, r17Abspos);
+    StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
     talon.optimizeBusUtilization();
 
     // TurretCRT3.calculateTurretRotations(
@@ -112,14 +101,11 @@ public class TurretMotorTalonFX implements TurretMotorIO {
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {
-    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position, r13Abspos, r17Abspos);
+    StatusSignal.refreshAll(velocity, dutyCycle, voltage, position);
     inputs.masterAppliedVolts = voltage.getValueAsDouble();
     inputs.masterVelocityRadPerSec = velocity.getValueAsDouble();
     inputs.masterPositionRot = position.getValueAsDouble();
     inputs.masterCurrentAmps = current.getValueAsDouble();
-
-    inputs.r13Abspos = r13Abspos.getValueAsDouble();
-    inputs.r17Abspos = r17Abspos.getValueAsDouble();
   }
 
   @Override
