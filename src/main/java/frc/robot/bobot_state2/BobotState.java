@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
+import frc.robot.Constants.TargetLocations;
 import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
 import frc.robot.field.FieldConstants;
@@ -145,6 +146,7 @@ public class BobotState extends VirtualSubsystem {
   public static void updateDistance(double distance) {
     BobotState.distance = distance;
   }
+
   // ToF = Time of Flight
   public static void updateToF(Double ToF) {
     BobotState.ToF = ToF;
@@ -316,6 +318,14 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodCalc;
   }
 
+  public static Translation2d targrtLocation() {
+    return (onTeamSide().getAsBoolean()
+        ? TargetLocations.getHubTarget()
+        : onTopHalf().getAsBoolean()
+            ? TargetLocations.getTopTarget()
+            : TargetLocations.getBottomTarget());
+  }
+
   // public static TargetAngleTracker getClosestAlignmentTracker() {
   // return autoAlignmentTrackers.stream()
   // .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)
@@ -323,6 +333,12 @@ public class BobotState extends VirtualSubsystem {
   // }
 
   // Adding Triggers here
+  public static Trigger canShoot() {
+    return new Trigger(
+        () ->
+            (BobotState.TurretMotorPos <= BobotState.OptiTurretYaw + .5
+                && BobotState.TurretMotorPos >= BobotState.OptiTurretYaw - .5));
+  }
 
   public static Trigger onBottomHalf() {
     return new Trigger(
