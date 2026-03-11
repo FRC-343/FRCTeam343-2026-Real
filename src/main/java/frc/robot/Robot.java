@@ -97,8 +97,9 @@ public class Robot extends LoggedRobot {
     Threads.setCurrentThreadPriority(false, 10);
 
     // The below is highly experimental
-    robotContainer.TurretCalcs();
-    robotContainer.HoodCalcs();
+    // robotContainer.TurretCalcs();
+    // robotContainer.HoodCalcs();
+    robotContainer.ShootCalcs();
   }
 
   /** This function is called once when the robot is disabled. */

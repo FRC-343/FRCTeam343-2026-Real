@@ -289,9 +289,9 @@ public class ShooterHelper {
 
       Solution best = new Solution();
 
-      double bestError = Double.MAX_VALUE;
+      double bestVelocity = Double.MAX_VALUE;
 
-      for (double hood = 5; hood < 45; hood += 0.2) {
+      for (double hood = 0; hood <= 34; hood += 0.2) {
 
         double theta = Math.toRadians(hood);
 
@@ -302,18 +302,15 @@ public class ShooterHelper {
 
         double denom = 2 * cos * cos * (distance * tan - height);
 
-        if (denom <= 0) continue;
+        // Reject invalid or unstable solutions
+        if (denom < 0.0001) continue;
 
         double velocity = Math.sqrt(numerator / denom);
 
-        double predictedHeight =
-            distance * tan - (g * distance * distance) / (2 * velocity * velocity * cos * cos);
+        // Choose lowest velocity shot
+        if (velocity < bestVelocity) {
 
-        double error = Math.abs(predictedHeight - height);
-
-        if (error < bestError) {
-
-          bestError = error;
+          bestVelocity = velocity;
 
           best.hood = hood;
           best.velocity = velocity;

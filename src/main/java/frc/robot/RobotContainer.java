@@ -33,7 +33,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAim;
+import frc.robot.util.ShooterHelper.HoodAimTest;
 import frc.robot.util.ShooterHelper.TimeOfFlight;
 import frc.robot.util.ShooterHelper.TurretCRT2;
 import frc.robot.util.ShooterHelper.TurretCalc;
@@ -236,148 +236,124 @@ public class RobotContainer {
                 Rotation2d.fromRotations(BobotState.getTurretPosi2()))));
   }
 
-  public void HoodCalcs() {
+  //   public void HoodCalcs() {
 
-    /* Field Speed converts robot speed to field speeds for easier math */
+  //     /* Field Speed converts robot speed to field speeds for easier math */
+  //     ChassisSpeeds fieldSpeeds =
+  //         ChassisSpeeds.fromRobotRelativeSpeeds(
+  //             BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
+
+  //     /* Gets the robot velocity using the converted field speeds */
+  //     Translation2d robotVelocityXY =
+  //         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+
+  //     Translation2d targetXY = BobotState.getTurretTarget();
+
+  //     // BobotState.updateTurretTarget(
+  //     //     targetXY); // This mainly used for sim to show the position the turret/hood is
+  //     // // targeting.
+
+  //     /* Gets the fuel exit velocity this is used for the hood calculations */
+  //     double shooterExitVelocity =
+  //         (BobotState.getShooterRPS()) * Constants.ShooterConstants.CIRCUMFERENCE;
+
+  //     /*
+  //      * Call for the calculation that gets an estimated time that the fuel will be in
+  //      * the air
+  //      * from
+  //      * any give position/speed
+  //      */
+  //     BobotState.updateToF(
+  //         TimeOfFlight.solveTime(
+  //             BobotState.getGlobalPose().getTranslation(),
+  //             robotVelocityXY,
+  //             targetXY,
+  //             new Translation2d(),
+  //             shooterExitVelocity));
+
+  //     double time = BobotState.getToF(); // gives us an easier call for the TOF
+
+  //     if (!Double.isNaN(time)) { // If time is a real number do the calculations
+
+  //       Translation2d intercept =
+  //           targetXY.plus(
+  //               robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the
+
+  //       double distance =
+  //           intercept.getDistance(
+  //               BobotState.getGlobalPose()
+  //                   .getTranslation()); // Gets the distance from the shooter to the intercept
+  //       //   position.
+
+  //       BobotState.updateDistance(distance);
+
+  //       double hood =
+  //           HoodAim.calculateHoodAngle(
+  //               distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
+
+  //       /* updates our call for the hood and turret */
+  //       BobotState.updateHoodAngle(hood);
+  //     }
+  //   }
+
+  public void ShootCalcs() {
+
     ChassisSpeeds fieldSpeeds =
         ChassisSpeeds.fromRobotRelativeSpeeds(
             BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
 
-    /* Gets the robot velocity using the converted field speeds */
-    Translation2d robotVelocityXY =
+    Translation2d robotVelocity =
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
-    Translation2d targetXY = BobotState.getTurretTarget();
+    Translation2d target = BobotState.getTurretTarget();
 
-    // BobotState.updateTurretTarget(
-    //     targetXY); // This mainly used for sim to show the position the turret/hood is
-    // // targeting.
+    Translation2d robotPos = BobotState.getGlobalPose().getTranslation();
 
-    /* Gets the fuel exit velocity this is used for the hood calculations */
-    double shooterExitVelocity =
-        (BobotState.getShooterRPS()) * Constants.ShooterConstants.CIRCUMFERENCE;
+    double distance = robotPos.getDistance(target);
 
-    /*
-     * Call for the calculation that gets an estimated time that the fuel will be in
-     * the air
-     * from
-     * any give position/speed
-     */
-    BobotState.updateToF(
+    BobotState.updateDistance(distance);
+
+    double hood = HoodAimTest.chooseHoodAngle(distance);
+
+    double velocity = HoodAimTest.requiredVelocity(distance, Units.inchesToMeters(55), hood);
+
+    double shooterRPS = velocity / Constants.ShooterConstants.CIRCUMFERENCE;
+
+    double horizontalVelocity = velocity * Math.cos(Math.toRadians(hood));
+
+    double time =
         TimeOfFlight.solveTime(
-            BobotState.getGlobalPose().getTranslation(),
-            robotVelocityXY,
-            targetXY,
-            new Translation2d(),
-            shooterExitVelocity));
+            robotPos, robotVelocity, target, new Translation2d(), horizontalVelocity);
 
-    double time = BobotState.getToF(); // gives us an easier call for the TOF
+    if (!Double.isNaN(time)) {
 
-    if (!Double.isNaN(time)) { // If time is a real number do the calculations
+      Translation2d leadTarget = target.plus(robotVelocity.times(-time));
 
-      Translation2d intercept =
-          targetXY.plus(
-              robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the
+      double turretRadians =
+          TurretCalc.calculateTurretSetpointRadians(leadTarget, BobotState.getGlobalPose());
 
-      double distance =
-          intercept.getDistance(
-              BobotState.getGlobalPose()
-                  .getTranslation()); // Gets the distance from the shooter to the intercept
-      //   position.
+      double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretRadians);
 
-      BobotState.updateDistance(distance);
-
-      double hood =
-          HoodAim.calculateHoodAngle(
-              distance, Units.inchesToMeters(55), shooterExitVelocity); // Gets the hood
-
-      /* updates our call for the hood and turret */
-      BobotState.updateHoodAngle(hood);
+      BobotState.updateOptiTurretYaw(turretRotations);
     }
+
+    BobotState.updateShooterRPS(shooterRPS);
+    BobotState.updateHoodAngle(hood);
   }
 
-  // public void ShootCalcs() {
+  // public void ballisticTest() {
 
-  //   ChassisSpeeds fieldSpeeds =
-  //       ChassisSpeeds.fromRobotRelativeSpeeds(
-  //           BobotState.getRoboSpeed(),
-  //           BobotState.getGlobalPose().getRotation());
+  //   Translation2d target = BobotState.getTurretTarget();
 
-  //   Translation2d robotVelocity =
-  //       new Translation2d(
-  //           fieldSpeeds.vxMetersPerSecond,
-  //           fieldSpeeds.vyMetersPerSecond);
+  //   Translation2d robotPos = BobotState.getGlobalPose().getTranslation();
 
-  //   Translation2d target = test2.getTarget();
+  //   double distance = robotPos.getDistance(target);
+  //   BallisticSolver.Solution sol = BallisticSolver.solve(distance, Units.inchesToMeters(55));
 
-  //   Translation2d robotPos =
-  //       BobotState.getGlobalPose().getTranslation();
+  //   double hood = sol.hood;
+  //   double velocity = sol.velocity;
 
-  //   double distance =
-  //       robotPos.getDistance(target);
-
-  //   BobotState.updateDistance(distance);
-
-  //   double hood =
-  //       HoodAimTest.chooseHoodAngle(distance);
-
-  //   double velocity =
-  //       HoodAimTest.requiredVelocity(
-  //           distance,
-  //           Units.inchesToMeters(55),
-  //           hood);
-
-  //   double shooterRPS =
-  //       velocity / Constants.ShooterConstants.CIRCUMFERENCE;
-
-  //   double horizontalVelocity =
-  //       velocity * Math.cos(Math.toRadians(hood));
-
-  //   double time =
-  //       TimeOfFlight.solveTime(
-  //           robotPos,
-  //           robotVelocity,
-  //           target,
-  //           new Translation2d(),
-  //           horizontalVelocity);
-
-  //   if (!Double.isNaN(time)) {
-
-  //     Translation2d leadTarget =
-  //         target.plus(robotVelocity.times(-time));
-
-  //     double turretRadians =
-  //         TurretCalc.calculateTurretSetpointRadians(
-  //             leadTarget,
-  //             BobotState.getGlobalPose());
-
-  //     double turretRotations =
-  //         TurretCalc.turretRadiansToMotorRotations(
-  //             turretRadians);
-
-  //     BobotState.updateOptiTurretYaw(turretRotations);
-  //   }
-
-  //   BobotState.updateShooterRPS(shooterRPS);
-  //   BobotState.updateHoodAngle(hood);
-  // }
-
-  // public void ballisticTest(){
-
-  //   Translation2d target = test2.getTarget();
-
-  //   Translation2d robotPos =
-  //       BobotState.getGlobalPose().getTranslation();
-
-  //   double distance =
-  //       robotPos.getDistance(target);
-  //     BallisticSolver.Solution sol =
-  //     BallisticSolver.solve(distance, Units.inchesToMeters(55));
-
-  // double hood = sol.hood;
-  // double velocity = sol.velocity;
-
-  //   BobotState.updateShooterRPS(velocity);
+  //   BobotState.updateShooterRPS(velocity / ShooterConstants.CIRCUMFERENCE);
   //   BobotState.updateHoodAngle(hood);
   // }
 
