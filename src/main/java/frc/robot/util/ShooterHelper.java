@@ -107,7 +107,7 @@ public class ShooterHelper {
     // Example: 270° total travel (-135° to +135° relative to robot forward)
 
     // Optional soft margin to avoid hard stops
-    public static final double SOFT_MARGIN_RAD = Math.toRadians(5);
+    public static final double SOFT_MARGIN_RAD = Math.toRadians(0);
 
     private TurretYawLimiter() {}
 
@@ -276,48 +276,10 @@ public class ShooterHelper {
     }
   }
 
-  public final class BallisticSolver {
-
-    public static class Solution {
-      public double hood;
-      public double velocity;
-    }
-
-    public static Solution solve(double distance, double height) {
-
-      double g = 9.81;
-
-      Solution best = new Solution();
-
-      double bestVelocity = Double.MAX_VALUE;
-
-      for (double hood = 0; hood <= 34; hood += 0.2) {
-
-        double theta = Math.toRadians(hood);
-
-        double cos = Math.cos(theta);
-        double tan = Math.tan(theta);
-
-        double numerator = g * distance * distance;
-
-        double denom = 2 * cos * cos * (distance * tan - height);
-
-        // Reject invalid or unstable solutions
-        if (denom < 0.0001) continue;
-
-        double velocity = Math.sqrt(numerator / denom);
-
-        // Choose lowest velocity shot
-        if (velocity < bestVelocity) {
-
-          bestVelocity = velocity;
-
-          best.hood = hood;
-          best.velocity = velocity;
-        }
-      }
-
-      return best;
+  public final class ShooterSpeed {
+    public static double ShooterRPS(double distance) {
+      double rps = 35 + (25 / 7.2) * (distance - 2.8);
+      return rps;
     }
   }
 }

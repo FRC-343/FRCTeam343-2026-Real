@@ -318,7 +318,7 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodCalc;
   }
 
-  public static Translation2d targrtLocation() {
+  public static Translation2d targetLocation() {
     return (onTeamSide().getAsBoolean()
         ? TargetLocations.getHubTarget()
         : onTopHalf().getAsBoolean()
@@ -336,8 +336,8 @@ public class BobotState extends VirtualSubsystem {
   public static Trigger canShoot() {
     return new Trigger(
         () ->
-            (BobotState.TurretMotorPos <= BobotState.OptiTurretYaw + .5
-                && BobotState.TurretMotorPos >= BobotState.OptiTurretYaw - .5));
+            (BobotState.TurretPos2 <= BobotState.OptiTurretYaw + .5
+                && BobotState.TurretPos2 >= BobotState.OptiTurretYaw - .5));
   }
 
   public static Trigger onBottomHalf() {

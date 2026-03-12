@@ -23,10 +23,10 @@ public class FieldConstants {
   /** Used for calculating HPS zoning */
   public static final double halfFieldWidth = fieldWidth / 2;
 
-  public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(30);
-  public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(30);
+  public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(20);
+  public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(20);
 
-  public static final double distanceToBlueTrench = Units.inchesToMeters(182.1);
+  public static final double distanceToBlueTrench = Units.inchesToMeters(188.1);
   public static final double distanceToRedTrench = fieldLength - distanceToBlueTrench;
 
   /*
