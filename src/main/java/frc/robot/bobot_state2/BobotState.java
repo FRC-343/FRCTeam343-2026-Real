@@ -323,7 +323,9 @@ public class BobotState extends VirtualSubsystem {
         ? TargetLocations.getHubTarget()
         : onTopHalf().getAsBoolean()
             ? TargetLocations.getTopTarget()
-            : TargetLocations.getBottomTarget());
+            : onBottomHalf().getAsBoolean()
+                ? TargetLocations.getBottomTarget()
+                : TargetLocations.getHubTarget());
   }
 
   // public static TargetAngleTracker getClosestAlignmentTracker() {
