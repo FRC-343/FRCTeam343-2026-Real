@@ -93,7 +93,7 @@ public class BobotState extends VirtualSubsystem {
 
   private static ChassisSpeeds roboChassisSpeeds;
 
-  private static Rotation2d OptiTurretYaw; // optimized turret angle
+  private static double OptiTurretYaw; // optimized turret angle
 
   private static Pose2d TurretTarget;
 
@@ -195,9 +195,9 @@ public class BobotState extends VirtualSubsystem {
     BobotState.roboChassisSpeeds = speed;
   }
 
-  // public static void updateOptiTurretYaw(double test) {
-  //   BobotState.OptiTurretYaw = test;
-  // }
+  public static void updateOptiTurretYaw(double test) {
+    BobotState.OptiTurretYaw = test;
+  }
 
   public static void updateTurretTarget(Pose2d target) {
     BobotState.TurretTarget = target;
@@ -285,9 +285,9 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.TurretMotorPos;
   }
 
-  // public static double getOptiTurretYaw() {
-  //   return BobotState.OptiTurretYaw;
-  // }
+  public static double getOptiTurretYaw() {
+    return BobotState.OptiTurretYaw;
+  }
 
   public static double getWantedRobotRot() {
     return BobotState.wantedRotRobot;
@@ -343,13 +343,6 @@ public class BobotState extends VirtualSubsystem {
                 : TargetLocations.getHubTarget());
   }
 
-  public static void updateBotAngle(Rotation2d test) {
-    BobotState.OptiTurretYaw = test;
-  }
-
-  public static Rotation2d getBotAngle() {
-    return BobotState.OptiTurretYaw;
-  }
   // public static TargetAngleTracker getClosestAlignmentTracker() {
   // return autoAlignmentTrackers.stream()
   // .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)

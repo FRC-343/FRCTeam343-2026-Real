@@ -278,7 +278,7 @@ public class RobotContainer {
 
     // field angle to target
     Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
-    BobotState.updateBotAngle(targetAngle);
+    // BobotState.updateBotAngle(targetAngle);
 
     // turret should point here relative to robot
     double turretSetpointRadians =
@@ -286,7 +286,7 @@ public class RobotContainer {
 
     double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 
-    // BobotState.updateOptiTurretYaw(turretRotations);
+    BobotState.updateOptiTurretYaw(turretRotations);
     BobotState.updateHoodAngle(hood);
   }
 
