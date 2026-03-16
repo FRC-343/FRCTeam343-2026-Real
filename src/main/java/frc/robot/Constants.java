@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -43,7 +44,7 @@ public final class Constants {
 
     public static final double FORWARDLIMITDEGREES = 180;
     public static final double REVERSELIMITDEGREES = -180;
-    public static final double MOTOR_TO_TURRET_RATIO = 221 / 21 * 3;
+    public static final double MOTOR_TO_TURRET_RATIO = 31.5714286;
   }
 
   public static final class ShooterConstants {
@@ -54,7 +55,7 @@ public final class Constants {
   }
 
   public static final class TargetLocations {
-    public static Translation2d getHubTarget() {
+    public static Pose2d getHubTarget() {
       double x =
           HubFaces.B.get()
               .tag
@@ -82,19 +83,19 @@ public final class Constants {
                       0.0))
               .getY();
 
-      return new Translation2d(x, y);
+      return new Pose2d(x, y, HubFaces.B.get().tag.pose().getRotation().toRotation2d());
     }
 
-    public static Translation2d getBottomTarget() {
+    public static Pose2d getBottomTarget() {
       double x = FieldUtils.isRedAlliance() ? 14.78 : .91;
       double y = FieldUtils.isRedAlliance() ? 1.72 : 1.72;
-      return new Translation2d(x, y);
+      return new Pose2d(x, y, HubFaces.B.get().tag.pose().getRotation().toRotation2d());
     }
 
-    public static Translation2d getTopTarget() {
+    public static Pose2d getTopTarget() {
       double x = FieldUtils.isRedAlliance() ? 14.78 : .91;
       double y = FieldUtils.isRedAlliance() ? 6.46 : 6.46;
-      return new Translation2d(x, y);
+      return new Pose2d(x, y, HubFaces.B.get().tag.pose().getRotation().toRotation2d());
     }
   }
 }

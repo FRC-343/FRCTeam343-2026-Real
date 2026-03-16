@@ -2,23 +2,22 @@ package frc.robot.bobot_state2.varc;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.field.FieldUtils;
 
-public class HubTagTracker extends TargetAngleTracker {
+public class TestTargetTracker extends TargetAngleTracker {
   private double distanceMeters = 0;
   private Rotation2d rotationTarget = Rotation2d.kZero;
 
   public void update() {
     Pose2d closestPose =
-        FieldUtils.getClosestHub()
-            .tag
-            .pose()
-            .toPose2d()
+        Constants.TargetLocations.getHubTarget()
             .rotateBy(BobotState.getGlobalPose().getTranslation().getAngle());
-    rotationTarget = closestPose.getRotation().plus(Rotation2d.kPi);
+
     distanceMeters =
         closestPose.getTranslation().getDistance(BobotState.getGlobalPose().getTranslation());
+
+    rotationTarget = closestPose.getRotation().plus(Rotation2d.kPi);
   }
 
   public Rotation2d getRotationTarget() {

@@ -106,6 +106,16 @@ public class Hood extends SubsystemBase {
                     Constants.HoodConstants.MAXHOOD)));
   }
 
+  public Command setHoodPosition2() {
+    return new RunCommand(
+        () ->
+            this.io.setHoodPosition(
+                MathUtil.clamp(
+                    Constants.HoodConstants.MAXHOOD,
+                    Constants.HoodConstants.MINHOOD,
+                    Constants.HoodConstants.MAXHOOD)));
+  }
+
   public Command stopCommand() {
     return new InstantCommand(this.io::stop, this);
   }

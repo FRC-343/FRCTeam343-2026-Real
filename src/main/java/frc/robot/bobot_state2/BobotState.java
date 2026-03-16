@@ -2,7 +2,6 @@ package frc.robot.bobot_state2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -10,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.TargetLocations;
 import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
+import frc.robot.bobot_state2.varc.TestTargetTracker;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
 import frc.robot.subsystems.vision2.PoseObservation;
@@ -44,6 +44,7 @@ public class BobotState extends VirtualSubsystem {
 
   // adding Tag Trackers here
   private static HubTagTracker hubTracker = new HubTagTracker();
+  private static TestTargetTracker TestTarget = new TestTargetTracker();
 
   // list of tags used to calculate where the hub is
   private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
@@ -60,6 +61,8 @@ public class BobotState extends VirtualSubsystem {
   /*
    * Highlighting small section importaint for our shooter calcs
    */
+
+  private static double wantedRotRobot;
 
   private static double
       ToF; // this will hold the Time of flight info needed for turret and hood calcs
@@ -90,9 +93,9 @@ public class BobotState extends VirtualSubsystem {
 
   private static ChassisSpeeds roboChassisSpeeds;
 
-  private static double OptiTurretYaw; // optimized turret angle
+  private static Rotation2d OptiTurretYaw; // optimized turret angle
 
-  private static Translation2d TurretTarget;
+  private static Pose2d TurretTarget;
 
   private static double r17;
 
@@ -147,6 +150,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.distance = distance;
   }
 
+  public static void updateWantedRobotRot(double rot) {
+    BobotState.wantedRotRobot = rot;
+  }
+
   // ToF = Time of Flight
   public static void updateToF(Double ToF) {
     BobotState.ToF = ToF;
@@ -188,11 +195,11 @@ public class BobotState extends VirtualSubsystem {
     BobotState.roboChassisSpeeds = speed;
   }
 
-  public static void updateOptiTurretYaw(double test) {
-    BobotState.OptiTurretYaw = test;
-  }
+  // public static void updateOptiTurretYaw(double test) {
+  //   BobotState.OptiTurretYaw = test;
+  // }
 
-  public static void updateTurretTarget(Translation2d target) {
+  public static void updateTurretTarget(Pose2d target) {
     BobotState.TurretTarget = target;
   }
 
@@ -278,12 +285,20 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.TurretMotorPos;
   }
 
-  public static double getOptiTurretYaw() {
-    return BobotState.OptiTurretYaw;
+  // public static double getOptiTurretYaw() {
+  //   return BobotState.OptiTurretYaw;
+  // }
+
+  public static double getWantedRobotRot() {
+    return BobotState.wantedRotRobot;
   }
 
   public static Rotation2d getRotationtoClosestHub() {
     return BobotState.hubTracker.getRotationTarget();
+  }
+
+  public static Rotation2d getRotationToTarget() {
+    return BobotState.TestTarget.getRotationTarget();
   }
 
   public static double getMotorTarget1() {
@@ -302,7 +317,7 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.r17AbsPos;
   }
 
-  public static Translation2d getTurretTarget() {
+  public static Pose2d getTurretTarget() {
     return BobotState.TurretTarget;
   }
 
@@ -318,7 +333,7 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodCalc;
   }
 
-  public static Translation2d targetLocation() {
+  public static Pose2d targetLocation() {
     return (onTeamSide().getAsBoolean()
         ? TargetLocations.getHubTarget()
         : onTopHalf().getAsBoolean()
@@ -328,6 +343,13 @@ public class BobotState extends VirtualSubsystem {
                 : TargetLocations.getHubTarget());
   }
 
+  public static void updateBotAngle(Rotation2d test) {
+    BobotState.OptiTurretYaw = test;
+  }
+
+  public static Rotation2d getBotAngle() {
+    return BobotState.OptiTurretYaw;
+  }
   // public static TargetAngleTracker getClosestAlignmentTracker() {
   // return autoAlignmentTrackers.stream()
   // .reduce((a, b) -> a.getDistanceMeters() < b.getDistanceMeters() ? a : b)
@@ -335,12 +357,6 @@ public class BobotState extends VirtualSubsystem {
   // }
 
   // Adding Triggers here
-  public static Trigger canShoot() {
-    return new Trigger(
-        () ->
-            (BobotState.TurretPos2 <= BobotState.OptiTurretYaw + .5
-                && BobotState.TurretPos2 >= BobotState.OptiTurretYaw - .5));
-  }
 
   public static Trigger onBottomHalf() {
     return new Trigger(
@@ -362,6 +378,8 @@ public class BobotState extends VirtualSubsystem {
 
   @Override
   public void periodic() {
+
+    Logger.recordOutput(logRoot + "Wanted robot rot", wantedRotRobot);
 
     Logger.recordOutput(logRoot + "Wanted Perp Pose", atWantedPerpPose);
 
@@ -437,6 +455,13 @@ public class BobotState extends VirtualSubsystem {
       hubTracker.update();
 
       String calcLogRoot = logRoot + "Hub/";
+      Logger.recordOutput(calcLogRoot + "Closest tag", FieldUtils.getClosestHub().tag);
+      Logger.recordOutput(
+          calcLogRoot + "Target Angle Deg", BobotState.getRotationtoClosestHub().getDegrees());
+    }
+    {
+      TestTarget.update();
+      String calcLogRoot = logRoot + "Target/";
       Logger.recordOutput(calcLogRoot + "Closest tag", FieldUtils.getClosestHub().tag);
       Logger.recordOutput(
           calcLogRoot + "Target Angle Deg", BobotState.getRotationtoClosestHub().getDegrees());

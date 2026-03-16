@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Shooter;
 
 import com.pathplanner.lib.config.PIDConstants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,8 +50,14 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVelocityThenStopCommand() {
-    return new RunCommand(() -> this.io.setVelocity(BobotState.getWantedShooterRPS()), this)
+    return new RunCommand(
+            () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
+            this)
         .finallyDo(io::stop);
+  }
+
+  public Command setVelocityThenStopCommand2(double speed) {
+    return new RunCommand(() -> this.io.setVelocity(speed), this).finallyDo(io::stop);
   }
 
   public Command setPercentOutputThenStopCommand(double percentDecimal) {

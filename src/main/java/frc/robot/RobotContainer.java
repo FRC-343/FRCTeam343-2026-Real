@@ -8,6 +8,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
@@ -149,7 +152,7 @@ public class RobotContainer {
         new Vision();
         break;
     }
-
+    configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -174,6 +177,14 @@ public class RobotContainer {
     configureOpButtons();
   }
 
+  private void configureNamedCommands() {
+    NamedCommands.registerCommand("Intake", intake.runForTime(.5, 5));
+    NamedCommands.registerCommand("Shooter set speed", shooter.runForTime(40, 10));
+    NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 10));
+    NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 10));
+    NamedCommands.registerCommand("Hood", hood.setHoodPosition2());
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -189,9 +200,17 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightBumper().whileTrue(turret.setTurretPosition2());
+    controller
+        .rightBumper()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> BobotState.getRotationToTarget()));
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
   }
 
   private void configureOpButtons() {
@@ -203,8 +222,11 @@ public class RobotContainer {
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-35)
-                .alongWith(kicker.setVelocityThenStopCommand(20))
-                .onlyWhile(BobotState.canShoot()));
+                .alongWith(kicker.setVelocityThenStopCommand(20)));
+
+    controller2
+        .y()
+        .whileTrue(shooter.setVelocityThenStopCommand2(40).alongWith(hood.setHoodPosition2()));
   }
 
   /**
@@ -225,7 +247,7 @@ public class RobotContainer {
     Translation2d robotVelocity =
         new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
-    Translation2d target = BobotState.getTurretTarget();
+    Translation2d target = BobotState.getTurretTarget().getTranslation();
 
     Translation2d robotPos = BobotState.getGlobalPose().getTranslation();
 
@@ -250,30 +272,21 @@ public class RobotContainer {
     } else {
       leadTarget = target;
     }
+    Rotation2d robotHeading = BobotState.getGlobalPose().getRotation();
 
-    double turretRadians =
-        TurretCalc.calculateTurretSetpointRadians(leadTarget, BobotState.getGlobalPose());
+    Translation2d toTarget = leadTarget.minus(robotPos);
 
-    Rotation2d robotToTarget =
-        new Rotation2d(
-            leadTarget.getX() - BobotState.getGlobalPose().getX(),
-            leadTarget.getY() - BobotState.getGlobalPose().getY());
+    // field angle to target
+    Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
+    BobotState.updateBotAngle(targetAngle);
 
-    Rotation2d turretField =
-        BobotState.getGlobalPose()
-            .getRotation()
-            .plus(
-                Rotation2d.fromRadians(
-                    TurretCalc.motorRotationsToTurretRadians(BobotState.getTurretPosi2())));
+    // turret should point here relative to robot
+    double turretSetpointRadians =
+        MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
 
-    Rotation2d error = robotToTarget.minus(turretField);
+    double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 
-    double newTurretSetpoint =
-        TurretCalc.motorRotationsToTurretRadians(BobotState.getTurretPosi2()) + error.getRadians();
-
-    double turretRotations = TurretCalc.turretRadiansToMotorRotations(newTurretSetpoint);
-
-    BobotState.updateOptiTurretYaw(turretRotations);
+    // BobotState.updateOptiTurretYaw(turretRotations);
     BobotState.updateHoodAngle(hood);
   }
 

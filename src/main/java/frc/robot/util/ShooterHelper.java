@@ -1,12 +1,18 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
+import frc.robot.bobot_state2.BobotState;
+import frc.robot.commands.DriveCommandConstants;
 
 public class ShooterHelper {
+  public static final ProfiledPIDController angleController =
+      DriveCommandConstants.makeAngleController();
 
   public final class HoodAimTest {
 
@@ -104,8 +110,20 @@ public class ShooterHelper {
 
   public final class ShooterSpeed {
     public static double ShooterRPS(double distance) {
-      double rps = 35 + (25 / 7.2) * (distance - 2.8);
+      double rps = 34 + (25 / 7.2) * (distance - 2.8);
       return rps;
+    }
+  }
+
+  public class MoreHelper {
+
+    public static double getRot() {
+      Transform2d error = BobotState.getGlobalPose().minus(BobotState.targetLocation());
+
+      double angularSpeed = angleController.calculate(error.getRotation().getRadians(), 0);
+      angularSpeed = !angleController.atSetpoint() ? angularSpeed : 0;
+
+      return angularSpeed;
     }
   }
 }
