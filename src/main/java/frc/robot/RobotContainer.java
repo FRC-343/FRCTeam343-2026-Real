@@ -200,14 +200,7 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller
-        .rightBumper()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> BobotState.getRotationToTarget()));
+    controller.rightBumper().whileTrue(turret.setTurretPosition2());
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -221,8 +214,8 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-35)
-                .alongWith(kicker.setVelocityThenStopCommand(20)));
+                .setVelocityThenStopCommand(-55)
+                .alongWith(kicker.setVelocityThenStopCommand(40)));
 
     controller2
         .y()
