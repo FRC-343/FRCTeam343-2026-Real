@@ -265,17 +265,17 @@ public class RobotContainer {
     } else {
       leadTarget = target;
     }
-    Rotation2d robotHeading = BobotState.getGlobalPose().getRotation();
+    double robotHeading = BobotState.getGlobalPose().getRotation().getRadians();
 
     Translation2d toTarget = leadTarget.minus(robotPos);
 
     // field angle to target
-    Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
+    double targetAngle = Math.atan2(toTarget.getX(), toTarget.getY());
     // BobotState.updateBotAngle(targetAngle);
 
     // turret should point here relative to robot
     double turretSetpointRadians =
-        MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
+        MathUtil.angleModulus(targetAngle - robotHeading);
 
     double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 
