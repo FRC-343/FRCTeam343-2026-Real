@@ -10,7 +10,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -204,6 +203,8 @@ public class RobotContainer {
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    controller.a().onTrue(Commands.runOnce(drive::resetGyro, drive));
   }
 
   private void configureOpButtons() {
@@ -274,8 +275,7 @@ public class RobotContainer {
     // BobotState.updateBotAngle(targetAngle);
 
     // turret should point here relative to robot
-    double turretSetpointRadians =
-        MathUtil.angleModulus(targetAngle - robotHeading);
+    double turretSetpointRadians = MathUtil.angleModulus(targetAngle - robotHeading);
 
     double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 

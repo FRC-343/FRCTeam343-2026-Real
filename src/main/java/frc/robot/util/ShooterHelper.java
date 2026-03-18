@@ -1,18 +1,12 @@
 package frc.robot.util;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants;
-import frc.robot.bobot_state2.BobotState;
-import frc.robot.commands.DriveCommandConstants;
 
 public class ShooterHelper {
-  public static final ProfiledPIDController angleController =
-      DriveCommandConstants.makeAngleController();
 
   public final class HoodAimTest {
 
@@ -63,21 +57,21 @@ public class ShooterHelper {
       double vy = relVel.getY();
 
       double a = vx * vx + vy * vy - projectileSpeed * projectileSpeed;
-      double b = 2 * (rx * vx + ry * vy);
+      double b = 2.0 * (rx * vx + ry * vy);
       double c = rx * rx + ry * ry;
 
-      double disc = b * b - 4 * a * c;
+      double disc = b * b - 4.0 * a * c;
       if (disc < 0) return Double.NaN;
 
       double sqrtD = Math.sqrt(disc);
 
-      double t1 = (-b - sqrtD) / (2 * a);
-      double t2 = (-b + sqrtD) / (2 * a);
+      double t1 = (-b - sqrtD) / (2.0 * a);
+      double t2 = (-b + sqrtD) / (2.0 * a);
 
       double t = Double.POSITIVE_INFINITY;
 
-      if (t1 > 0) t = t1;
-      if (t2 > 0 && t2 < t) t = t2;
+      if (t1 > 0.0) t = t1;
+      if (t2 > 0.0 && t2 < t) t = t2;
 
       return Double.isFinite(t) ? t : Double.NaN;
     }
@@ -99,7 +93,7 @@ public class ShooterHelper {
 
     public static double turretRadiansToMotorRotations(double turretRadians) {
 
-      return (turretRadians / (2 * Math.PI)) * Constants.TurretConstants.MOTOR_TO_TURRET_RATIO;
+      return (turretRadians / (2.0 * Math.PI)) * Constants.TurretConstants.MOTOR_TO_TURRET_RATIO;
     }
 
     public static double motorRotationsToTurretRadians(double motorRotations) {
@@ -110,20 +104,8 @@ public class ShooterHelper {
 
   public final class ShooterSpeed {
     public static double ShooterRPS(double distance) {
-      double rps = 34 + (25 / 7.2) * (distance - 2.8);
+      double rps = 34.0 + (25.0 / 7.2) * (distance - 2.8);
       return rps;
-    }
-  }
-
-  public class MoreHelper {
-
-    public static double getRot() {
-      Transform2d error = BobotState.getGlobalPose().minus(BobotState.targetLocation());
-
-      double angularSpeed = angleController.calculate(error.getRotation().getRadians(), 0);
-      angularSpeed = !angleController.atSetpoint() ? angularSpeed : 0;
-
-      return angularSpeed;
     }
   }
 }

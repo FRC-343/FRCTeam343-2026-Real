@@ -48,12 +48,18 @@ public class GyroIOPigeon2 implements GyroIO {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
     inputs.yawPosition =
         Rotation2d.fromDegrees(
-            yaw.getValueAsDouble() > 360
+            yaw.getValueAsDouble() >= 360
                 ? (yaw.getValueAsDouble() % 360)
-                : yaw.getValueAsDouble() < -360
+                : yaw.getValueAsDouble() <= -360
                     ? yaw.getValueAsDouble() % -360
                     : yaw.getValueAsDouble());
-    inputs.yawVelocityRadPerSec = Units.degreesToRadians(yawVelocity.getValueAsDouble());
+    inputs.yawVelocityRadPerSec =
+        Units.degreesToRadians(
+            yawVelocity.getValueAsDouble() >= 360
+                ? (yawVelocity.getValueAsDouble() % 360)
+                : yawVelocity.getValueAsDouble() <= -360
+                    ? yawVelocity.getValueAsDouble() % -360
+                    : yawVelocity.getValueAsDouble());
 
     inputs.odometryYawTimestamps =
         yawTimestampQueue.stream().mapToDouble((Double value) -> value).toArray();
@@ -63,5 +69,11 @@ public class GyroIOPigeon2 implements GyroIO {
             .toArray(Rotation2d[]::new);
     yawTimestampQueue.clear();
     yawPositionQueue.clear();
+  }
+
+  @Override
+  public void resetGyro() {
+    pigeon.reset();
+    ;
   }
 }
