@@ -46,6 +46,8 @@ public class GyroIOPigeon2 implements GyroIO {
   @Override
   public void updateInputs(GyroIOInputs inputs) {
     inputs.connected = BaseStatusSignal.refreshAll(yaw, yawVelocity).equals(StatusCode.OK);
+
+    // The below is being used to floor the gyro feedback to +- 360 (technically -359 <-> 0 <-> 359)
     inputs.yawPosition =
         Rotation2d.fromDegrees(
             yaw.getValueAsDouble() >= 360

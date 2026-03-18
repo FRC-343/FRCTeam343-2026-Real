@@ -73,9 +73,9 @@ public class BobotState extends VirtualSubsystem {
 
   private static double TurretCalc; // the number that the turret calc spits out
 
-  private static double ShooterRPS;
+  private static double ShooterRPS; // Shooter RPS
 
-  private static double ShooterWantedRPS;
+  private static double ShooterWantedRPS; // Shooter Wanted RPS
 
   /*
    * Highlighting small section importaint for our shooter calcs
@@ -89,29 +89,13 @@ public class BobotState extends VirtualSubsystem {
 
   private static double TurretMotorPos; // this will store the turret position
 
-  private static double ShooterRPM;
+  private static double ShooterRPM; // Shooter RPM
 
-  private static ChassisSpeeds roboChassisSpeeds;
+  private static ChassisSpeeds roboChassisSpeeds; // Robot speed
 
   private static double OptiTurretYaw; // optimized turret angle
 
-  private static Pose2d TurretTarget;
-
-  private static double r17;
-
-  private static double r13;
-
-  private static double motorTarget1;
-
-  private static double motorTarget2;
-
-  private static double r17AbsPos;
-
-  private static double r13AbsPos;
-
-  private static double rotVel;
-
-  private static double difference;
+  private static Pose2d TurretTarget; // Turret target pose
 
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
@@ -135,10 +119,6 @@ public class BobotState extends VirtualSubsystem {
 
   public static void updateGlobalPose(Pose2d pose) {
     BobotState.globalPose = pose;
-  }
-
-  public static void updateAngVelo(double rate) {
-    BobotState.rotVel = rate;
   }
 
   /*
@@ -203,41 +183,12 @@ public class BobotState extends VirtualSubsystem {
     BobotState.TurretTarget = target;
   }
 
-  public static void updateTurretCRTTargets(double r17, double r13) {
-    BobotState.r17 = r17;
-    BobotState.r13 = r13;
-  }
-
-  public static void updateR13AbsPos(double r13) {
-    BobotState.r13AbsPos = r13;
-  }
-
-  public static void updateR17AbsPos(double r17) {
-    BobotState.r17AbsPos = r17;
-  }
-
-  public static void updateMotorTarget1(double motorTarget) {
-    BobotState.motorTarget1 = motorTarget;
-  }
-
-  public static void updateMotorTarget2(double motorTarget) {
-    BobotState.motorTarget2 = motorTarget;
-  }
-
-  public static void updateDifference(double difference) {
-    BobotState.difference = difference;
-  }
-
   public static void updateHood(double pos) {
     BobotState.HoodPos = pos;
   }
 
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
-  }
-
-  public static double getRobotRotVelo() {
-    return BobotState.rotVel;
   }
 
   /*
@@ -301,28 +252,8 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.TestTarget.getRotationTarget();
   }
 
-  public static double getMotorTarget1() {
-    return BobotState.motorTarget1;
-  }
-
-  public static double getMotorTarget2() {
-    return BobotState.motorTarget2;
-  }
-
-  public static double getR13AbsPos() {
-    return BobotState.r13AbsPos;
-  }
-
-  public static double getR17AbsPos() {
-    return BobotState.r17AbsPos;
-  }
-
   public static Pose2d getTurretTarget() {
     return BobotState.TurretTarget;
-  }
-
-  public static double getDifference() {
-    return BobotState.difference;
   }
 
   public static double getHoodPos() {
@@ -410,23 +341,7 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(
         logRoot + "Turret Min limit", Constants.TurretConstants.REVERSELIMITDEGREES);
 
-    Logger.recordOutput(logRoot + "Ratio 17 target", r17);
-
-    Logger.recordOutput(logRoot + "Ratio 13 target", r13);
-
-    Logger.recordOutput(logRoot + "Motor target 1", motorTarget1);
-
-    Logger.recordOutput(logRoot + "Motor target 2", motorTarget2);
-
-    Logger.recordOutput(logRoot + "Ratio 17 Abs position", r17AbsPos);
-
-    Logger.recordOutput(logRoot + "Ratio 13 Abs position", r13AbsPos);
-
     Logger.recordOutput(logRoot + "Turret motor position", TurretMotorPos);
-
-    Logger.recordOutput(logRoot + "Robot rotational velocity", rotVel);
-
-    Logger.recordOutput(logRoot + "Encoder difference", difference);
 
     Logger.recordOutput(logRoot + "Hood Position", HoodPos);
 

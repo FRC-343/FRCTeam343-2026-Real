@@ -22,5 +22,5 @@ public interface GyroIO {
 
   public default void updateInputs(GyroIOInputs inputs) {}
 
-  public default void resetGyro() {}
+  public default void resetGyro() {} // Call to reset the gyro going to be used in testing
 }
