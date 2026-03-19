@@ -10,6 +10,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -259,24 +260,24 @@ public class RobotContainer {
         TimeOfFlightTest.solveTime(
             robotPos, robotVelocity, target, new Translation2d(), horizontalVelocity);
     Translation2d leadTarget;
-    if (!Double.isNaN(time)) {
+    // if (!Double.isNaN(time)) {
 
-      leadTarget = target.plus(robotVelocity.times(time));
+    //   leadTarget = target.plus(robotVelocity.times(time));
 
-    } else {
-      leadTarget = target;
-    }
-    double robotHeading = BobotState.getGlobalPose().getRotation().getRadians();
+    // } else {
+    leadTarget = target;
+    // }
+    Rotation2d robotHeading = drive.getRotation();
 
     Translation2d toTarget = leadTarget.minus(robotPos);
 
     // field angle to target
-    double targetAngle = Math.atan2(toTarget.getX(), toTarget.getY());
+    Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
     // BobotState.updateBotAngle(targetAngle);
 
     // turret should point here relative to robot
-    double turretSetpointRadians = MathUtil.angleModulus(targetAngle - robotHeading);
-
+    double turretSetpointRadians =
+        MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
     double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 
     BobotState.updateOptiTurretYaw(turretRotations);
