@@ -203,13 +203,13 @@ public class Drive extends SubsystemBase {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
-    PoseObservation observation;
-    while ((observation = BobotState.getVisionObservations().poll()) != null) {
-      poseEstimator.addVisionMeasurement(
-          observation.robotPose().toPose2d(), observation.timestampSeconds()
-          // ,observation.stdDevs()
-          );
-    }
+    // PoseObservation observation;
+    // while ((observation = BobotState.getVisionObservations().poll()) != null) {
+    //   poseEstimator.addVisionMeasurement(
+    //       observation.robotPose().toPose2d(), observation.timestampSeconds()
+    //       // ,observation.stdDevs()
+    //       );
+    // }
 
     BobotState.updateGlobalPose(getPose());
     BobotState.updateRoboChassisSpeed(getChassisSpeeds());

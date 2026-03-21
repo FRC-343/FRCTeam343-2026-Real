@@ -13,6 +13,8 @@ import frc.robot.bobot_state2.varc.TestTargetTracker;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
 import frc.robot.subsystems.vision2.PoseObservation;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import frc.robot.util.VirtualSubsystem;
 import java.util.List;
 import java.util.Queue;
@@ -96,6 +98,18 @@ public class BobotState extends VirtualSubsystem {
   private static double OptiTurretYaw; // optimized turret angle
 
   private static Pose2d TurretTarget; // Turret target pose
+
+  private static double hoodTest;
+
+  private static double shooterTest;
+
+  public static void updateHoodTest(double value){
+    BobotState.hoodTest = value;
+  }
+
+  public static void updateShooterTest(double value){
+    BobotState.shooterTest = value;
+  }
 
   public static void updateWantedPose(boolean perpPoseWanted) {
     BobotState.atWantedPerpPose = perpPoseWanted;
@@ -266,12 +280,22 @@ public class BobotState extends VirtualSubsystem {
 
   public static Pose2d targetLocation() {
     return (onTeamSide().getAsBoolean()
-        ? TargetLocations.getHubTarget()
+        ? FieldUtils.getHub()
         : onTopHalf().getAsBoolean()
-            ? TargetLocations.getTopTarget()
+            ? FieldUtils.getLeftTarget()
             : onBottomHalf().getAsBoolean()
-                ? TargetLocations.getBottomTarget()
-                : TargetLocations.getHubTarget());
+                ? FieldUtils.getRightTarget()
+                : FieldUtils.getHub());
+  }
+
+  public static TargetType targetType() {
+    return (onTeamSide().getAsBoolean()
+        ? TurretUtil.TargetType.HUB
+        : onTopHalf().getAsBoolean()
+            ? TurretUtil.TargetType.LEFT_PASS
+            : onBottomHalf().getAsBoolean()
+                ? TurretUtil.TargetType.RIGHT_PASS
+                : TurretUtil.TargetType.HUB);
   }
 
   // public static TargetAngleTracker getClosestAlignmentTracker() {
@@ -351,6 +375,12 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Team Side Trigger", onTeamSide());
 
     Logger.recordOutput(logRoot + "Distance", distance);
+
+    Logger.recordOutput(logRoot + "Target Type", targetType().toString());
+
+    Logger.recordOutput(logRoot + "Hood Increment value", hoodTest);
+
+    Logger.recordOutput(logRoot + "ShooterRPS Increment value", shooterTest);
 
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";

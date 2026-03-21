@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
@@ -67,6 +68,11 @@ public class RobotContainer {
   private final Shooter shooter;
 
   private final Hood hood;
+
+  private double test = 1;
+
+  private double test2 = 35;
+
 
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
@@ -200,7 +206,7 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightBumper().whileTrue(turret.setTurretPosition());
+    controller.rightBumper().whileTrue(turret.shootOnMoveCommandTurret());
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -209,9 +215,17 @@ public class RobotContainer {
   }
 
   private void configureOpButtons() {
+ 
+
+    controller2.povUp().onTrue(new InstantCommand(() -> test += 1));
+    controller2.povDown().onTrue(new InstantCommand(() -> test -= 1));
+
+    controller2.povRight().onTrue(new InstantCommand(()-> test2 += 1));
+    controller2.povLeft().onTrue(new InstantCommand(() -> test2 -= 1));
+
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition()));
+        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()));
     controller2
         .leftBumper()
         .whileTrue(
@@ -244,7 +258,10 @@ public class RobotContainer {
 
     Translation2d target = BobotState.getTurretTarget().getTranslation();
 
-    Translation2d robotPos = BobotState.getGlobalPose().getTranslation().plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
+    Translation2d robotPos =
+        BobotState.getGlobalPose()
+            .getTranslation()
+            .plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
 
     double distance = robotPos.getDistance(target);
 

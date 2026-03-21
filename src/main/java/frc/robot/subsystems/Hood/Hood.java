@@ -3,6 +3,8 @@ package frc.robot.subsystems.Hood;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
@@ -12,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
+
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -96,12 +101,12 @@ public class Hood extends SubsystemBase {
         this);
   }
 
-  public Command setHoodPosition() {
+  public Command setHoodPosition(double position) {
     return new RunCommand(
         () ->
             this.io.setHoodPosition(
                 MathUtil.clamp(
-                    20, Constants.HoodConstants.MINHOOD, Constants.HoodConstants.MAXHOOD)));
+                    position, Constants.HoodConstants.MINHOOD, Constants.HoodConstants.MAXHOOD)));
   }
 
   public Command setHoodPosition2() {
@@ -138,4 +143,22 @@ public class Hood extends SubsystemBase {
    * Triggers might also be separated at a later date, potentially added to BobotState
    */
 
+
+     public Command shootOnMoveCommandTurret() {
+    TargetType target = BobotState.targetType();
+
+    return run(() -> {
+          Pose2d robotPose = BobotState.getGlobalPose();
+          ChassisSpeeds speeds = BobotState.getRoboSpeed();
+          TurretUtil.ShotSolution solution =
+              TurretUtil.computeLeadShotSolution(
+                  robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+
+          if (solution.isValid) {
+            setHoodPosition(solution.trajectoryAngleDegrees);
+            BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+          }
+        })
+        .withName("ShootOnMove-Turret-" + target.toString());
+  }
 }

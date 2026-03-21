@@ -1,5 +1,7 @@
 package frc.robot.field;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -21,6 +23,26 @@ public class FieldUtils {
 
   public static double getFlipped() {
     return FieldUtils.isRedAlliance() ? -1 : 1;
+  }
+
+  public static Pose2d getHub() {
+    return FieldUtils.isBlueAlliance()
+        ? new Pose2d(
+            FieldConstants.BLUE_HUB_CENTER_X, FieldConstants.HUB_CENTER_Y, new Rotation2d())
+        : new Pose2d(
+            FieldConstants.RED_HUB_CENTER_X, FieldConstants.HUB_CENTER_Y, new Rotation2d());
+  }
+
+  public static Pose2d getLeftTarget() {
+    return FieldUtils.isBlueAlliance()
+        ? new Pose2d(FieldConstants.BLUE_PASS_X, FieldConstants.BLUE_LEFT_PASS_Y, new Rotation2d())
+        : new Pose2d(FieldConstants.RED_PASS_X, FieldConstants.RED_LEFT_PASS_Y, new Rotation2d());
+  }
+
+  public static Pose2d getRightTarget() {
+    return FieldUtils.isBlueAlliance()
+        ? new Pose2d(FieldConstants.BLUE_PASS_X, FieldConstants.BLUE_RIGHT_PASS_Y, new Rotation2d())
+        : new Pose2d(FieldConstants.RED_PASS_X, FieldConstants.RED_RIGHT_PASS_Y, new Rotation2d());
   }
 
   public static HubFace getClosestHub() {
