@@ -73,7 +73,6 @@ public class RobotContainer {
 
   private double test2 = 35;
 
-
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
@@ -215,12 +214,11 @@ public class RobotContainer {
   }
 
   private void configureOpButtons() {
- 
 
     controller2.povUp().onTrue(new InstantCommand(() -> test += 1));
     controller2.povDown().onTrue(new InstantCommand(() -> test -= 1));
 
-    controller2.povRight().onTrue(new InstantCommand(()-> test2 += 1));
+    controller2.povRight().onTrue(new InstantCommand(() -> test2 += 1));
     controller2.povLeft().onTrue(new InstantCommand(() -> test2 -= 1));
 
     controller2

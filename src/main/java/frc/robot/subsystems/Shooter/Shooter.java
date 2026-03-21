@@ -14,7 +14,6 @@ import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -86,7 +85,7 @@ public class Shooter extends SubsystemBase {
         .andThen(io::stop);
   }
 
-    public Command shootOnMoveCommandTurret() {
+  public Command shootOnMoveCommandTurret() {
     TargetType target = BobotState.targetType();
 
     return run(() -> {

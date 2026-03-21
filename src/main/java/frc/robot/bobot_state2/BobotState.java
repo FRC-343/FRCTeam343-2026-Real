@@ -6,7 +6,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Constants.TargetLocations;
 import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
 import frc.robot.bobot_state2.varc.TestTargetTracker;
@@ -103,11 +102,11 @@ public class BobotState extends VirtualSubsystem {
 
   private static double shooterTest;
 
-  public static void updateHoodTest(double value){
+  public static void updateHoodTest(double value) {
     BobotState.hoodTest = value;
   }
 
-  public static void updateShooterTest(double value){
+  public static void updateShooterTest(double value) {
     BobotState.shooterTest = value;
   }
 
@@ -283,9 +282,7 @@ public class BobotState extends VirtualSubsystem {
         ? FieldUtils.getHub()
         : onTopHalf().getAsBoolean()
             ? FieldUtils.getLeftTarget()
-            : onBottomHalf().getAsBoolean()
-                ? FieldUtils.getRightTarget()
-                : FieldUtils.getHub());
+            : onBottomHalf().getAsBoolean() ? FieldUtils.getRightTarget() : FieldUtils.getHub());
   }
 
   public static TargetType targetType() {

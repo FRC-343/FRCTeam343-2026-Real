@@ -98,7 +98,8 @@ public class Turret extends SubsystemBase {
 
           if (solution.isValid) {
             setAngle(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
-            BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+            BobotState.updateTurretPos1(
+                TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
           }
         })
         .withName("ShootOnMove-Turret-" + target.toString());

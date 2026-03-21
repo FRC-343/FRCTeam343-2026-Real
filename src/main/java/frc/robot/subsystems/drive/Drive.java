@@ -37,7 +37,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.vision2.PoseObservation;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

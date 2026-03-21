@@ -16,7 +16,6 @@ import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
-
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -143,8 +142,7 @@ public class Hood extends SubsystemBase {
    * Triggers might also be separated at a later date, potentially added to BobotState
    */
 
-
-     public Command shootOnMoveCommandTurret() {
+  public Command shootOnMoveCommandTurret() {
     TargetType target = BobotState.targetType();
 
     return run(() -> {
@@ -156,7 +154,8 @@ public class Hood extends SubsystemBase {
 
           if (solution.isValid) {
             setHoodPosition(solution.trajectoryAngleDegrees);
-            BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+            BobotState.updateTurretPos1(
+                TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
           }
         })
         .withName("ShootOnMove-Turret-" + target.toString());
