@@ -9,11 +9,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,10 +34,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAimTest;
 import frc.robot.util.ShooterHelper.ShooterSpeed;
-import frc.robot.util.ShooterHelper.TimeOfFlightTest;
-import frc.robot.util.ShooterHelper.TurretCalc;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -205,7 +201,7 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightBumper().whileTrue(turret.shootOnMoveCommandTurret());
+    controller.rightBumper().whileTrue(turret.setTurretPosition());
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -245,58 +241,72 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  public void ShootCalcs() {
+  // public void ShootCalcs() {
 
-    ChassisSpeeds fieldSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
+  //   ChassisSpeeds fieldSpeeds =
+  //       ChassisSpeeds.fromRobotRelativeSpeeds(
+  //           BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
 
-    Translation2d robotVelocity =
-        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+  //   Translation2d robotVelocity =
+  //       new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
 
-    Translation2d target = BobotState.getTurretTarget().getTranslation();
+  //   Translation2d target = BobotState.getTurretTarget().getTranslation();
 
-    Translation2d robotPos =
-        BobotState.getGlobalPose()
-            .getTranslation()
-            .plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
+  //   Translation2d robotPos =
+  //       BobotState.getGlobalPose()
+  //           .getTranslation()
+  //           .plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
 
-    double distance = robotPos.getDistance(target);
+  //   double distance = robotPos.getDistance(target);
 
-    BobotState.updateDistance(distance);
+  //   BobotState.updateDistance(distance);
 
-    double hood = HoodAimTest.chooseHoodAngle(distance);
+  //   double hood = HoodAimTest.chooseHoodAngle(distance);
 
-    double velocity = HoodAimTest.requiredVelocity(distance, Units.inchesToMeters(55), hood);
+  //   double velocity = HoodAimTest.requiredVelocity(distance, Units.inchesToMeters(55), hood);
 
-    double horizontalVelocity = velocity * Math.cos(Math.toRadians(hood));
+  //   double horizontalVelocity = velocity * Math.cos(Math.toRadians(hood));
 
-    double time =
-        TimeOfFlightTest.solveTime(
-            robotPos, robotVelocity, target, new Translation2d(), horizontalVelocity);
-    Translation2d leadTarget;
-    // if (!Double.isNaN(time)) {
+  //   double time =
+  //       TimeOfFlightTest.solveTime(
+  //           robotPos, robotVelocity, target, new Translation2d(), horizontalVelocity);
+  //   Translation2d leadTarget;
+  //   // if (!Double.isNaN(time)) {
 
-    //   leadTarget = target.plus(robotVelocity.times(time));
+  //   //   leadTarget = target.plus(robotVelocity.times(time));
 
-    // } else {
-    leadTarget = target;
-    // }
-    Rotation2d robotHeading = drive.getRotation();
+  //   // } else {
+  //   leadTarget = target;
+  //   // }
+  //   Rotation2d robotHeading = drive.getRotation();
 
-    Translation2d toTarget = leadTarget.minus(robotPos);
+  //   Translation2d toTarget = leadTarget.minus(robotPos);
 
-    // field angle to target
-    Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
-    // BobotState.updateBotAngle(targetAngle);
+  //   // field angle to target
+  //   Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
+  //   // BobotState.updateBotAngle(targetAngle);
 
-    // turret should point here relative to robot
-    double turretSetpointRadians =
-        MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
-    double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
+  //   // turret should point here relative to robot
+  //   double turretSetpointRadians =
+  //       MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
+  //   double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
 
-    BobotState.updateOptiTurretYaw(turretRotations);
-    BobotState.updateHoodAngle(hood);
+  //   BobotState.updateOptiTurretYaw(turretRotations);
+  //   BobotState.updateHoodAngle(hood);
+  // }
+
+  public void shootOnMoveCommandTurret() {
+    TargetType target = BobotState.targetType();
+
+    Pose2d robotPose = BobotState.getGlobalPose();
+    ChassisSpeeds speeds = BobotState.getRoboSpeed();
+    TurretUtil.ShotSolution solution =
+        TurretUtil.computeLeadShotSolution(
+            robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+
+    if (solution.isValid) {
+      BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+    }
   }
 
   public void Automation() {
