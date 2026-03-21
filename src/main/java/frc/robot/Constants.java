@@ -44,7 +44,7 @@ public final class Constants {
 
     public static final double FORWARDLIMITDEGREES = 180;
     public static final double REVERSELIMITDEGREES = -180;
-    public static final double MOTOR_TO_TURRET_RATIO = 221.0 / 21.0 * 3.0;
+    public static final double MOTOR_TO_TURRET_RATIO = 7.0 * 3.0;
   }
 
   public static final class ShooterConstants {

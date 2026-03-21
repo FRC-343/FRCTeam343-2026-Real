@@ -244,7 +244,7 @@ public class RobotContainer {
 
     Translation2d target = BobotState.getTurretTarget().getTranslation();
 
-    Translation2d robotPos = BobotState.getGlobalPose().getTranslation();
+    Translation2d robotPos = BobotState.getGlobalPose().getTranslation().plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
 
     double distance = robotPos.getDistance(target);
 
