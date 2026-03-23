@@ -32,11 +32,13 @@ public class Shooter extends SubsystemBase {
         break;
       case REPLAY:
       default:
-        io = new ShooterIO() {};
+        io = new ShooterIO() {
+        };
 
         break;
     }
   }
+
   // test
   @Override
   public void periodic() {
@@ -55,8 +57,8 @@ public class Shooter extends SubsystemBase {
 
   public Command setVelocityThenStopCommand() {
     return new RunCommand(
-            () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
-            this)
+        () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
+        this)
         .finallyDo(io::stop);
   }
 
@@ -89,17 +91,16 @@ public class Shooter extends SubsystemBase {
     TargetType target = BobotState.targetType();
 
     return run(() -> {
-          Pose2d robotPose = BobotState.getGlobalPose();
-          ChassisSpeeds speeds = BobotState.getRoboSpeed();
-          TurretUtil.ShotSolution solution =
-              TurretUtil.computeLeadShotSolution(
-                  robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+      Pose2d robotPose = BobotState.getGlobalPose();
+      ChassisSpeeds speeds = BobotState.getRoboSpeed();
+      TurretUtil.ShotSolution solution = TurretUtil.computeLeadShotSolution(
+          robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
-          if (solution.isValid) {
-            setVelocityThenStopCommand2(solution.shooterSpeedRPS);
-            BobotState.updateTurretPos2(solution.shooterSpeedRPS);
-          }
-        })
+      if (solution.isValid) {
+        setVelocityThenStopCommand2(solution.shooterSpeedRPS);
+        BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+      }
+    })
         .withName("ShootOnMove-Shooter-" + target.toString());
   }
 }
