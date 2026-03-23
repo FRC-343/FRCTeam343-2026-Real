@@ -104,6 +104,12 @@ public class BobotState extends VirtualSubsystem {
 
   private static Pose2d turretPose;
 
+  private static boolean slowdown;
+
+  public static void updateSlowdown(boolean slow) {
+    BobotState.slowdown = slow;
+  }
+
   public static void updateTurretPose(Pose2d turret) {
     BobotState.turretPose = turret;
   }
@@ -206,6 +212,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.HoodPos = pos;
   }
 
+  public static boolean getSlowdown() {
+    return BobotState.slowdown;
+  }
+
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
   }
@@ -286,6 +296,13 @@ public class BobotState extends VirtualSubsystem {
 
   public static double getWantedHood() {
     return BobotState.HoodCalc;
+  }
+
+  public static Trigger slowTrigger() {
+    return new Trigger(
+        () ->
+            ((BobotState.ShooterWantedRPS + 1) >= BobotState.ShooterRPS
+                && (BobotState.ShooterWantedRPS - 1) <= BobotState.ShooterRPS));
   }
 
   public static Pose2d targetLocation() {
@@ -369,6 +386,8 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Turret Target", TurretTarget);
 
+    Logger.recordOutput(logRoot + "slow down trigger", slowTrigger().getAsBoolean());
+
     Logger.recordOutput(
         logRoot + "Turret Max limit", Constants.TurretConstants.FORWARDLIMITDEGREES);
 
@@ -392,6 +411,7 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "ShooterRPS Increment value", shooterTest);
 
+    Logger.recordOutput(logRoot + "Slowdown", slowdown);
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";
     // Logger.recordOutput(

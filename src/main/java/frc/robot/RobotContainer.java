@@ -199,7 +199,7 @@ public class RobotContainer {
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    controller.a().onTrue(Commands.runOnce(drive::resetGyro, drive));
+    // controller.a().onTrue(Commands.runOnce(drive::resetGyro, drive));
   }
 
   private void configureOpButtons() {

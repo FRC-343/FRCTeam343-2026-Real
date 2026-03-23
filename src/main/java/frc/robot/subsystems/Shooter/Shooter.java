@@ -28,12 +28,11 @@ public class Shooter extends SubsystemBase {
         // 22 is inverted
         break;
       case SIM:
-        io = new ShooterIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
+        io = new ShooterIOSim(DCMotor.getKrakenX60(2), 1, .2, new PIDConstants(2, 0, .2));
         break;
       case REPLAY:
       default:
-        io = new ShooterIO() {
-        };
+        io = new ShooterIO() {};
 
         break;
     }
@@ -57,8 +56,8 @@ public class Shooter extends SubsystemBase {
 
   public Command setVelocityThenStopCommand() {
     return new RunCommand(
-        () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
-        this)
+            () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
+            this)
         .finallyDo(io::stop);
   }
 
@@ -91,16 +90,17 @@ public class Shooter extends SubsystemBase {
     TargetType target = BobotState.targetType();
 
     return run(() -> {
-      Pose2d robotPose = BobotState.getGlobalPose();
-      ChassisSpeeds speeds = BobotState.getRoboSpeed();
-      TurretUtil.ShotSolution solution = TurretUtil.computeLeadShotSolution(
-          robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+          Pose2d robotPose = BobotState.getGlobalPose();
+          ChassisSpeeds speeds = BobotState.getRoboSpeed();
+          TurretUtil.ShotSolution solution =
+              TurretUtil.computeLeadShotSolution(
+                  robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
-      if (solution.isValid) {
-        setVelocityThenStopCommand2(solution.shooterSpeedRPS);
-        BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
-      }
-    })
+          if (solution.isValid) {
+            setVelocityThenStopCommand2(solution.shooterSpeedRPS);
+            BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+          }
+        })
         .withName("ShootOnMove-Shooter-" + target.toString());
   }
 }
