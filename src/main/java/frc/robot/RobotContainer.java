@@ -10,6 +10,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -37,16 +38,18 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAimTest;
-import frc.robot.util.ShooterHelper.ShooterSpeed;
-import frc.robot.util.ShooterHelper.TimeOfFlightTest;
-import frc.robot.util.ShooterHelper.TurretCalc;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -69,11 +72,6 @@ public class RobotContainer {
 
   private final Hood hood;
 
-  private double test = 1;
-
-  private double test2 = 35;
-
-
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
@@ -83,7 +81,9 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
 
     switch (Constants.currentMode) {
@@ -91,13 +91,12 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+        drive = new Drive(
+            new GyroIOPigeon2(),
+            new ModuleIOTalonFX(TunerConstants.FrontLeft),
+            new ModuleIOTalonFX(TunerConstants.FrontRight),
+            new ModuleIOTalonFX(TunerConstants.BackLeft),
+            new ModuleIOTalonFX(TunerConstants.BackRight));
 
         // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
@@ -115,13 +114,13 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIOSim(TunerConstants.FrontLeft),
+            new ModuleIOSim(TunerConstants.FrontRight),
+            new ModuleIOSim(TunerConstants.BackLeft),
+            new ModuleIOSim(TunerConstants.BackRight));
         // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
@@ -137,13 +136,17 @@ public class RobotContainer {
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            });
 
         // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
@@ -192,9 +195,11 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -215,13 +220,6 @@ public class RobotContainer {
   }
 
   private void configureOpButtons() {
- 
-
-    controller2.povUp().onTrue(new InstantCommand(() -> test += 1));
-    controller2.povDown().onTrue(new InstantCommand(() -> test -= 1));
-
-    controller2.povRight().onTrue(new InstantCommand(()-> test2 += 1));
-    controller2.povLeft().onTrue(new InstantCommand(() -> test2 -= 1));
 
     controller2
         .a()
@@ -247,62 +245,21 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  public void ShootCalcs() {
+  public void TurretMath() {
+    TargetType target = BobotState.targetType();
+    Pose2d robotPose = BobotState.getGlobalPose();
+    ChassisSpeeds speeds = BobotState.getRoboSpeed();
+    TurretUtil.ShotSolution solution = TurretUtil.computeLeadShotSolution(
+        robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
-    ChassisSpeeds fieldSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
-
-    Translation2d robotVelocity =
-        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
-
-    Translation2d target = BobotState.getTurretTarget().getTranslation();
-
-    Translation2d robotPos =
-        BobotState.getGlobalPose()
-            .getTranslation()
-            .plus(new Translation2d(Units.inchesToMeters(-2.25), Units.inchesToMeters(-4.8125)));
-
-    double distance = robotPos.getDistance(target);
-
-    BobotState.updateDistance(distance);
-
-    double hood = HoodAimTest.chooseHoodAngle(distance);
-
-    double velocity = HoodAimTest.requiredVelocity(distance, Units.inchesToMeters(55), hood);
-
-    double horizontalVelocity = velocity * Math.cos(Math.toRadians(hood));
-
-    double time =
-        TimeOfFlightTest.solveTime(
-            robotPos, robotVelocity, target, new Translation2d(), horizontalVelocity);
-    Translation2d leadTarget;
-    // if (!Double.isNaN(time)) {
-
-    //   leadTarget = target.plus(robotVelocity.times(time));
-
-    // } else {
-    leadTarget = target;
-    // }
-    Rotation2d robotHeading = drive.getRotation();
-
-    Translation2d toTarget = leadTarget.minus(robotPos);
-
-    // field angle to target
-    Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
-    // BobotState.updateBotAngle(targetAngle);
-
-    // turret should point here relative to robot
-    double turretSetpointRadians =
-        MathUtil.angleModulus(targetAngle.minus(robotHeading).getRadians());
-    double turretRotations = TurretCalc.turretRadiansToMotorRotations(turretSetpointRadians);
-
-    BobotState.updateOptiTurretYaw(turretRotations);
-    BobotState.updateHoodAngle(hood);
+    if (solution.isValid) {
+      BobotState.updateOptiTurretYaw(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+      BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+      BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
+    }
   }
 
   public void Automation() {
     BobotState.updateTurretTarget(BobotState.targetLocation());
-    BobotState.updateWantedShooterRPS(ShooterSpeed.ShooterRPS(BobotState.getDistance()));
   }
 }
