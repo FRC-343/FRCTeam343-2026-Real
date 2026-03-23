@@ -60,7 +60,13 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                         .withNeutralMode(NeutralModeValue.Brake)
                         .withInverted(InvertedValue.Clockwise_Positive))
                 .withSlot0(
-                    new Slot0Configs().withKV(0.12).withKA(.01).withKP(10).withKI(0).withKD(.1))
+                    new Slot0Configs()
+                        .withKV(0.12)
+                        .withKA(.01)
+                        .withKP(10.5)
+                        .withKI(0)
+                        .withKD(.1)
+                        .withKS(.3))
                 .withMotionMagic(
                     new MotionMagicConfigs()
                         .withMotionMagicAcceleration(75)

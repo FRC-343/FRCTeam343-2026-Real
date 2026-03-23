@@ -16,7 +16,7 @@ public class FieldConstants {
   public static final double BLUE_HUB_CENTER_X = Units.inchesToMeters(182.11);
 
   public static final double RED_HUB_CENTER_X = Units.inchesToMeters(469.11);
-  public static final double HUB_CENTER_Y = Units.inchesToMeters(158.845);
+  public static final double HUB_CENTER_Y = Units.inchesToMeters(164.845);
 
   public static final double BLUE_PASS_X = Units.inchesToMeters(91.055);
   public static final double RED_PASS_X = Units.inchesToMeters(560.165);

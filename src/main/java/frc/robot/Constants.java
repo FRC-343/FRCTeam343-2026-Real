@@ -47,7 +47,7 @@ public final class Constants {
     public static final double MOTOR_TO_TURRET_RATIO = 7.0 * 3.0;
 
     public static final double TURRET_OFFSET_X = Units.inchesToMeters(-2.25);
-    public static final double TURRET_OFFSET_Y = Units.inchesToMeters(-4.8125);
+    public static final double TURRET_OFFSET_Y = Units.inchesToMeters(4.8125);
   }
 
   public static final class ShooterConstants {

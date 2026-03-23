@@ -34,7 +34,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.ShooterSpeed;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -201,7 +200,6 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightBumper().whileTrue(turret.setTurretPosition());
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -219,13 +217,18 @@ public class RobotContainer {
 
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()));
+        .whileTrue(
+            shooter
+                .setVelocityThenStopCommand()
+                .alongWith(hood.setHoodPosition2())
+                .alongWith(turret.setTurretPosition()))
+        .whileFalse(hood.setHoodPosition(2));
     controller2
         .leftBumper()
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-55)
-                .alongWith(kicker.setVelocityThenStopCommand(40)));
+                .alongWith(kicker.setVelocityThenStopCommand(50)));
 
     controller2
         .y()
@@ -306,11 +309,14 @@ public class RobotContainer {
 
     if (solution.isValid) {
       BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+      BobotState.updateDistance(solution.distanceMeters);
+      BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
+      BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+      BobotState.updateTurretPose(TurretUtil.getTurretPose(robotPose));
     }
   }
 
   public void Automation() {
     BobotState.updateTurretTarget(BobotState.targetLocation());
-    BobotState.updateWantedShooterRPS(ShooterSpeed.ShooterRPS(BobotState.getDistance()));
   }
 }

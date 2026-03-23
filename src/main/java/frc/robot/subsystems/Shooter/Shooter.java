@@ -54,7 +54,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVelocityThenStopCommand() {
-    return new RunCommand(() -> this.io.setVelocity(MathUtil.clamp(35, 25.0, 45.0)), this)
+    return new RunCommand(
+            () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 25.0, 45.0)),
+            this)
         .finallyDo(io::stop);
   }
 

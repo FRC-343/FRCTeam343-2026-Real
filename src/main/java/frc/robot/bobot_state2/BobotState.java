@@ -102,6 +102,12 @@ public class BobotState extends VirtualSubsystem {
 
   private static double shooterTest;
 
+  private static Pose2d turretPose;
+
+  public static void updateTurretPose(Pose2d turret) {
+    BobotState.turretPose = turret;
+  }
+
   public static void updateHoodTest(double value) {
     BobotState.hoodTest = value;
   }
@@ -209,6 +215,11 @@ public class BobotState extends VirtualSubsystem {
    * Section we are adding get methods to
    *
    */
+
+  public static Pose2d getTurretPose() {
+    return BobotState.turretPose;
+  }
+
   public static double getDistance() {
     return BobotState.distance;
   }
@@ -323,6 +334,8 @@ public class BobotState extends VirtualSubsystem {
 
   @Override
   public void periodic() {
+
+    Logger.recordOutput(logRoot + "Turret pose", turretPose);
 
     Logger.recordOutput(logRoot + "Wanted robot rot", wantedRotRobot);
 
