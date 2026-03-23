@@ -79,7 +79,7 @@ public class Turret extends SubsystemBase {
 
   public Command setTurretPosition() {
 
-    return new RunCommand(() -> this.io.setTurretPosition(BobotState.getOptiTurretYaw()));
+    return new RunCommand(() -> this.io.setTurretPosition(-BobotState.getTurretPosi1()));
   }
 
   public Command setAngle(double angle) {
@@ -98,7 +98,8 @@ public class Turret extends SubsystemBase {
 
           if (solution.isValid) {
             setAngle(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
-            BobotState.updateTurretPos1(TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+            BobotState.updateTurretPos1(
+                TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
           }
         })
         .withName("ShootOnMove-Turret-" + target.toString());

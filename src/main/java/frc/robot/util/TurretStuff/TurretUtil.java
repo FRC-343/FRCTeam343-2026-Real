@@ -139,8 +139,8 @@ public class TurretUtil {
     return normalizeDegrees(Math.toDegrees(turretRad));
   }
 
-  public static double degreesToMotorRotations(double degrees){
-    return (degrees/360) * Constants.TurretConstants.MOTOR_TO_TURRET_RATIO;
+  public static double degreesToMotorRotations(double degrees) {
+    return (degrees / 360) * Constants.TurretConstants.MOTOR_TO_TURRET_RATIO;
   }
 
   // =========================
