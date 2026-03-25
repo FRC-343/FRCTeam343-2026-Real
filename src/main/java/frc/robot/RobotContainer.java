@@ -209,8 +209,7 @@ public class RobotContainer {
         .whileTrue(
             shooter
                 .setVelocityThenStopCommand()
-                .alongWith(hood.setHoodPosition2())
-                .alongWith(turret.setTurretPosition()))
+                .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
         .whileFalse(hood.setHoodPosition(2));
     controller2
         .leftBumper()
@@ -246,6 +245,7 @@ public class RobotContainer {
           TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
       BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
       BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
+      BobotState.updateDistance(solution.distanceMeters);
     }
   }
 
