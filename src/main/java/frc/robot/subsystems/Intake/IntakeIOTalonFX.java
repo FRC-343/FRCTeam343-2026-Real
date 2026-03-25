@@ -74,12 +74,12 @@ public class IntakeIOTalonFX implements IntakeIO {
     StatusSignal.refreshAll(velocity, dutyCycle, voltage);
     inputs.appliedVoltage = voltage.getValueAsDouble();
     inputs.appliedDutyCycle = dutyCycle.getValueAsDouble();
-    inputs.velocityRotPerSecond = velocity.getValueAsDouble() / 3.0;
+    inputs.velocityRotPerSecond = velocity.getValueAsDouble();
   }
 
   @Override
   public void setVelocity(double velocityRotPerSecond) {
-    talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond * 3.0));
+    talon.setControl(velocityVoltage.withVelocity(velocityRotPerSecond));
   }
 
   @Override

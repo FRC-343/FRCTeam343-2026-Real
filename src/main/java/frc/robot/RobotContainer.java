@@ -173,11 +173,15 @@ public class RobotContainer {
   }
 
   private void configureNamedCommands() {
-    NamedCommands.registerCommand("Intake", intake.runForTime(.5, 5));
-    NamedCommands.registerCommand("Shooter set speed", shooter.runForTime(40, 10));
-    NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 10));
-    NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 10));
-    NamedCommands.registerCommand("Hood", hood.setHoodPosition2());
+    NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
+    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(.5));
+    NamedCommands.registerCommand("Shooter set speed", shooter.setVelocityThenStopCommand().withTimeout(4));
+    NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 3));
+    NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 3));
+    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(4));
+    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.2));
+
+    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(4));
   }
 
   /**

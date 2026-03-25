@@ -301,8 +301,7 @@ public class BobotState extends VirtualSubsystem {
   public static Trigger slowTrigger() {
     return new Trigger(
         () ->
-            ((BobotState.ShooterWantedRPS + 1) >= BobotState.ShooterRPS
-                && (BobotState.ShooterWantedRPS - 1) <= BobotState.ShooterRPS));
+            (BobotState.ShooterRPS > 10.0));
   }
 
   public static Pose2d targetLocation() {
