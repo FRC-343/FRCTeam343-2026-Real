@@ -8,12 +8,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,10 +18,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.DriveCommands;
-import frc.robot.field.FieldConstants;
-import frc.robot.field.FieldUtils;
-import frc.robot.field.HubFaces;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Kicker.Kicker;
+import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Spindexer.Spindexer;
 import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -34,9 +33,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.ShooterHelper.HoodAim;
-import frc.robot.util.ShooterHelper.TimeOfFlight;
-import frc.robot.util.ShooterHelper.TurretAim;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -49,25 +47,33 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  //   private final Shooter shooter;
+  // private final Shooter shooter;
 
   private final Turret turret;
 
-  private final BobotState test;
+  private final Spindexer spindexer;
+
+  private final Kicker kicker;
+
+  private final BobotState bobot;
+
+  private final Intake intake;
+
+  private final Shooter shooter;
+
+  private final Hood hood;
 
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
 
-  //   private final DriverAutomationFactory m_Automation;
+  // private final DriverAutomationFactory m_Automation;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    test = new BobotState();
-    new Vision();
 
     switch (Constants.currentMode) {
       case REAL:
@@ -86,6 +92,13 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
+        spindexer = new Spindexer();
+        kicker = new Kicker();
+        intake = new Intake();
+        hood = new Hood();
+        shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
 
         break;
 
@@ -102,7 +115,13 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
-
+        spindexer = new Spindexer();
+        kicker = new Kicker();
+        intake = new Intake();
+        hood = new Hood();
+        shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
         break;
 
       default:
@@ -119,10 +138,16 @@ public class RobotContainer {
 
         // shooter = new Shooter();
         turret = new Turret();
-
+        spindexer = new Spindexer();
+        kicker = new Kicker();
+        intake = new Intake();
+        hood = new Hood();
+        shooter = new Shooter();
+        bobot = new BobotState();
+        new Vision();
         break;
     }
-
+    configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -144,6 +169,20 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    configureOpButtons();
+  }
+
+  private void configureNamedCommands() {
+    NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
+    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(.5));
+    NamedCommands.registerCommand(
+        "Shooter set speed", shooter.setVelocityThenStopCommand().withTimeout(4));
+    NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 3));
+    NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 3));
+    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(4));
+    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
+
+    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(4));
   }
 
   /**
@@ -161,32 +200,32 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // Lock to 0° when A button is held
-    controller
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // controller.a().onTrue(Commands.runOnce(drive::resetGyro, drive));
+  }
+
+  private void configureOpButtons() {
+
+    controller2
         .a()
         .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+            shooter
+                .setVelocityThenStopCommand()
+                .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
+        .whileFalse(hood.setHoodPosition(2));
+    controller2
+        .leftBumper()
+        .whileTrue(
+            spindexer
+                .setVelocityThenStopCommand(-60)
+                .alongWith(kicker.setVelocityThenStopCommand(55)));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                    drive)
-                .ignoringDisable(true));
-
-    // controller.leftBumper().whileTrue(shooter.setVelocityCommand(30));
-    controller.rightBumper().whileTrue(turret.setTurretPosition());
+    controller2
+        .y()
+        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()));
   }
 
   /**
@@ -198,81 +237,24 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  public void ShooterCalcs() {
+  public void TurretMath() {
+    TargetType target = BobotState.targetType();
+    Pose2d robotPose = BobotState.getGlobalPose();
+    ChassisSpeeds speeds = BobotState.getRoboSpeed();
+    TurretUtil.ShotSolution solution =
+        TurretUtil.computeLeadShotSolution(
+            robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
-    /* Field Speed converts robot speed to field speeds for easier math */
-    ChassisSpeeds fieldSpeeds =
-        ChassisSpeeds.fromRobotRelativeSpeeds(
-            BobotState.getRoboSpeed(), BobotState.getGlobalPose().getRotation());
-
-    /* Gets the robot velocity using the converted field speeds */
-    Translation2d robotVelocityXY =
-        new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
-
-    /* Gets the shooter position on the robot */
-    Translation2d shooterXY =
-        BobotState.getGlobalPose()
-            .transformBy(
-                new Transform2d(Units.inchesToMeters(2), Units.inchesToMeters(2), new Rotation2d()))
-            .getTranslation();
-
-    /* Gets the targerts position on the field
-     * Flips for different field side
-     */
-    Translation2d targetXY =
-        HubFaces.B.get()
-            .tag
-            .pose()
-            .getTranslation()
-            .toTranslation2d()
-            .plus(
-                new Translation2d(
-                    FieldUtils.isBlueAlliance()
-                        ? FieldConstants.tagToHub
-                        : -FieldConstants.tagToHub,
-                    0.0));
-
-    BobotState.updateTurretTarget(
-        targetXY); // This mainly used for sim to show the position the turret/hood is targeting.
-
-    /* Gets the fuel exit velocity this is used for the hood calculations */
-    double shooterExitVelocity =
-        BobotState.getShooterRPM() * Constants.ShooterConstants.WheelCir * .3;
-
-    /* Call for the calculation that gets an estimated time that the fuel will be in the air from any give position/speed */
-    BobotState.updateToF(
-        TimeOfFlight.solveTime(
-            shooterXY, robotVelocityXY, targetXY, new Translation2d(), shooterExitVelocity));
-
-    double time = BobotState.getToF(); // gives us an easier call for the TOF
-
-    if (!Double.isNaN(time)) { // If time is a real number do the calculations
-
-      /* Gives us an easier call for the turret YAW */
-      double yaw =
-
-          /* Call to calculate turret YAW */
-          TurretAim.calculateYaw(
-              shooterXY,
-              BobotState.getGlobalPose().getTranslation(),
-              targetXY,
-              new Translation2d(),
-              BobotState.getToF());
-
-      Translation2d intercept =
-          targetXY.plus(
-              robotVelocityXY.times(-time)); // Gets the positon that the robot would hit the target
-
-      double distance =
-          intercept.getDistance(
-              shooterXY); // Gets the distance from the shooter to the intercept position.
-
-      double hood =
-          HoodAim.calculateHoodAngle(distance, 72 - 17, shooterExitVelocity); // Gets the hood angle
-
-      /* updates our call for the hood and turret */
-      BobotState.updateTurretYaw(yaw);
-      BobotState.updateHoodAngle(hood);
+    if (solution.isValid) {
+      BobotState.updateOptiTurretYaw(
+          TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+      BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+      BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
+      BobotState.updateDistance(solution.distanceMeters);
     }
+  }
+
+  public void Automation() {
+    BobotState.updateTurretTarget(BobotState.targetLocation());
   }
 }

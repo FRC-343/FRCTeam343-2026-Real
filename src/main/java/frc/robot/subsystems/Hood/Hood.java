@@ -3,6 +3,8 @@ package frc.robot.subsystems.Hood;
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
@@ -11,12 +13,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimitSwitch.LimitSwitchDigitalInput;
-import frc.robot.LimitSwitch.LimitSwitchIO;
-import frc.robot.LimitSwitch.LimitSwitchIOInputsAutoLogged;
-import frc.robot.beambreak.BeambreakDigitalInput;
-import frc.robot.beambreak.BeambreakIO;
-import frc.robot.beambreak.BeambreakIOInputsAutoLogged;
+import frc.robot.bobot_state2.BobotState;
+import frc.robot.util.TurretStuff.TurretUtil;
+import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.Logger;
 
 /*
@@ -26,18 +25,10 @@ import org.littletonrobotics.junction.Logger;
 
 public class Hood extends SubsystemBase {
   private final HoodMotorIO io;
-  private final BeambreakIO beambreak;
-  private final LimitSwitchIO LimitSwitch;
-  private final LimitSwitchIO LimitSwitchBackup;
 
   boolean test = false;
 
   private final HoodMotorIOInputsAutoLogged inputs = new HoodMotorIOInputsAutoLogged();
-  private final BeambreakIOInputsAutoLogged beambreakInputs = new BeambreakIOInputsAutoLogged();
-  private final LimitSwitchIOInputsAutoLogged LimitSwitchInputs =
-      new LimitSwitchIOInputsAutoLogged();
-  private final LimitSwitchIOInputsAutoLogged LimitSwitchBackupInputs =
-      new LimitSwitchIOInputsAutoLogged();
 
   private final PIDController pidController =
       new PIDController(
@@ -53,24 +44,15 @@ public class Hood extends SubsystemBase {
     switch (Constants.currentMode) {
       case REAL:
         io = new HoodMotorTalonFX(21);
-        beambreak = new BeambreakDigitalInput(9); // 3 and 2
-        LimitSwitch = new LimitSwitchDigitalInput(0);
-        LimitSwitchBackup = new LimitSwitchDigitalInput(1);
 
         break;
       case SIM:
         io = new HoodMotorSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));
-        beambreak = new BeambreakDigitalInput(2);
-        LimitSwitch = new LimitSwitchDigitalInput(0);
-        LimitSwitchBackup = new LimitSwitchDigitalInput(1);
 
         break;
       case REPLAY:
       default:
         io = new HoodMotorIO() {};
-        beambreak = new BeambreakIO() {};
-        LimitSwitch = new LimitSwitchIO() {};
-        LimitSwitchBackup = new LimitSwitchIO() {};
         break;
     }
   }
@@ -78,10 +60,6 @@ public class Hood extends SubsystemBase {
   @Override
   public void periodic() {
     this.io.updateInputs(this.inputs);
-    this.beambreak.updateInputs(this.beambreakInputs);
-    this.LimitSwitch.updateInputs(this.LimitSwitchInputs);
-    this.LimitSwitchBackup.updateInputs(this.LimitSwitchBackupInputs);
-
     Logger.processInputs("Hood", this.inputs);
 
     if (DriverStation.isDisabled()) {
@@ -89,27 +67,16 @@ public class Hood extends SubsystemBase {
       this.io.stop();
     }
 
-    Logger.processInputs("Hood/Beambreak", this.beambreakInputs);
-    Logger.processInputs("Hood/LimitSwitch", this.LimitSwitchInputs);
-    Logger.processInputs("Hood/LimitSwitchBackup", this.LimitSwitchBackupInputs);
-
     Logger.recordOutput("Hood/SetpointInches", setpointInches);
 
     // Log Mechanisms
     // measuredVisualizer.update(this.inputs.masterPositionRad);
     // setpointVisualizer.update(this.setpointInches);
     // // I'm not quite sure how this works, it is semi working in sim.
-
+    BobotState.updateHood(this.inputs.masterPositionRad);
   }
 
   // These needs to be reorganized
-
-  public Command overrideBeambreakObstructedCommand(boolean value) {
-    return new InstantCommand(
-        () -> {
-          this.beambreak.overrideObstructed(value);
-        });
-  }
 
   private void setSetpoint(double setpoint) {
     setpointInches = MathUtil.clamp(setpoint, 0, 56); // not real value
@@ -138,7 +105,17 @@ public class Hood extends SubsystemBase {
         () ->
             this.io.setHoodPosition(
                 MathUtil.clamp(
-                    position, Constants.HoodConstants.minHood, Constants.HoodConstants.maxHood)));
+                    position, Constants.HoodConstants.MINHOOD, Constants.HoodConstants.MAXHOOD)));
+  }
+
+  public Command setHoodPosition2() {
+    return new RunCommand(
+        () ->
+            this.io.setHoodPosition(
+                MathUtil.clamp(
+                    BobotState.getWantedHood(),
+                    Constants.HoodConstants.MINHOOD,
+                    Constants.HoodConstants.MAXHOOD)));
   }
 
   public Command stopCommand() {
@@ -167,4 +144,22 @@ public class Hood extends SubsystemBase {
    * Triggers might also be separated at a later date, potentially added to BobotState
    */
 
+  public Command shootOnMoveCommandTurret() {
+    TargetType target = BobotState.targetType();
+
+    return run(() -> {
+          Pose2d robotPose = BobotState.getGlobalPose();
+          ChassisSpeeds speeds = BobotState.getRoboSpeed();
+          TurretUtil.ShotSolution solution =
+              TurretUtil.computeLeadShotSolution(
+                  robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+
+          if (solution.isValid) {
+            setHoodPosition(solution.trajectoryAngleDegrees);
+            BobotState.updateTurretPos1(
+                TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+          }
+        })
+        .withName("ShootOnMove-Turret-" + target.toString());
+  }
 }

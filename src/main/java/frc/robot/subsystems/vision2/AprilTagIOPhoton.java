@@ -33,7 +33,6 @@ public class AprilTagIOPhoton implements AprilTagIO {
     //     PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
     //     source.robotToCamera());
 
-    // estimator. setMultiTagFallbackStrategy(PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
   }
 
   @Override

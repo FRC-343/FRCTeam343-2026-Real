@@ -10,34 +10,39 @@ public class FieldConstants {
   public static record AprilTagStruct(int fiducialId, Pose3d pose) {}
 
   /** Distance from the center of the April Tag on the Face to the center of the Pole */
+
+  // we hardcoding everything
+
+  public static final double BLUE_HUB_CENTER_X = Units.inchesToMeters(182.11);
+
+  public static final double RED_HUB_CENTER_X = Units.inchesToMeters(469.11);
+  public static final double HUB_CENTER_Y = Units.inchesToMeters(164.845);
+
+  public static final double BLUE_PASS_X = Units.inchesToMeters(91.055);
+  public static final double RED_PASS_X = Units.inchesToMeters(560.165);
+  public static final double BLUE_LEFT_PASS_Y = Units.inchesToMeters(234.775);
+  public static final double BLUE_RIGHT_PASS_Y = Units.inchesToMeters(79.4225);
+  public static final double RED_LEFT_PASS_Y = Units.inchesToMeters(234.775);
+  public static final double RED_RIGHT_PASS_Y = Units.inchesToMeters(79.4225);
+
   public static final double tagToHub = Units.inchesToMeters(23.5);
 
   public static final double distanceToTag = Units.inchesToMeters(10);
-
-  public static final double tagToCageRight = Units.inchesToMeters(44.18);
-  public static final double tagToCageCenter = Units.inchesToMeters(1.25);
-  public static final double tagToCageLeft = Units.inchesToMeters(-41.7);
 
   public static final double fieldLength = Units.inchesToMeters(690.876);
   public static final double fieldWidth = Units.inchesToMeters(317);
   public static final double startingLineX = Units.inchesToMeters(299.438);
 
+  public static final double centerZoneWidth = Units.inchesToMeters(50);
+
   /** Used for calculating HPS zoning */
   public static final double halfFieldWidth = fieldWidth / 2;
 
-  /*
-   * April Tag Lookup
-   */
-  //   public static final HPSFace blueHPSDriverRight =
-  //       new HPSFace(new AprilTagStruct(12, VisionConstants.fieldLayout.getTagPose(12).get()));
-  //   public static final HPSFace blueHPSDriverLeft =
-  //       new HPSFace(new AprilTagStruct(13, VisionConstants.fieldLayout.getTagPose(13).get()));
+  public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(20);
+  public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(20);
 
-  //   public static final ProcessorFace blueProcessor =
-  //       new ProcessorFace(new AprilTagStruct(16,
-  // VisionConstants.fieldLayout.getTagPose(16).get()));
-  //   public static final BargeCage blueBarge =
-  //       new BargeCage(new AprilTagStruct(14, VisionConstants.fieldLayout.getTagPose(14).get()));
+  public static final double distanceToBlueTrench = Units.inchesToMeters(186.1);
+  public static final double distanceToRedTrench = fieldLength - (distanceToBlueTrench + 4.0);
 
   // Blue Hub
   public static final HubFace blueHubA =
@@ -56,17 +61,6 @@ public class FieldConstants {
       new HubFace(new AprilTagStruct(21, VisionConstants.fieldLayout.getTagPose(21).get()));
   public static final HubFace blueHubH =
       new HubFace(new AprilTagStruct(24, VisionConstants.fieldLayout.getTagPose(24).get()));
-
-  //   public static final HPSFace redHPSDriverLeft =
-  //       new HPSFace(new AprilTagStruct(1, VisionConstants.fieldLayout.getTagPose(1).get()));
-  //   public static final HPSFace redHPSDriverRight =
-  //       new HPSFace(new AprilTagStruct(2, VisionConstants.fieldLayout.getTagPose(2).get()));
-
-  //   public static final ProcessorFace redProcessor =
-  //       new ProcessorFace(new AprilTagStruct(3,
-  // VisionConstants.fieldLayout.getTagPose(3).get()));
-  //   public static final BargeCage redBarge =
-  //       new BargeCage(new AprilTagStruct(5, VisionConstants.fieldLayout.getTagPose(5).get()));
 
   // Red Hub
   public static final HubFace redHubA =
@@ -89,7 +83,8 @@ public class FieldConstants {
   public static final List<HubFace> BLUEHUBTAGS = List.of(blueHubB, blueHubD, blueHubF, blueHubH);
   public static final List<HubFace> REDHUBTAGS = List.of(redHubB, redHubD, redHubF, redHubH);
 
-  //   public static final List<HPSFace> blueHPSTags = List.of(blueHPSDriverLeft,
+  // public static final List<HPSFace> blueHPSTags = List.of(blueHPSDriverLeft,
   // blueHPSDriverRight);
-  //   public static final List<HPSFace> redHPSTags = List.of(redHPSDriverLeft, redHPSDriverRight);
+  // public static final List<HPSFace> redHPSTags = List.of(redHPSDriverLeft,
+  // redHPSDriverRight);
 }

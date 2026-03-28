@@ -8,15 +8,14 @@ public interface TurretMotorIO {
   @AutoLog
   public static class TurretMotorIOInputs {
     public boolean masterConnected;
-    public double masterPositionRad = 0.0;
+    public double masterPositionRot;
     public double masterVelocityRadPerSec = 0.0;
     public double masterAppliedVolts = 0.0;
     public double masterCurrentAmps = 0.0;
 
-    public double extentionAbsPos = 0.0;
-
     public Rotation2d extentionPos = new Rotation2d();
   }
+
   /** Updates the set of loggable inputs. */
   public default void updateInputs(TurretMotorIOInputs inputs) {}
 
@@ -36,6 +35,8 @@ public interface TurretMotorIO {
   public default void setVoltage(double voltage) {}
 
   public default void resetEncoder() {}
+
+  public default void setStatorPosition(double position) {}
 
   public default void stop() {
     setTurretVelocity(0);

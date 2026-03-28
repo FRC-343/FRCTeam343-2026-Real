@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.BobotState;
-// import frc.robot.bobot_state2.BobotState;
 import frc.robot.util.VirtualSubsystem;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,7 +92,7 @@ public class Vision extends VirtualSubsystem {
       rejectedAprilTagPoses.addAll(Arrays.asList(cam.inputs.rejectedAprilTagPoses));
 
       for (PoseObservation observation : cam.inputs.validPoseObservations) {
-        // BobotState.offerVisionObservation(observation);
+        BobotState.offerVisionObservation(observation);
       }
     }
 

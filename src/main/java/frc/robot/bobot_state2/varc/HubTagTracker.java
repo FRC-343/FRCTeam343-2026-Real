@@ -10,7 +10,12 @@ public class HubTagTracker extends TargetAngleTracker {
   private Rotation2d rotationTarget = Rotation2d.kZero;
 
   public void update() {
-    Pose2d closestPose = FieldUtils.getClosestHub().tag.pose().toPose2d();
+    Pose2d closestPose =
+        FieldUtils.getClosestHub()
+            .tag
+            .pose()
+            .toPose2d()
+            .rotateBy(BobotState.getGlobalPose().getTranslation().getAngle());
     rotationTarget = closestPose.getRotation().plus(Rotation2d.kPi);
     distanceMeters =
         closestPose.getTranslation().getDistance(BobotState.getGlobalPose().getTranslation());
