@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.535954922894425,
-        "y": 7.451043890865955
+        "x": 1.6583452211126959,
+        "y": 7.392582025677603
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.275704485219903,
-        "y": 7.401349265308886
+        "x": 2.398094783438173,
+        "y": 7.342887400120534
       },
       "isLocked": false,
       "linkedName": "LeftShootEnd"
@@ -83,10 +83,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -91.01397872278531
+    "rotation": -91.01397872278532
   },
   "reversed": false,
-  "folder": "LEFT START PATHS",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

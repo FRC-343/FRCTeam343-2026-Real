@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.603979496738117,
-        "y": 0.5397110904007456
+        "x": 2.188830242510699,
+        "y": 0.6903566333808839
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9448219671899123,
-        "y": 0.47086729466986177
+        "x": 2.529672712962494,
+        "y": 0.6215128376500001
       },
       "isLocked": false,
       "linkedName": "RightShootEnd"
@@ -86,7 +86,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "RIGHT START",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

@@ -41,8 +41,8 @@ public class FieldConstants {
   public static final double centerZoneWidthTop = halfFieldWidth + Units.inchesToMeters(20);
   public static final double centerZoneWidthBottom = halfFieldWidth - Units.inchesToMeters(20);
 
-  public static final double distanceToBlueTrench = Units.inchesToMeters(188.1);
-  public static final double distanceToRedTrench = fieldLength - distanceToBlueTrench;
+  public static final double distanceToBlueTrench = Units.inchesToMeters(186.1);
+  public static final double distanceToRedTrench = fieldLength - (distanceToBlueTrench + 4.0);
 
   // Blue Hub
   public static final HubFace blueHubA =

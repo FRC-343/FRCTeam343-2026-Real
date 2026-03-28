@@ -175,11 +175,12 @@ public class RobotContainer {
   private void configureNamedCommands() {
     NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
     NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(.5));
-    NamedCommands.registerCommand("Shooter set speed", shooter.setVelocityThenStopCommand().withTimeout(4));
+    NamedCommands.registerCommand(
+        "Shooter set speed", shooter.setVelocityThenStopCommand().withTimeout(4));
     NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 3));
     NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 3));
     NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(4));
-    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.2));
+    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
     NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(4));
   }
@@ -219,12 +220,12 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-55)
-                .alongWith(kicker.setVelocityThenStopCommand(50)));
+                .setVelocityThenStopCommand(-60)
+                .alongWith(kicker.setVelocityThenStopCommand(55)));
 
     controller2
         .y()
-        .whileTrue(shooter.setVelocityThenStopCommand2(40).alongWith(hood.setHoodPosition2()));
+        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()));
   }
 
   /**
