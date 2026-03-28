@@ -63,10 +63,10 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                     new Slot0Configs()
                         .withKV(0.12)
                         .withKA(.01)
-                        .withKP(10.5)
+                        .withKP(15.0)
                         .withKI(0)
-                        .withKD(.1)
-                        .withKS(.3))
+                        .withKD(.2)
+                        .withKS(.5))
                 .withMotionMagic(
                     new MotionMagicConfigs()
                         .withMotionMagicAcceleration(75)
@@ -89,21 +89,7 @@ public class TurretMotorTalonFX implements TurretMotorIO {
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
     talon.optimizeBusUtilization();
 
-    // TurretCRT3.calculateTurretRotations(
-    //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
-    //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()));
-    // TurretCRT2.calculateTurretAngleFromCANCoderDegrees(
-    //     Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble()),
-    //     Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()));
-
-    // setStatorPosition(
-    //     TurretCRT3.calculateTurretRotations(
-    //         Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
-    //         Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble())));
-    // BobotState.updateMotorTarget1(
-    //     TurretCRT3.calculateTurretRotations(
-    //         Units.rotationsToDegrees(r13.getAbsolutePosition().getValueAsDouble()),
-    //         Units.rotationsToDegrees(r17.getAbsolutePosition().getValueAsDouble())));
+    talon.setPosition(0);
   }
 
   public void updateInputs(TurretMotorIOInputs inputs) {

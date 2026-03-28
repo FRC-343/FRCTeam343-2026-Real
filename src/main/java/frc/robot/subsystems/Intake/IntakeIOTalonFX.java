@@ -2,6 +2,7 @@ package frc.robot.subsystems.Intake;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -48,7 +49,11 @@ public class IntakeIOTalonFX implements IntakeIO {
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
+                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0))
+                .withCurrentLimits(
+                    new CurrentLimitsConfigs()
+                        .withStatorCurrentLimit(50)
+                        .withStatorCurrentLimitEnable(true)));
 
     talonFollower
         .getConfigurator()
@@ -61,7 +66,12 @@ public class IntakeIOTalonFX implements IntakeIO {
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0)));
+                .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0))
+                .withCurrentLimits(
+                    new CurrentLimitsConfigs()
+                        .withStatorCurrentLimit(80)
+                        .withStatorCurrentLimitEnable(true)));
+
     velocityVoltage.Slot = 0;
 
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity);
