@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
-import frc.robot.bobot_state2.varc.TestTargetTracker;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
 import frc.robot.subsystems.vision2.PoseObservation;
@@ -45,7 +44,6 @@ public class BobotState extends VirtualSubsystem {
 
   // adding Tag Trackers here
   private static HubTagTracker hubTracker = new HubTagTracker();
-  private static TestTargetTracker TestTarget = new TestTargetTracker();
 
   // list of tags used to calculate where the hub is
   private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
@@ -282,10 +280,6 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.hubTracker.getRotationTarget();
   }
 
-  public static Rotation2d getRotationToTarget() {
-    return BobotState.TestTarget.getRotationTarget();
-  }
-
   public static Pose2d getTurretTarget() {
     return BobotState.TurretTarget;
   }
@@ -420,13 +414,6 @@ public class BobotState extends VirtualSubsystem {
       hubTracker.update();
 
       String calcLogRoot = logRoot + "Hub/";
-      Logger.recordOutput(calcLogRoot + "Closest tag", FieldUtils.getClosestHub().tag);
-      Logger.recordOutput(
-          calcLogRoot + "Target Angle Deg", BobotState.getRotationtoClosestHub().getDegrees());
-    }
-    {
-      TestTarget.update();
-      String calcLogRoot = logRoot + "Target/";
       Logger.recordOutput(calcLogRoot + "Closest tag", FieldUtils.getClosestHub().tag);
       Logger.recordOutput(
           calcLogRoot + "Target Angle Deg", BobotState.getRotationtoClosestHub().getDegrees());
