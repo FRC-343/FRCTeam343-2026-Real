@@ -201,17 +201,13 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller
-        .rightTrigger()
-        .whileTrue(
-            intake
-                .setPercentOutputThenStopCommand(.5)
-                .alongWith(
-                    DriveCommands.joystickDriveAtAngle(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    // .alongWith(
+    //     DriveCommands.joystickDriveAtAngle(
+    //         drive,
+    //         () -> -controller.getLeftY(),
+    //         () -> -controller.getLeftX(),
+    //         () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
@@ -236,7 +232,7 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-50)
+                .setVelocityThenStopCommand(-5)
                 .alongWith(kicker.setVelocityThenStopCommand(55)));
 
     controller2
