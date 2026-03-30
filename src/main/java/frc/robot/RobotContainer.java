@@ -10,6 +10,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -200,11 +201,30 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    controller
+        .rightTrigger()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(.5)
+                .alongWith(
+                    DriveCommands.joystickDriveAtAngle(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // controller.a().onTrue(Commands.runOnce(drive::resetGyro, drive));
+    controller
+        .a()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                    drive,
+                    () -> -controller.getLeftY(),
+                    () -> -controller.getLeftX(),
+                    () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+                .alongWith(turret.setAngle(0)));
+
   }
 
   private void configureOpButtons() {
@@ -222,7 +242,8 @@ public class RobotContainer {
 
     controller2
         .y()
-        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()));
+        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()))
+        .whileFalse(hood.setHoodPosition(2));
   }
 
   /**
@@ -245,6 +266,8 @@ public class RobotContainer {
     if (solution.isValid) {
       BobotState.updateOptiTurretYaw(
           TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+      BobotState.updateSolutionDegAngle(
+          solution.turretAngleDegrees + BobotState.getGlobalPose().getRotation().getDegrees());
       BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
       BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
       BobotState.updateDistance(solution.distanceMeters);

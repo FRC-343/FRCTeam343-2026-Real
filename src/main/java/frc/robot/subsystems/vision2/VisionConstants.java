@@ -44,7 +44,7 @@ public class VisionConstants {
                           Units.inchesToMeters(12.331), // left+
                           Units.inchesToMeters(18.033)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
+                          0, Units.degreesToRadians(355), Units.degreesToRadians(-15.793)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
@@ -55,7 +55,7 @@ public class VisionConstants {
                           Units.inchesToMeters(11.529), // left+
                           Units.inchesToMeters(7.899)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-158.909)))),
+                          0, Units.degreesToRadians(345), Units.degreesToRadians(-158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
@@ -65,7 +65,7 @@ public class VisionConstants {
                           Units.inchesToMeters(-6.979), // forward+
                           Units.inchesToMeters(-12.331), // left+
                           Units.inchesToMeters(19.533)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
+                      new Rotation3d(0, Units.degreesToRadians(355), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
@@ -76,15 +76,15 @@ public class VisionConstants {
                           Units.inchesToMeters(-11.547), // left+
                           Units.inchesToMeters(7.899)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
+                          0, Units.degreesToRadians(345), Units.degreesToRadians(158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
-  public static final double ambiguityCutoff = 0.6;
+  public static final double ambiguityCutoff = .001;
   public static final double singleTagPoseCutoffMeters = 4;
 
   // The standard deviations of our vision estimated poses, which affect correction rate
   // (Fake values. Experiment and determine estimation noise on an actual robot.)
   public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
-  public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(2, 2, 4);
+  public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(4, 4, 8);
 }

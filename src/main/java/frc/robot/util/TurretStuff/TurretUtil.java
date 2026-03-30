@@ -233,7 +233,7 @@ public class TurretUtil {
     double virtualY = turretNow.getY();
     HubLookUpTable.ShootingParameters params = null;
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
       // Predict turret position when ball arrives
       virtualX = turretNow.getX() + robotVelX * tof;
       virtualY = turretNow.getY() + robotVelY * tof;

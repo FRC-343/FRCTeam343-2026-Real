@@ -104,6 +104,12 @@ public class BobotState extends VirtualSubsystem {
 
   private static boolean slowdown;
 
+  private static double solutionDegAngle;
+
+  public static void updateSolutionDegAngle(double angle) {
+    BobotState.solutionDegAngle = angle;
+  }
+
   public static void updateSlowdown(boolean slow) {
     BobotState.slowdown = slow;
   }
@@ -223,6 +229,10 @@ public class BobotState extends VirtualSubsystem {
    * Section we are adding get methods to
    *
    */
+
+  public static double getSolutionAngle() {
+    return BobotState.solutionDegAngle;
+  }
 
   public static Pose2d getTurretPose() {
     return BobotState.turretPose;
@@ -403,6 +413,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "ShooterRPS Increment value", shooterTest);
 
     Logger.recordOutput(logRoot + "Slowdown", slowdown);
+
+    Logger.recordOutput(logRoot + "Solution Angle", solutionDegAngle);
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";
     // Logger.recordOutput(
