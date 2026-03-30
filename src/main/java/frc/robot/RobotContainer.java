@@ -224,7 +224,6 @@ public class RobotContainer {
                     () -> -controller.getLeftX(),
                     () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
                 .alongWith(turret.setAngle(0)));
-
   }
 
   private void configureOpButtons() {
