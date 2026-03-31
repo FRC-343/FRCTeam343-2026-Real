@@ -202,24 +202,41 @@ public class RobotContainer {
             () -> -controller.getRightX()));
 
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
-    // .alongWith(
-    //     DriveCommands.joystickDriveAtAngle(
-    //         drive,
-    //         () -> -controller.getLeftY(),
-    //         () -> -controller.getLeftX(),
-    //         () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+    controller
+        .b()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(.5)
+                .alongWith(
+                    DriveCommands.joystickDriveAtAngle(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     controller
         .a()
         .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
+            DriveCommands.joystickDriveAtAngleForShoot(
                     drive,
                     () -> -controller.getLeftY(),
                     () -> -controller.getLeftX(),
                     () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
                 .alongWith(turret.setAngle(0)));
+
+    controller
+        .x()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(.5)
+                .alongWith(
+                    DriveCommands.joystickDriveAtAngle(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
   }
 
   private void configureOpButtons() {
