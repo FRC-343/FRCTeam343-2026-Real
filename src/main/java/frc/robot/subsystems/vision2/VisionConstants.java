@@ -44,18 +44,18 @@ public class VisionConstants {
                           Units.inchesToMeters(12.331), // left+
                           Units.inchesToMeters(18.033)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(355), Units.degreesToRadians(-15.793)))),
+                          0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
                   "BLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-11.629), // forward+
-                          Units.inchesToMeters(11.529), // left+
-                          Units.inchesToMeters(7.899)), // up+
+                          Units.inchesToMeters(-10.635), // forward+
+                          Units.inchesToMeters(10.837), // left+
+                          Units.inchesToMeters(7.602)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(345), Units.degreesToRadians(-158.909)))),
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
@@ -65,18 +65,18 @@ public class VisionConstants {
                           Units.inchesToMeters(-6.979), // forward+
                           Units.inchesToMeters(-12.331), // left+
                           Units.inchesToMeters(19.533)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(355), Units.degreesToRadians(15)))),
+                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
                   "BRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-11.634), // forward+
-                          Units.inchesToMeters(-11.547), // left+
-                          Units.inchesToMeters(7.899)), // up+
+                          Units.inchesToMeters(-10.635), // forward+
+                          Units.inchesToMeters(-10.837), // left+
+                          Units.inchesToMeters(7.602)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(345), Units.degreesToRadians(158.909)))),
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
