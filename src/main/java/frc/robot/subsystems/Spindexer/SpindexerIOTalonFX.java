@@ -42,7 +42,8 @@ public class SpindexerIOTalonFX implements SpindexerIO {
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(.5).withKI(0).withKD(0))
+                .withSlot0(
+                    new Slot0Configs().withKV(0.12).withKP(.8).withKI(0).withKD(0).withKS(1.4))
                 .withCurrentLimits(
                     new CurrentLimitsConfigs()
                         .withStatorCurrentLimit(50)
