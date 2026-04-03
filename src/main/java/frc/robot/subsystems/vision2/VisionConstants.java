@@ -80,11 +80,11 @@ public class VisionConstants {
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 
-  public static final double ambiguityCutoff = .001;
+  public static final double ambiguityCutoff = .1;
   public static final double singleTagPoseCutoffMeters = 4;
 
   // The standard deviations of our vision estimated poses, which affect correction rate
   // (Fake values. Experiment and determine estimation noise on an actual robot.)
-  public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(4, 4, 8);
+  public static final Matrix<N3, N1> singleTagStdDevs = VecBuilder.fill(2, 2, 4);
   public static final Matrix<N3, N1> multiTagStdDevs = VecBuilder.fill(4, 4, 8);
 }

@@ -243,8 +243,11 @@ public class RobotContainer {
 
     controller2
         .a()
-        .whileTrue(shooter.setVelocityThenStopCommand().alongWith(hood.setHoodPosition2()))
-        .whileFalse(hood.setHoodPosition(2));
+        .whileTrue(
+            shooter
+                .setVelocityThenStopCommand()
+                .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
+        .whileFalse(hood.setHoodPosition(2).alongWith(turret.setAngle(0)));
     controller2
         .leftBumper()
         .whileTrue(
