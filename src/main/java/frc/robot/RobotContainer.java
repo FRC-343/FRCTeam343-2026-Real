@@ -253,7 +253,7 @@ public class RobotContainer {
         .whileTrue(
             spindexer
                 .setVelocityThenStopCommand(-5)
-                .alongWith(kicker.setVelocityThenStopCommand(55)));
+                .alongWith(kicker.setVelocityThenStopCommand(15)));
 
     controller2
         .y()
