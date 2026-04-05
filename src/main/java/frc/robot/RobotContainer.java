@@ -252,7 +252,7 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-5)
+                .setVelocityThenStopCommand(-10)
                 .alongWith(kicker.setVelocityThenStopCommand(15)));
 
     controller2
