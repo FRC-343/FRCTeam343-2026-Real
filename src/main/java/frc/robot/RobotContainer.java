@@ -215,6 +215,7 @@ public class RobotContainer {
                         () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
 
     controller
         .a()
