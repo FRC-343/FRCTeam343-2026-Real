@@ -63,7 +63,7 @@ public class ShooterIOTalonFx implements ShooterIO {
             new TalonFXConfiguration()
                 .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                 .withSlot0(
-                    new Slot0Configs().withKV(.12).withKP(.16).withKI(0).withKD(0).withKS(1.6)));
+                    new Slot0Configs().withKV(.12).withKP(.16).withKI(0).withKD(0.01).withKS(1.6)));
     velocityVoltage.Slot = 0;
 
     StatusSignal.setUpdateFrequencyForAll(

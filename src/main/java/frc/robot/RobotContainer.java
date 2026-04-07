@@ -201,19 +201,19 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller
         .b()
         .whileTrue(
             intake
-                .setPercentOutputThenStopCommand(.5)
+                .setPercentOutputThenStopCommand(-.5)
                 .alongWith(
                     DriveCommands.joystickDriveAtAngle(
                         drive,
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     controller
