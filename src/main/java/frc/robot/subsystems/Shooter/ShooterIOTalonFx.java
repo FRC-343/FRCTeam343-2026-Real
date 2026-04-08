@@ -56,14 +56,14 @@ public class ShooterIOTalonFx implements ShooterIO {
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
                 .withSlot0(
-                    new Slot0Configs().withKV(.12).withKP(.16).withKI(0).withKD(0).withKS(1.6)));
+                    new Slot0Configs().withKV(.11).withKP(.1).withKI(0).withKD(0.0).withKS(1.2)));
     follower
         .getConfigurator()
         .apply(
             new TalonFXConfiguration()
                 .withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
                 .withSlot0(
-                    new Slot0Configs().withKV(.12).withKP(.16).withKI(0).withKD(0.01).withKS(1.6)));
+                    new Slot0Configs().withKV(.11).withKP(.1).withKI(0).withKD(0.0).withKS(1.2)));
     velocityVoltage.Slot = 0;
 
     StatusSignal.setUpdateFrequencyForAll(
