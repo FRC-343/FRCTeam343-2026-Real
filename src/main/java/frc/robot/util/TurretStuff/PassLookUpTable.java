@@ -47,6 +47,7 @@ public class PassLookUpTable {
     addEntry(7.2, 55, 34.0, 2.8);
     // bs entry
     addEntry(10.0, 56.0, 34.0, 3.4);
+    addEntry(13, 63, 34.0, 4.2);
   }
 
   /** Add an entry to the lookup table */

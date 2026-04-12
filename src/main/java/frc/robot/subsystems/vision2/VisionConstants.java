@@ -42,7 +42,7 @@ public class VisionConstants {
                       new Translation3d(
                           Units.inchesToMeters(-10.979), // forward+
                           Units.inchesToMeters(12.331), // left+
-                          Units.inchesToMeters(18.033)), // up+
+                          Units.inchesToMeters(18.1117401575)), // up+
                       new Rotation3d(
                           0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
@@ -64,7 +64,7 @@ public class VisionConstants {
                       new Translation3d(
                           Units.inchesToMeters(-6.979), // forward+
                           Units.inchesToMeters(-12.331), // left+
-                          Units.inchesToMeters(19.533)), // up+
+                          Units.inchesToMeters(19.6117401575)), // up+
                       new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(

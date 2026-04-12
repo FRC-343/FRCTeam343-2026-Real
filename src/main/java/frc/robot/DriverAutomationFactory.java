@@ -1,9 +1,6 @@
 package frc.robot;
 
-// import frc.robot.commands.PositionWithCoralStation;
-// import frc.robot.commands.PositionWithReef;
 import frc.robot.subsystems.drive.Drive;
-// import frc.robot.subsystems.vision.OffsetTags;
 import frc.robot.util.CommandCustomController;
 
 public class DriverAutomationFactory {

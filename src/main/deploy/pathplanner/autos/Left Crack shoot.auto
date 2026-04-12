@@ -15,19 +15,19 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Shooter no stop"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Left Shoot1"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Left to shoot"
+                        "pathName": "LeftCrackStart"
                       }
                     },
                     {
@@ -37,7 +37,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "Shooter set speed"
+                              "name": "Turret"
                             }
                           },
                           {
@@ -47,25 +47,25 @@
                             }
                           },
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoAim"
-                            }
-                          },
-                          {
                             "type": "sequential",
                             "data": {
                               "commands": [
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.6
+                                    "waitTime": 0.9
                                   }
                                 },
                                 {
                                   "type": "parallel",
                                   "data": {
                                     "commands": [
+                                      {
+                                        "type": "path",
+                                        "data": {
+                                          "pathName": "LeftCrackSotm1"
+                                        }
+                                      },
                                       {
                                         "type": "named",
                                         "data": {
@@ -80,6 +80,12 @@
                                       }
                                     ]
                                   }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Hood down"
+                                  }
                                 }
                               ]
                             }
@@ -88,21 +94,9 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "Hood down"
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
-                        "pathName": "Left Shoot2"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Left to shoot2"
+                        "pathName": "LeftCrackPass2"
                       }
                     },
                     {
@@ -112,7 +106,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "Shooter set speed"
+                              "name": "Turret"
                             }
                           },
                           {
@@ -122,25 +116,25 @@
                             }
                           },
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "AutoAim"
-                            }
-                          },
-                          {
                             "type": "sequential",
                             "data": {
                               "commands": [
                                 {
                                   "type": "wait",
                                   "data": {
-                                    "waitTime": 0.6
+                                    "waitTime": 0.9
                                   }
                                 },
                                 {
                                   "type": "parallel",
                                   "data": {
                                     "commands": [
+                                      {
+                                        "type": "path",
+                                        "data": {
+                                          "pathName": "LeftCrackSotm2"
+                                        }
+                                      },
                                       {
                                         "type": "named",
                                         "data": {
@@ -155,17 +149,17 @@
                                       }
                                     ]
                                   }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "Hood down"
+                                  }
                                 }
                               ]
                             }
                           }
                         ]
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Hood down"
                       }
                     }
                   ]
@@ -178,6 +172,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Crack autos",
   "choreoAuto": false
 }

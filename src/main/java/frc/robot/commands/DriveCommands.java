@@ -79,13 +79,13 @@ public class DriveCommands {
           omega = Math.copySign(omega * omega, omega);
 
           // Convert to field relative speeds & send command
-          if (BobotState.slowTrigger().getAsBoolean()) {
+          if (!BobotState.slowTrigger().getAsBoolean()) {
 
             ChassisSpeeds speeds =
                 new ChassisSpeeds(
-                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() / 2.5,
-                    linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() / 2.5,
-                    omega * drive.getMaxAngularSpeedRadPerSec() / 2.5);
+                    linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                    linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                    omega * drive.getMaxAngularSpeedRadPerSec());
             boolean isFlipped =
                 DriverStation.getAlliance().isPresent()
                     && DriverStation.getAlliance().get() == Alliance.Red;
@@ -98,8 +98,8 @@ public class DriveCommands {
           } else {
             ChassisSpeeds speeds =
                 new ChassisSpeeds(
-                    (linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec()),
-                    (linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec()),
+                    (linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() * 1.5),
+                    (linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() * 1.5),
                     (omega * drive.getMaxAngularSpeedRadPerSec()));
             boolean isFlipped =
                 DriverStation.getAlliance().isPresent()
@@ -202,6 +202,44 @@ public class DriveCommands {
                       linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec() / 3.5,
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec() / 3.5,
                       omega);
+              boolean isFlipped =
+                  DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get() == Alliance.Red;
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      speeds,
+                      isFlipped
+                          ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                          : drive.getRotation()));
+            },
+            drive)
+
+        // Reset PID controller when command starts
+        .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+  }
+
+  public static Command pointAtAngle(Drive drive, Supplier<Rotation2d> rotationSupplier) {
+
+    // Create PID controller
+    ProfiledPIDController angleController =
+        new ProfiledPIDController(
+            ANGLE_KP,
+            0.0,
+            ANGLE_KD,
+            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+    angleController.enableContinuousInput(-Math.PI, Math.PI);
+
+    // Construct command
+    return Commands.run(
+            () -> {
+
+              // Calculate angular speed
+              double omega =
+                  angleController.calculate(
+                      drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
+
+              // Convert to field relative speeds & send command
+              ChassisSpeeds speeds = new ChassisSpeeds(0.0, 0.0, omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance().get() == Alliance.Red;

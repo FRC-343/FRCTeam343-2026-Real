@@ -59,12 +59,12 @@ public class HoodMotorTalonFX implements HoodMotorIO {
                         .withNeutralMode(NeutralModeValue.Brake)
                         .withInverted(InvertedValue.Clockwise_Positive))
                 .withSlot0(
-                    new Slot0Configs().withKV(0.12).withKA(.01).withKP(2).withKI(0).withKD(0))
+                    new Slot0Configs().withKV(0.12).withKA(.01).withKP(3).withKI(0).withKD(0))
                 .withMotionMagic(
                     new MotionMagicConfigs()
-                        .withMotionMagicAcceleration(70)
-                        .withMotionMagicCruiseVelocity(70)
-                        .withMotionMagicJerk(200)));
+                        .withMotionMagicAcceleration(250)
+                        .withMotionMagicCruiseVelocity(250)
+                        .withMotionMagicJerk(600)));
     velocityVoltage.Slot = 0;
 
     StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);

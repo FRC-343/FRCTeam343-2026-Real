@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.0169044222539223,
+        "y": 5.801126961483595
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.771069900142653,
+        "y": 5.917574893009986
+      },
+      "isLocked": false,
+      "linkedName": "LeftCrackBumpEnd1"
+    },
+    {
+      "anchor": {
+        "x": 3.418002853067047,
+        "y": 7.41845934379458
+      },
+      "prevControl": {
+        "x": 3.366283375983583,
+        "y": 7.173867652009652
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LeftCrackSotm1end"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 240.0,
+        "maxAngularAcceleration": 240.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 8.0,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Leftside crack",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

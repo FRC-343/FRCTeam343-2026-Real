@@ -175,15 +175,24 @@ public class RobotContainer {
 
   private void configureNamedCommands() {
     NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
-    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(.5));
+    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(-.5));
     NamedCommands.registerCommand(
         "Shooter set speed", shooter.setVelocityThenStopCommand().withTimeout(4));
-    NamedCommands.registerCommand("Spindexer", spindexer.runForTime(-35, 3));
-    NamedCommands.registerCommand("Kicker", kicker.runForTime(20, 3));
-    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(4));
+    NamedCommands.registerCommand("Shooter no stop", shooter.setVelocityThenStopCommand());
+    NamedCommands.registerCommand(
+        "Spindexer", spindexer.setVelocityThenStopCommand(-9).withTimeout(3));
+    NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
+    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
     NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
-    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(4));
+    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(5));
+    NamedCommands.registerCommand("Turret no Stop", turret.setTurretPosition());
+
+    NamedCommands.registerCommand(
+        "AutoAim",
+        DriveCommands.pointAtAngle(
+                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+            .withTimeout(4));
   }
 
   /**
@@ -213,6 +222,11 @@ public class RobotContainer {
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+    controller
+        .y()
+        .whileTrue(
+            DriveCommands.pointAtAngle(
+                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
@@ -253,14 +267,27 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-9)
-                .alongWith(kicker.setVelocityThenStopCommand(15)));
+                .setVelocityThenStopCommand(-5)
+                .alongWith(kicker.setVelocityThenStopCommand(14)));
+    controller2
+        .leftTrigger()
+        .whileTrue(
+            kicker
+                .setVelocityThenStopCommand(55)
+                .alongWith(spindexer.setVelocityThenStopCommand(-25)));
+
     controller2
         .rightBumper()
         .whileTrue(
             spindexer
-                .setVelocityThenStopCommand(-13)
-                .alongWith(kicker.setVelocityThenStopCommand(35)));
+                .setVelocityThenStopCommand(5)
+                .alongWith(kicker.setVelocityThenStopCommand(-55)));
+    controller2
+        .rightTrigger()
+        .whileTrue(
+            spindexer
+                .setVelocityThenStopCommand(-5)
+                .alongWith(kicker.setVelocityThenStopCommand(18)));
 
     controller2
         .y()

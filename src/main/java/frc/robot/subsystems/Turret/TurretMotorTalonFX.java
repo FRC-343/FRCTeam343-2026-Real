@@ -69,9 +69,9 @@ public class TurretMotorTalonFX implements TurretMotorIO {
                         .withKS(.0))
                 .withMotionMagic(
                     new MotionMagicConfigs()
-                        .withMotionMagicAcceleration(75)
-                        .withMotionMagicCruiseVelocity(75)
-                        .withMotionMagicJerk(200)));
+                        .withMotionMagicAcceleration(250)
+                        .withMotionMagicCruiseVelocity(250)
+                        .withMotionMagicJerk(1200)));
     // try fused cancoder with the rotor to sensor and sensor to mech set
     velocityVoltage.Slot = 0;
 

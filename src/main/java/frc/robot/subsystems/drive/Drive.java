@@ -116,12 +116,12 @@ public class Drive extends SubsystemBase {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getPose,
+        () -> BobotState.getGlobalPose(),
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(6.0, 0.0, 0.0), new PIDConstants(6.0, 0.0, 0.0)),
         PP_CONFIG,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -206,9 +206,8 @@ public class Drive extends SubsystemBase {
     PoseObservation observation;
     while ((observation = BobotState.getVisionObservations().poll()) != null) {
       poseEstimator.addVisionMeasurement(
-          observation.robotPose().toPose2d(), observation.timestampSeconds()
-          // ,observation.stdDevs()
-          );
+          observation.robotPose().toPose2d(), observation.timestampSeconds());
+      // observation.stdDevs());
     }
 
     BobotState.updateGlobalPose(getPose());

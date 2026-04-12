@@ -42,7 +42,7 @@ public class KickerIOTalonFX implements KickerIO {
                             isInverted
                                 ? InvertedValue.Clockwise_Positive
                                 : InvertedValue.CounterClockwise_Positive))
-                .withSlot0(new Slot0Configs().withKV(0.12).withKP(.1).withKI(0).withKD(0))
+                .withSlot0(new Slot0Configs().withKV(0.12).withKP(.2).withKI(0).withKD(0))
                 .withCurrentLimits(
                     new CurrentLimitsConfigs()
                         .withStatorCurrentLimit(50)
