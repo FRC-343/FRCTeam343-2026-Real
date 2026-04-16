@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Shooter;
+package frc.robot.subsystems.UpperShooter;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.MathUtil;
@@ -16,23 +16,23 @@ import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.Logger;
 
-public class Shooter extends SubsystemBase {
-  private final ShooterIO io;
+public class UpperShooter extends SubsystemBase {
+  private final UpperShooterIO io;
 
   private final ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
-  public Shooter() {
+  public UpperShooter() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new ShooterIOTalonFx(22, 23, true);
+        io = new UpperShooterIOTalonFx(40, 22, true);
         // 22 is inverted
         break;
       case SIM:
-        io = new ShooterIOSim(DCMotor.getKrakenX60(2), 1, .2, new PIDConstants(2, 0, .2));
+        io = new UpperShooterIOSim(DCMotor.getKrakenX60(2), 1, .2, new PIDConstants(2, 0, .2));
         break;
       case REPLAY:
       default:
-        io = new ShooterIO() {};
+        io = new UpperShooterIO() {};
 
         break;
     }

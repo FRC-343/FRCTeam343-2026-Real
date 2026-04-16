@@ -1,8 +1,8 @@
-package frc.robot.subsystems.Shooter;
+package frc.robot.subsystems.UpperShooter;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ShooterIO {
+public interface UpperShooterIO {
   @AutoLog
   public static class ShooterIOInputs {
     public double appliedVoltage = 0.0;

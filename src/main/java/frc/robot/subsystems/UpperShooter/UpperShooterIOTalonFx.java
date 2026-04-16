@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Shooter;
+package frc.robot.subsystems.UpperShooter;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
@@ -15,7 +15,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 
-public class ShooterIOTalonFx implements ShooterIO {
+public class UpperShooterIOTalonFx implements UpperShooterIO {
   private final TalonFX talon;
   private final TalonFX follower;
   private final StatusSignal<Voltage> voltage;
@@ -31,7 +31,7 @@ public class ShooterIOTalonFx implements ShooterIO {
 
   private final Orchestra m_orchestra = new Orchestra();
 
-  public ShooterIOTalonFx(int deviceId, int deviceId2, boolean isInverted) {
+  public UpperShooterIOTalonFx(int deviceId, int deviceId2, boolean isInverted) {
     talon = new TalonFX(deviceId);
     follower = new TalonFX(deviceId2);
     voltage = talon.getMotorVoltage();

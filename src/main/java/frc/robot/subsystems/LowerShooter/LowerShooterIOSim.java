@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Shooter;
+package frc.robot.subsystems.LowerShooter;
 
 import com.pathplanner.lib.config.PIDConstants;
 import edu.wpi.first.math.controller.PIDController;
@@ -6,7 +6,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
-public class ShooterIOSim implements ShooterIO {
+public class LowerShooterIOSim implements LowerShooterIO {
   // private static double momentOfInertiaKgMSquared = 0.0000032998;
   private static double momentOfInertiaKgMSquared = 1.0; // TBD
 
@@ -14,7 +14,8 @@ public class ShooterIOSim implements ShooterIO {
 
   private final PIDController controller;
 
-  public ShooterIOSim(DCMotor motorModel, double reduction, double moi, PIDConstants pidConstants) {
+  public LowerShooterIOSim(
+      DCMotor motorModel, double reduction, double moi, PIDConstants pidConstants) {
     wheelSim =
         new DCMotorSim(LinearSystemId.createDCMotorSystem(motorModel, moi, reduction), motorModel);
     controller = new PIDController(pidConstants.kP, pidConstants.kI, pidConstants.kD);
