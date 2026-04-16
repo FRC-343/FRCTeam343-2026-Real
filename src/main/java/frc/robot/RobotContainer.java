@@ -18,12 +18,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.commands.AutoCommands.TestAuto;
+// import frc.robot.commands.AutoCommands.TestAuto;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.IntakePiviot.IntakePiviot;
+// import frc.robot.subsystems.IntakePiviot.IntakePiviot;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.Spindexer.Spindexer;
@@ -49,36 +49,36 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Drive drive;
+  // private final Drive drive;
 
-  private final Turret turret;
+  // private final Turret turret;
 
-  private final Spindexer spindexer;
+  // private final Spindexer spindexer;
 
   private final Kicker kicker;
 
   private final BobotState bobot;
 
-  private final Intake intake;
+  // private final Intake intake;
 
   private final UpperShooter upperShooter;
 
   private final LowerShooter lowerShooter;
 
-  private final Hood hood;
+  // private final Hood hood;
 
-  private final IntakePiviot iPiviot;
+  // private final IntakePiviot iPiviot;
 
   // Controller
-  private final CommandCustomController controller = new CommandCustomController(0);
-  private final CommandCustomController controller2 = new CommandCustomController(1);
+  // private final CommandCustomController controller = new CommandCustomController(0);
+  // private final CommandCustomController controller2 = new CommandCustomController(1);
 
   private final CommandCustomController testController = new CommandCustomController(4);
 
-  private final DriverAutomationFactory m_Automation;
+  // private final DriverAutomationFactory m_Automation;
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  // private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -88,129 +88,129 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+        // drive =
+        //     new Drive(
+        //         new GyroIOPigeon2(),
+        //         new ModuleIOTalonFX(TunerConstants.FrontLeft),
+        //         new ModuleIOTalonFX(TunerConstants.FrontRight),
+        //         new ModuleIOTalonFX(TunerConstants.BackLeft),
+        //         new ModuleIOTalonFX(TunerConstants.BackRight));
 
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        turret = new Turret();
-        spindexer = new Spindexer();
+        // turret = new Turret();
+        // spindexer = new Spindexer();
         kicker = new Kicker();
-        intake = new Intake();
-        hood = new Hood();
+        // intake = new Intake();
+        // hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        iPiviot = new IntakePiviot();
+        // iPiviot = new IntakePiviot();
         new Vision();
 
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // drive =
+        //     new Drive(
+        //         new GyroIO() {},
+        //         new ModuleIOSim(TunerConstants.FrontLeft),
+        //         new ModuleIOSim(TunerConstants.FrontRight),
+        //         new ModuleIOSim(TunerConstants.BackLeft),
+        //         new ModuleIOSim(TunerConstants.BackRight));
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        turret = new Turret();
-        spindexer = new Spindexer();
+        // turret = new Turret();
+        // spindexer = new Spindexer();
         kicker = new Kicker();
-        intake = new Intake();
-        hood = new Hood();
+        // intake = new Intake();
+        // hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        iPiviot = new IntakePiviot();
+        // iPiviot = new IntakePiviot();
         new Vision();
         break;
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+        // drive =
+        //     new Drive(
+        //         new GyroIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {},
+        //         new ModuleIO() {});
 
-        m_Automation = new DriverAutomationFactory(controller, controller2, drive);
+        // m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        turret = new Turret();
-        spindexer = new Spindexer();
+        // turret = new Turret();
+        // spindexer = new Spindexer();
         kicker = new Kicker();
-        intake = new Intake();
-        hood = new Hood();
+        // intake = new Intake();
+        // hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        iPiviot = new IntakePiviot();
+        // iPiviot = new IntakePiviot();
         new Vision();
         break;
     }
-    configureNamedCommands();
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // configureNamedCommands();
+    // // Set up auto routines
+    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption(
-        "LeftShoot",
-        TestAuto.LeftShoot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
+    // autoChooser.addOption(
+    //     "LeftShoot",
+    //     TestAuto.LeftShoot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
 
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // // Set up SysId routines
+    // autoChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
-    configureButtonBindings();
-    configureOpButtons();
+    // configureButtonBindings();
+    // configureOpButtons();
     configureTestButtons();
   }
 
-  private void configureNamedCommands() {
-    NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
-    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(-.5));
-    NamedCommands.registerCommand(
-        "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
-    NamedCommands.registerCommand("Shooter no stop", upperShooter.setVelocityThenStopCommand());
-    NamedCommands.registerCommand(
-        "Spindexer", spindexer.setVelocityThenStopCommand(-9).withTimeout(3));
-    NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
-    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
-    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
+  // private void configureNamedCommands() {
+  //   NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
+  //   NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(-.5));
+  //   NamedCommands.registerCommand(
+  //       "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
+  //   NamedCommands.registerCommand("Shooter no stop", upperShooter.setVelocityThenStopCommand());
+  //   NamedCommands.registerCommand(
+  //       "Spindexer", spindexer.setVelocityThenStopCommand(-9).withTimeout(3));
+  //   NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
+  //   NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
+  //   NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
-    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(5));
-    NamedCommands.registerCommand("Turret no Stop", turret.setTurretPosition());
+  //   NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(5));
+  //   NamedCommands.registerCommand("Turret no Stop", turret.setTurretPosition());
 
-    NamedCommands.registerCommand(
-        "AutoAim",
-        DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
-            .withTimeout(4));
-  }
+  //   NamedCommands.registerCommand(
+  //       "AutoAim",
+  //       DriveCommands.pointAtAngle(
+  //               drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+  //           .withTimeout(4));
+  // }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -218,104 +218,104 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
-    // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+  // private void configureButtonBindings() {
+  //   // Default command, normal field-relative drive
+  //   drive.setDefaultCommand(
+  //       DriveCommands.joystickDrive(
+  //           drive,
+  //           () -> -controller.getLeftY(),
+  //           () -> -controller.getLeftX(),
+  //           () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
-    controller
-        .b()
-        .whileTrue(
-            intake
-                .setPercentOutputThenStopCommand(-.5)
-                .alongWith(
-                    DriveCommands.joystickDriveAtAngle(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
-    controller
-        .y()
-        .whileTrue(
-            DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
-    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
+  //   controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+  //   controller
+  //       .b()
+  //       .whileTrue(
+  //           intake
+  //               .setPercentOutputThenStopCommand(-.5)
+  //               .alongWith(
+  //                   DriveCommands.joystickDriveAtAngle(
+  //                       drive,
+  //                       () -> -controller.getLeftY(),
+  //                       () -> -controller.getLeftX(),
+  //                       () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+  //   controller
+  //       .y()
+  //       .whileTrue(
+  //           DriveCommands.pointAtAngle(
+  //               drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
+  //   controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+  //   controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
+  //   controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
 
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngleForShoot(
-                    drive,
-                    () -> -controller.getLeftY(),
-                    () -> -controller.getLeftX(),
-                    () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
-                .alongWith(turret.setAngle(0)));
+  //   controller
+  //       .a()
+  //       .whileTrue(
+  //           DriveCommands.joystickDriveAtAngleForShoot(
+  //                   drive,
+  //                   () -> -controller.getLeftY(),
+  //                   () -> -controller.getLeftX(),
+  //                   () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+  //               .alongWith(turret.setAngle(0)));
 
-    controller
-        .x()
-        .whileTrue(
-            intake
-                .setPercentOutputThenStopCommand(.5)
-                .alongWith(
-                    DriveCommands.joystickDriveAtAngle(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
-  }
+  //   controller
+  //       .x()
+  //       .whileTrue(
+  //           intake
+  //               .setPercentOutputThenStopCommand(.5)
+  //               .alongWith(
+  //                   DriveCommands.joystickDriveAtAngle(
+  //                       drive,
+  //                       () -> -controller.getLeftY(),
+  //                       () -> -controller.getLeftX(),
+  //                       () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
+  // }
 
-  private void configureOpButtons() {
+  // private void configureOpButtons() {
 
-    controller2
-        .a()
-        .whileTrue(
-            upperShooter
-                .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
-        .whileFalse(hood.setHoodPosition(2).alongWith(turret.setAngle(0)));
-    controller2
-        .leftBumper()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-5)
-                .alongWith(kicker.setVelocityThenStopCommand(14)));
-    controller2
-        .leftTrigger()
-        .whileTrue(
-            kicker
-                .setVelocityThenStopCommand(55)
-                .alongWith(spindexer.setVelocityThenStopCommand(-25)));
+  //   controller2
+  //       .a()
+  //       .whileTrue(
+  //           upperShooter
+  //               .setVelocityThenStopCommand()
+  //               .alongWith(lowerShooter.setVelocityThenStopCommand())
+  //               .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
+  //       .whileFalse(hood.setHoodPosition(2).alongWith(turret.setAngle(0)));
+  //   controller2
+  //       .leftBumper()
+  //       .whileTrue(
+  //           spindexer
+  //               .setVelocityThenStopCommand(-5)
+  //               .alongWith(kicker.setVelocityThenStopCommand(14)));
+  //   controller2
+  //       .leftTrigger()
+  //       .whileTrue(
+  //           kicker
+  //               .setVelocityThenStopCommand(55)
+  //               .alongWith(spindexer.setVelocityThenStopCommand(-25)));
 
-    controller2
-        .rightBumper()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(5)
-                .alongWith(kicker.setVelocityThenStopCommand(-55)));
-    controller2
-        .rightTrigger()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-5)
-                .alongWith(kicker.setVelocityThenStopCommand(18)));
+  //   controller2
+  //       .rightBumper()
+  //       .whileTrue(
+  //           spindexer
+  //               .setVelocityThenStopCommand(5)
+  //               .alongWith(kicker.setVelocityThenStopCommand(-55)));
+  //   controller2
+  //       .rightTrigger()
+  //       .whileTrue(
+  //           spindexer
+  //               .setVelocityThenStopCommand(-5)
+  //               .alongWith(kicker.setVelocityThenStopCommand(18)));
 
-    controller2
-        .y()
-        .whileTrue(
-            upperShooter
-                .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(hood.setHoodPosition2()))
-        .whileFalse(hood.setHoodPosition(2));
-  }
+  //   controller2
+  //       .y()
+  //       .whileTrue(
+  //           upperShooter
+  //               .setVelocityThenStopCommand()
+  //               .alongWith(lowerShooter.setVelocityThenStopCommand())
+  //               .alongWith(hood.setHoodPosition2()))
+  //       .whileFalse(hood.setHoodPosition(2));
+  // }
 
   private void configureTestButtons() {
     testController
@@ -332,30 +332,30 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
-  }
+  // public Command getAutonomousCommand() {
+  //   return autoChooser.get();
+  // }
 
-  public void TurretMath() {
-    TargetType target = BobotState.targetType();
-    Pose2d robotPose = BobotState.getGlobalPose();
-    ChassisSpeeds speeds = BobotState.getRoboSpeed();
-    TurretUtil.ShotSolution solution =
-        TurretUtil.computeLeadShotSolution(
-            robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+  // public void TurretMath() {
+  //   TargetType target = BobotState.targetType();
+  //   Pose2d robotPose = BobotState.getGlobalPose();
+  //   ChassisSpeeds speeds = BobotState.getRoboSpeed();
+  //   TurretUtil.ShotSolution solution =
+  //       TurretUtil.computeLeadShotSolution(
+  //           robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
-    if (solution.isValid) {
-      BobotState.updateOptiTurretYaw(
-          TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
-      BobotState.updateSolutionDegAngle(
-          solution.turretAngleDegrees + BobotState.getGlobalPose().getRotation().getDegrees());
-      BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
-      BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
-      BobotState.updateDistance(solution.distanceMeters);
-    }
-  }
+  //   if (solution.isValid) {
+  //     BobotState.updateOptiTurretYaw(
+  //         TurretUtil.degreesToMotorRotations(solution.turretAngleDegrees));
+  //     BobotState.updateSolutionDegAngle(
+  //         solution.turretAngleDegrees + BobotState.getGlobalPose().getRotation().getDegrees());
+  //     BobotState.updateWantedShooterRPS(solution.shooterSpeedRPS);
+  //     BobotState.updateHoodAngle(solution.trajectoryAngleDegrees);
+  //     BobotState.updateDistance(solution.distanceMeters);
+  //   }
+  // }
 
-  public void Automation() {
-    BobotState.updateTurretTarget(BobotState.targetLocation());
-  }
+  // public void Automation() {
+  //   BobotState.updateTurretTarget(BobotState.targetLocation());
+  // }
 }
