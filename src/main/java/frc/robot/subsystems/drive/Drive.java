@@ -39,7 +39,6 @@ import frc.robot.Constants.Mode;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
-import frc.robot.subsystems.vision2.PoseObservation;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -47,6 +46,7 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+  FollowPath.Builder pathBuilder;
 
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY =
@@ -139,7 +139,7 @@ public class Drive extends SubsystemBase {
         });
 
     // Create a reusable builder with your robot's configuration
-    FollowPath.Builder pathBuilder =
+    pathBuilder =
         new FollowPath.Builder(
                 this, // The drive subsystem to require
                 () -> BobotState.getGlobalPose(), // Supplier for current robot pose
@@ -151,6 +151,8 @@ public class Drive extends SubsystemBase {
                 )
             .withDefaultShouldFlip() // Auto-flip for red alliance
             .withPoseReset(this::setPose);
+
+    BobotState.setPathBuilder(pathBuilder);
 
     // Configure SysId
     sysId =
@@ -219,12 +221,12 @@ public class Drive extends SubsystemBase {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
-    PoseObservation observation;
-    while ((observation = BobotState.getVisionObservations().poll()) != null) {
-      poseEstimator.addVisionMeasurement(
-          observation.robotPose().toPose2d(), observation.timestampSeconds());
-      // observation.stdDevs());
-    }
+    // PoseObservation observation;
+    // while ((observation = BobotState.getVisionObservations().poll()) != null) {
+    //   poseEstimator.addVisionMeasurement(
+    //       observation.robotPose().toPose2d(), observation.timestampSeconds());
+    //   // observation.stdDevs());
+    // }
 
     BobotState.updateGlobalPose(getPose());
     BobotState.updateRoboChassisSpeed(getChassisSpeeds());
@@ -386,5 +388,9 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  public FollowPath.Builder pathBuilder() {
+    return pathBuilder;
   }
 }

@@ -109,7 +109,7 @@ public class BobotState extends VirtualSubsystem {
 
   private static double solutionDegAngle;
 
-  public static void setPathBuilder(FollowPath.Builder builder){
+  public static void setPathBuilder(FollowPath.Builder builder) {
     BobotState.BuilderTest = builder;
   }
 
@@ -223,8 +223,7 @@ public class BobotState extends VirtualSubsystem {
     BobotState.HoodPos = pos;
   }
 
-
-  public static FollowPath.Builder getBuilder(){
+  public static FollowPath.Builder getBuilder() {
     return BobotState.BuilderTest;
   }
 
