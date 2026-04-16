@@ -138,22 +138,19 @@ public class Drive extends SubsystemBase {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
-// Create a reusable builder with your robot's configuration
-FollowPath.Builder pathBuilder = new FollowPath.Builder(
-    this,                      // The drive subsystem to require
-    () -> BobotState.getGlobalPose(),             // Supplier for current robot pose
-    this::getChassisSpeeds,    // Supplier for current speeds
-    this::runVelocity,               // Consumer to drive the robot
-    new PIDController(5.0, 0.0, 0.0),    // Translation PID
-    new PIDController(3.0, 0.0, 0.0),    // Rotation PID
-    new PIDController(2.0, 0.0, 0.0)     // Cross-track PID
-).withDefaultShouldFlip()                // Auto-flip for red alliance
- .withPoseReset(this::setPose); 
-
-
-
-
-
+    // Create a reusable builder with your robot's configuration
+    FollowPath.Builder pathBuilder =
+        new FollowPath.Builder(
+                this, // The drive subsystem to require
+                () -> BobotState.getGlobalPose(), // Supplier for current robot pose
+                this::getChassisSpeeds, // Supplier for current speeds
+                this::runVelocity, // Consumer to drive the robot
+                new PIDController(5.0, 0.0, 0.0), // Translation PID
+                new PIDController(3.0, 0.0, 0.0), // Rotation PID
+                new PIDController(2.0, 0.0, 0.0) // Cross-track PID
+                )
+            .withDefaultShouldFlip() // Auto-flip for red alliance
+            .withPoseReset(this::setPose);
 
     // Configure SysId
     sysId =
