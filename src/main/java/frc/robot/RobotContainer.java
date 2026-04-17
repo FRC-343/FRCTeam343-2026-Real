@@ -7,37 +7,14 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
-import frc.robot.commands.DriveCommands;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Hood.Hood;
-import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.LowerShooter.LowerShooter;
-import frc.robot.subsystems.Spindexer.Spindexer;
-import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
 import frc.robot.util.CommandCustomController;
-import frc.robot.util.TurretStuff.TurretUtil;
-import frc.robot.util.TurretStuff.TurretUtil.TargetType;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -196,7 +173,8 @@ public class RobotContainer {
   //   NamedCommands.registerCommand("Shooter no stop", upperShooter.setVelocityThenStopCommand());
   //   NamedCommands.registerCommand(
   //       "Spindexer", spindexer.setVelocityThenStopCommand(-9).withTimeout(3));
-  //   NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
+  //   NamedCommands.registerCommand("Kicker",
+  // kicker.setVelocityThenStopCommand(20).withTimeout(3));
   //   NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
   //   NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
@@ -320,16 +298,17 @@ public class RobotContainer {
         .rightBumper()
         .whileTrue(
             upperShooter
-                .setVelocityThenStopCommand2(-32)
-                .alongWith(lowerShooter.setVelocityThenStopCommand2(12)));
-    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(-24));
+                .setVelocityThenStopCommand2(-28)
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(28)));
+    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(-32));
+    testController.a().whileTrue(kicker.setVelocityThenStopCommand(24));
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
-   * @return the command to run in autonomous
-  //  */
+   * @return the command to run in autonomous //
+   */
   // public Command getAutonomousCommand() {
   //   return autoChooser.get();
   // }
