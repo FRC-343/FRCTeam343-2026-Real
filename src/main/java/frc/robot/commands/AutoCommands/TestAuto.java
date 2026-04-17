@@ -1,6 +1,7 @@
 package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.bobot_state2.BobotState;
@@ -13,17 +14,23 @@ import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
 import frc.robot.subsystems.drive.Drive;
 
-public class TestAuto {
-  static Path trenchLeave = new Path("LeftTrenchLeave");
+public class TestAuto  {
 
-  public static Command LeftShoot(
+  static Path trenchLeave = new Path("RightTrenchLeave");
+
+  static double wait = SmartDashboard.getNumber("Wait time", 0);
+
+  public static Command RightShoot(
       Intake intake,
       LowerShooter lShoot,
       UpperShooter uShoot,
       Kicker kicker,
       IntakePiviot iPiviot,
-      Drive drive) {
+      Drive drive,
+      double wait) {
+
     return Commands.sequence(
+        Commands.waitSeconds(wait),
         iPiviot.setAngle(0).withTimeout(.2),
         Commands.parallel(
             intake.setPercentOutputThenStopCommand(-.5),

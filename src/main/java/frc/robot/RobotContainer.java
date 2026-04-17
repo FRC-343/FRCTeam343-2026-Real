@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -160,13 +161,11 @@ public class RobotContainer {
         new Vision();
         break;
     }
+    SmartDashboard.putNumber("Wait time", 0);
+
     configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    autoChooser.addOption(
-        "LeftShoot",
-        TestAuto.LeftShoot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -357,5 +356,21 @@ public class RobotContainer {
 
   public void Automation() {
     BobotState.updateTurretTarget(BobotState.targetLocation());
+    BobotState.updatewaitTest(SmartDashboard.getNumber("Wait time", 0));
+  }
+
+  public void UpdatingAutos(){
+      
+    autoChooser.addOption(
+        "RightShoot",
+        TestAuto.LeftShoot(
+            intake,
+            lowerShooter,
+            upperShooter,
+            kicker,
+            iPiviot,
+            drive, BobotState.getWaitTest()));
+
+  
   }
 }

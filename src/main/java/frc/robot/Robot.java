@@ -9,9 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.vision2.VisionConstants;
+import frc.robot.util.Elastic;
 import frc.robot.util.VirtualSubsystem;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -31,6 +33,7 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
 
   public Robot() {
+    Elastic.selectTab("Autonomous");
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -94,6 +97,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     robotContainer.Automation();
     robotContainer.TurretMath();
+    robotContainer.UpdatingAutos();
+
     // Return to non-RT thread priority (do not modify the first argument)
     Threads.setCurrentThreadPriority(false, 10);
 
@@ -108,7 +113,8 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -135,6 +141,7 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    Elastic.selectTab("Teleoperated");
   }
 
   /** This function is called periodically during operator control. */

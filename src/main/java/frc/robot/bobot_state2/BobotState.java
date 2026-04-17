@@ -30,6 +30,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static final Queue<PoseObservation> poseObservations = new LinkedBlockingQueue<>(20);
 
+  private static double waitTest;
+
   private static FollowPath.Builder BuilderTest;
 
   private static Pose2d globalPose = new Pose2d(); // Robots position on the field.
@@ -108,6 +110,10 @@ public class BobotState extends VirtualSubsystem {
   private static boolean slowdown;
 
   private static double solutionDegAngle;
+
+  public static void updatewaitTest(double waitTest){
+    BobotState.waitTest = waitTest;
+  }
 
   public static void setPathBuilder(FollowPath.Builder builder) {
     BobotState.BuilderTest = builder;
@@ -240,6 +246,10 @@ public class BobotState extends VirtualSubsystem {
    * Section we are adding get methods to
    *
    */
+
+  public static double getWaitTest(){
+    return BobotState.waitTest;
+  }
 
   public static double getSolutionAngle() {
     return BobotState.solutionDegAngle;
@@ -426,6 +436,8 @@ public class BobotState extends VirtualSubsystem {
     Logger.recordOutput(logRoot + "Slowdown", slowdown);
 
     Logger.recordOutput(logRoot + "Solution Angle", solutionDegAngle);
+
+    Logger.recordOutput(logRoot + "Wait test", waitTest);
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";
     // Logger.recordOutput(
