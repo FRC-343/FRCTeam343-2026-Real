@@ -28,7 +28,6 @@ import frc.robot.subsystems.IntakePiviot.IntakePiviot;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.Spindexer.Spindexer;
-import frc.robot.subsystems.Turret.Turret;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -37,7 +36,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
-import frc.robot.util.ChooserTest;
 import frc.robot.util.CommandCustomController;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
@@ -52,8 +50,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-
-  private final Turret turret;
 
   private final Spindexer spindexer;
 
@@ -102,7 +98,6 @@ public class RobotContainer {
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
@@ -127,7 +122,6 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
@@ -152,7 +146,6 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        turret = new Turret();
         spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
@@ -206,9 +199,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
     NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
-    NamedCommands.registerCommand("Turret", turret.setTurretPosition().withTimeout(5));
-    NamedCommands.registerCommand("Turret no Stop", turret.setTurretPosition());
-
     NamedCommands.registerCommand(
         "AutoAim",
         DriveCommands.pointAtAngle(
@@ -256,11 +246,10 @@ public class RobotContainer {
         .a()
         .whileTrue(
             DriveCommands.joystickDriveAtAngleForShoot(
-                    drive,
-                    () -> -controller.getLeftY(),
-                    () -> -controller.getLeftX(),
-                    () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
-                .alongWith(turret.setAngle(0)));
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
 
     controller
         .x()
@@ -283,8 +272,7 @@ public class RobotContainer {
             upperShooter
                 .setVelocityThenStopCommand()
                 .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(hood.setHoodPosition2().alongWith(turret.setTurretPosition())))
-        .whileFalse(hood.setHoodPosition(2).alongWith(turret.setAngle(0)));
+                .alongWith(hood.setHoodPosition2()));
     controller2
         .leftBumper()
         .whileTrue(

@@ -21,9 +21,9 @@ import java.util.function.Consumer;
  *
  * <p>For instance, you may wish to be able to select between multiple autonomous modes. You can do
  * this by putting every possible Command you want to run as an autonomous into a {@link
- * ChooserTest} and then put it into the {@link SmartDashboard} to have a list of options appear
- * on the laptop. Once autonomous starts, simply ask the {@link ChooserTest} what the selected
- * value is.
+ * ChooserTest} and then put it into the {@link SmartDashboard} to have a list of options appear on
+ * the laptop. Once autonomous starts, simply ask the {@link ChooserTest} what the selected value
+ * is.
  *
  * @param <V> The type of the values to be stored
  */
