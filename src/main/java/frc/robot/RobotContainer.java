@@ -37,6 +37,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision2.Vision;
+import frc.robot.util.ChooserTest;
 import frc.robot.util.CommandCustomController;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
@@ -80,6 +81,8 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  // private final LoggedDashboardChooser<Command> BlineAutos;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -166,6 +169,8 @@ public class RobotContainer {
     configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // BlineAutos = new LoggedDashboardChooser<>("Bline Autos", new ChooserTest<>());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -359,18 +364,11 @@ public class RobotContainer {
     BobotState.updatewaitTest(SmartDashboard.getNumber("Wait time", 0));
   }
 
-  public void UpdatingAutos(){
-      
+  public void UpdatingAutos() {
+
     autoChooser.addOption(
         "RightShoot",
-        TestAuto.LeftShoot(
-            intake,
-            lowerShooter,
-            upperShooter,
-            kicker,
-            iPiviot,
-            drive, BobotState.getWaitTest()));
-
-  
+        TestAuto.RightShoot(
+            intake, lowerShooter, upperShooter, kicker, iPiviot, drive, BobotState.getWaitTest()));
   }
 }

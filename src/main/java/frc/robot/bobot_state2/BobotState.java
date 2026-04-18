@@ -111,7 +111,7 @@ public class BobotState extends VirtualSubsystem {
 
   private static double solutionDegAngle;
 
-  public static void updatewaitTest(double waitTest){
+  public static void updatewaitTest(double waitTest) {
     BobotState.waitTest = waitTest;
   }
 
@@ -247,7 +247,7 @@ public class BobotState extends VirtualSubsystem {
    *
    */
 
-  public static double getWaitTest(){
+  public static double getWaitTest() {
     return BobotState.waitTest;
   }
 

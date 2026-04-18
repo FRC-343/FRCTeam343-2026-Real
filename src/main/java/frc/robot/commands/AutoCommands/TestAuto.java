@@ -14,7 +14,7 @@ import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
 import frc.robot.subsystems.drive.Drive;
 
-public class TestAuto  {
+public class TestAuto {
 
   static Path trenchLeave = new Path("RightTrenchLeave");
 
