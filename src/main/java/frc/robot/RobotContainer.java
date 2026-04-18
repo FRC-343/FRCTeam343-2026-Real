@@ -298,10 +298,9 @@ public class RobotContainer {
         .rightBumper()
         .whileTrue(
             upperShooter
-                .setVelocityThenStopCommand2(-28)
-                .alongWith(lowerShooter.setVelocityThenStopCommand2(28)));
-    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(-32));
-    testController.a().whileTrue(kicker.setVelocityThenStopCommand(24));
+                .setVelocityThenStopCommand2(-36)
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(36)));
+    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(16));
   }
 
   /**

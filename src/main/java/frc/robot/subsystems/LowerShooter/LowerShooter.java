@@ -24,7 +24,7 @@ public class LowerShooter extends SubsystemBase {
   public LowerShooter() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new LowerShooterIOTalonFx(33, 23, true);
+        io = new LowerShooterIOTalonFx(23, 33, true);
         // 22 is inverted
         break;
       case SIM:
