@@ -14,7 +14,6 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,7 +37,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.BLine.FollowPath;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,7 +44,6 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-  FollowPath.Builder pathBuilder;
 
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY =
@@ -139,20 +136,6 @@ public class Drive extends SubsystemBase {
         });
 
     // Create a reusable builder with your robot's configuration
-    pathBuilder =
-        new FollowPath.Builder(
-                this, // The drive subsystem to require
-                () -> BobotState.getGlobalPose(), // Supplier for current robot pose
-                this::getChassisSpeeds, // Supplier for current speeds
-                this::runVelocity, // Consumer to drive the robot
-                new PIDController(5.0, 0.0, 0.0), // Translation PID
-                new PIDController(3.0, 0.0, 0.0), // Rotation PID
-                new PIDController(2.0, 0.0, 0.0) // Cross-track PID
-                )
-            .withDefaultShouldFlip() // Auto-flip for red alliance
-            .withPoseReset(this::setPose);
-
-    BobotState.setPathBuilder(pathBuilder);
 
     // Configure SysId
     sysId =
@@ -388,9 +371,5 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
-  }
-
-  public FollowPath.Builder pathBuilder() {
-    return pathBuilder;
   }
 }

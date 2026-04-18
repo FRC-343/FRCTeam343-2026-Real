@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-// import frc.robot.bobot_state2.BobotState;
 import org.littletonrobotics.junction.Logger;
 
 public class Kicker extends SubsystemBase {
@@ -19,7 +18,7 @@ public class Kicker extends SubsystemBase {
   public Kicker() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new KickerIOTalonFX(16, false);
+        io = new KickerIOTalonFX(16, 22, false);
         break;
       case SIM:
         io = new KickerIOSim(DCMotor.getKrakenX60(1), 3, 1, new PIDConstants(1, 0, 0));

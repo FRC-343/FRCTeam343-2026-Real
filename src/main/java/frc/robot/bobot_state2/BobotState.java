@@ -10,7 +10,6 @@ import frc.robot.bobot_state2.varc.HubTagTracker;
 import frc.robot.bobot_state2.varc.TargetAngleTracker;
 import frc.robot.field.FieldConstants;
 import frc.robot.field.FieldUtils;
-import frc.robot.lib.BLine.FollowPath;
 import frc.robot.subsystems.vision2.PoseObservation;
 import frc.robot.util.TurretStuff.TurretUtil;
 import frc.robot.util.TurretStuff.TurretUtil.TargetType;
@@ -227,10 +226,6 @@ public class BobotState extends VirtualSubsystem {
 
   public static void updateHood(double pos) {
     BobotState.HoodPos = pos;
-  }
-
-  public static FollowPath.Builder getBuilder() {
-    return BobotState.BuilderTest;
   }
 
   public static boolean getSlowdown() {
