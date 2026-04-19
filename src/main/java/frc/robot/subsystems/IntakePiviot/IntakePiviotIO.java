@@ -14,6 +14,8 @@ public interface IntakePiviotIO {
     public double masterCurrentAmps = 0.0;
 
     public Rotation2d extentionPos = new Rotation2d();
+
+    public double encoderPos = 0.0;
   }
 
   /** Updates the set of loggable inputs. */

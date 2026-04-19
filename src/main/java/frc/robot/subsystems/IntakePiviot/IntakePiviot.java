@@ -25,7 +25,7 @@ public class IntakePiviot extends SubsystemBase {
   public IntakePiviot() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakePiviotMotorTalonFX(13);
+        io = new IntakePiviotMotorTalonFX(13, 14);
 
         break;
       case SIM:

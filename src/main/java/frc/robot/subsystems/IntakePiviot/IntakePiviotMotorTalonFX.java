@@ -2,6 +2,7 @@ package frc.robot.subsystems.IntakePiviot;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,16 +22,15 @@ import edu.wpi.first.units.measure.Voltage;
 public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
   private final TalonFX talon;
 
-  // private final EasyCRT easyCRT;
-
-  // private final SparkBase encoder = new SparkMax(25, null);
-  // private final AbsoluteEncoder absEnc;
+  private final CANcoder absEnc;
 
   private final StatusSignal<Voltage> voltage;
   private final StatusSignal<Double> dutyCycle;
   private final StatusSignal<AngularVelocity> velocity;
   private final StatusSignal<Angle> position;
   private final StatusSignal<Current> current;
+
+  private final StatusSignal<Angle> encPos;
 
   private final VelocityVoltage velocityVoltage = new VelocityVoltage(0);
   private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
@@ -38,15 +39,15 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
 
   private final Orchestra m_orchestra = new Orchestra();
 
-  public IntakePiviotMotorTalonFX(int deviceId) {
+  public IntakePiviotMotorTalonFX(int deviceId, int encoderID) {
+    absEnc = new CANcoder(encoderID);
     talon = new TalonFX(deviceId);
     voltage = talon.getMotorVoltage();
     dutyCycle = talon.getDutyCycle();
     velocity = talon.getVelocity();
     position = talon.getPosition();
     current = talon.getStatorCurrent();
-
-    // absEnc = encoder.getAbsoluteEncoder();
+    encPos = absEnc.getAbsolutePosition();
 
     this.m_orchestra.addInstrument(talon);
     this.m_orchestra.loadMusic("output.chrp");
@@ -66,29 +67,22 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
                         .withKI(0)
                         .withKD(0.02)
                         .withKS(.0))
+                .withFeedback(
+                    new FeedbackConfigs()
+                        .withFusedCANcoder(absEnc)
+                        .withRotorToSensorRatio(27)
+                        .withSensorToMechanismRatio(1.33))
                 .withMotionMagic(
                     new MotionMagicConfigs()
                         .withMotionMagicAcceleration(250)
                         .withMotionMagicCruiseVelocity(250)
                         .withMotionMagicJerk(1200)));
-    // try fused cancoder with the rotor to sensor and sensor to mech set
+
     velocityVoltage.Slot = 0;
 
-    // r13.getConfigurator()
-    //     .apply(
-    //         new CANcoderConfiguration()
-    //             .MagnetSensor.withMagnetOffset(0.09228515625)
-    //                 .withAbsoluteSensorDiscontinuityPoint(0));
-    // r17.getConfigurator()
-    //     .apply(
-    //         new CANcoderConfiguration()
-    //             .MagnetSensor.withMagnetOffset(0.31689453125)
-    //                 .withAbsoluteSensorDiscontinuityPoint(0));
-
-    StatusSignal.setUpdateFrequencyForAll(10, voltage, dutyCycle, velocity, position, current);
+    StatusSignal.setUpdateFrequencyForAll(
+        10, voltage, dutyCycle, velocity, position, current, encPos);
     talon.optimizeBusUtilization();
-
-    talon.setPosition(0);
   }
 
   public void updateInputs(IntakePiviotMotorIOInputs inputs) {
@@ -97,6 +91,7 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
     inputs.masterVelocityRadPerSec = velocity.getValueAsDouble();
     inputs.masterPositionRot = position.getValueAsDouble();
     inputs.masterCurrentAmps = current.getValueAsDouble();
+    inputs.encoderPos = encPos.getValueAsDouble();
   }
 
   @Override
