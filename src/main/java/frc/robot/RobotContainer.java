@@ -19,10 +19,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
+import frc.robot.commands.BlineAuto.BlineAutos;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.IntakePiviot.IntakePiviot;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.Spindexer.Spindexer;
@@ -63,7 +65,7 @@ public class RobotContainer {
 
   private final Hood hood;
 
-  //   private final IntakePiviot iPiviot;
+  private final IntakePiviot iPiviot;
 
   // Controller
   private final CommandCustomController controller = new CommandCustomController(0);
@@ -75,8 +77,6 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
-
-  // private final LoggedDashboardChooser<Command> BlineAutos;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -103,7 +103,7 @@ public class RobotContainer {
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        // iPiviot = new IntakePiviot();
+        iPiviot = new IntakePiviot();
         new Vision();
 
         break;
@@ -127,7 +127,7 @@ public class RobotContainer {
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        // iPiviot = new IntakePiviot();
+        iPiviot = new IntakePiviot();
         new Vision();
         break;
 
@@ -151,7 +151,7 @@ public class RobotContainer {
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
-        // iPiviot = new IntakePiviot();
+        iPiviot = new IntakePiviot();
         new Vision();
         break;
     }
@@ -160,8 +160,6 @@ public class RobotContainer {
     configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
-    // BlineAutos = new LoggedDashboardChooser<>("Bline Autos", new ChooserTest<>());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -355,9 +353,9 @@ public class RobotContainer {
 
   public void UpdatingAutos() {
 
-    // autoChooser.addOption(
-    //     "RightShoot",
-    //     TestAuto.RightShoot(
-    // intake, lowerShooter, upperShooter, kicker, iPiviot, drive, BobotState.getWaitTest()));
+    autoChooser.addOption(
+        "RightShoot",
+        BlineAutos.RightShoot(
+            intake, lowerShooter, upperShooter, kicker, iPiviot, drive, BobotState.getWaitTest()));
   }
 }

@@ -1,4 +1,4 @@
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.BlineAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +14,7 @@ import frc.robot.subsystems.LowerShooter.LowerShooter;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
 import frc.robot.subsystems.drive.Drive;
 
-public class TestAuto {
+public class BlineAutos {
 
   static Path trenchLeave = new Path("RightTrenchLeave");
 
