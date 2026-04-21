@@ -1,11 +1,8 @@
 package frc.robot.commands.BlineAuto;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.bobot_state2.BobotState;
-import frc.robot.commands.DriveCommands;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.IntakePiviot.IntakePiviot;
@@ -16,7 +13,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class BlineAutos {
 
-  static Path trenchLeave = new Path("RightTrenchLeave");
+  static Path RightBumpCrossing = new Path("RightBumpCrossing");
 
   static double wait = SmartDashboard.getNumber("Wait time", 0);
 
@@ -27,17 +24,38 @@ public class BlineAutos {
       Kicker kicker,
       IntakePiviot iPiviot,
       Drive drive,
-      double wait) {
+      double startWait,
+      double bumpOneWait,
+      double LeaveWait,
+      double bumpTwoWait,
+      String RightPathOne) {
+    Path RPO = new Path(RightPathOne);
+    Path RightLeave = new Path("RightLeave");
 
+
+    if (RightPathOne == "RightToBump"){
     return Commands.sequence(
-        Commands.waitSeconds(wait),
+        Commands.waitSeconds(startWait),
         iPiviot.setAngle(0).withTimeout(.2),
         Commands.parallel(
             intake.setPercentOutputThenStopCommand(-.5),
             Commands.sequence(
-                drive.pathBuilder().build(trenchLeave),
-                DriveCommands.pointAtAngle(
-                        drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180))
-                    .withTimeout(4))));
+                drive.pathBuilder().build(RightLeave),
+                drive.pathBuilder().build(RPO),
+                Commands.waitSeconds(bumpOneWait), drive.pathBuilder().build(RightBumpCrossing))));
+    } else if(RightPathOne == "RightToOpHub"){
+    return Commands.sequence(
+        Commands.waitSeconds(startWait),
+        iPiviot.setAngle(0).withTimeout(.2),
+        Commands.parallel(
+            intake.setPercentOutputThenStopCommand(-.5),
+            Commands.sequence(
+                drive.pathBuilder().build(RightLeave),
+                drive.pathBuilder().build(RPO),
+                Commands.waitSeconds(bumpOneWait))));
+
+    } else {
+      return null;
+    }
   }
 }

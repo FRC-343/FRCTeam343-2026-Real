@@ -7,17 +7,15 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.BlineAuto.BlineAutos;
 import frc.robot.commands.DriveCommands;
@@ -71,6 +69,18 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  private final LoggedDashboardChooser<Command> LPO;
+
+  private final LoggedDashboardChooser<Command> LPT;
+
+  private final LoggedDashboardChooser<Command> LPTh;
+
+  private final LoggedDashboardChooser<String> RPO;
+
+  private final LoggedDashboardChooser<Command> RPT;
+
+  private final LoggedDashboardChooser<Command> RPTh;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -143,27 +153,45 @@ public class RobotContainer {
         new Vision();
         break;
     }
-    SmartDashboard.putNumber("Wait time", 0);
+    SmartDashboard.putNumber("Start Wait Time", 0);
+    SmartDashboard.putNumber("Bump Wait Time", 0);
+    SmartDashboard.putNumber("Leave Wait Time", 0);
+    SmartDashboard.putNumber("Bump Two Wait Time", 0);
 
-    configureNamedCommands();
+    SmartDashboard.putString(
+        "Auto info",
+        "Main Path selection is at the top of this stack. \n If a Left side start is chosen use the left stack of choosers to select paths.\nIf a right side start is chosen use the right stack of choosers to select paths. \n"
+            + " The above waits determine start delay, over bump 1, leave, and over bump 2.\nIf not using a path that goes over the bump you do not have to change wait times");
+
+    // configureNamedCommands();
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", new SendableChooser<>());
 
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    LPO = new LoggedDashboardChooser<>("Left Path One", new SendableChooser<>());
+    LPT = new LoggedDashboardChooser<>("Left Path Two", new SendableChooser<>());
+    LPTh = new LoggedDashboardChooser<>("Left Path Three", new SendableChooser<>());
+
+    RPO = new LoggedDashboardChooser<>("Right Path One", new SendableChooser<>());
+    RPT = new LoggedDashboardChooser<>("Right Path Two", new SendableChooser<>());
+    RPTh = new LoggedDashboardChooser<>("Right Path Three", new SendableChooser<>());
+
+    RPO.addDefaultOption("RightToBump", "RightToBump");
+    RPO.addOption("Right to op hum", "RightToOpHub");
+    // // Set up SysId routines
+    // autoChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -171,20 +199,23 @@ public class RobotContainer {
     configureTestButtons();
   }
 
-  private void configureNamedCommands() {
-    NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
-    NamedCommands.registerCommand("Intake no stop", intake.setPercentOutputThenStopCommand(-.5));
-    NamedCommands.registerCommand(
-        "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
-    NamedCommands.registerCommand("Shooter no stop", upperShooter.setVelocityThenStopCommand());
-    NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
+  //   private void configureNamedCommands() {
+  //     // NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
+  //     // NamedCommands.registerCommand("Intake no stop",
+  // intake.setPercentOutputThenStopCommand(-.5));
+  //     // NamedCommands.registerCommand(
+  //     //     "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
+  //     // NamedCommands.registerCommand("Shooter no stop",
+  // upperShooter.setVelocityThenStopCommand());
+  //     // NamedCommands.registerCommand("Kicker",
+  // kicker.setVelocityThenStopCommand(20).withTimeout(3));
 
-    NamedCommands.registerCommand(
-        "AutoAim",
-        DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
-            .withTimeout(4));
-  }
+  //     // NamedCommands.registerCommand(
+  //     //     "AutoAim",
+  //     //     DriveCommands.pointAtAngle(
+  //     //             drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+  //     //         .withTimeout(4));
+  //   }
 
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
@@ -302,14 +333,29 @@ public class RobotContainer {
 
   public void Automation() {
     BobotState.updateTurretTarget(BobotState.targetLocation());
-    BobotState.updatewaitTest(SmartDashboard.getNumber("Wait time", 0));
+    BobotState.updateStartWait(SmartDashboard.getNumber("Start Wait Time", 0));
+    BobotState.updateBumpWait(SmartDashboard.getNumber("Bump Wait Time", 0));
+    BobotState.updateLeaveWait(SmartDashboard.getNumber("Leave Wait Time", 0));
+    BobotState.updateBumpTwoWait(SmartDashboard.getNumber("Bump Two Wait Time", 0));
+
+    BobotState.updateRightPathOne(RPO.get());
   }
 
   public void UpdatingAutos() {
 
     autoChooser.addOption(
-        "RightShoot",
+        "RightLeave",
         BlineAutos.RightShoot(
-            intake, lowerShooter, upperShooter, kicker, iPiviot, drive, BobotState.getWaitTest()));
+            intake,
+            lowerShooter,
+            upperShooter,
+            kicker,
+            iPiviot,
+            drive,
+            BobotState.getStartWait(),
+            BobotState.getBumpWait(),
+            BobotState.getLeaveWait(),
+            BobotState.getBumpTwoWait(),
+            BobotState.getRightPathOne()));
   }
 }

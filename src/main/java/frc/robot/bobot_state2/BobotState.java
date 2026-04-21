@@ -30,7 +30,25 @@ public class BobotState extends VirtualSubsystem {
 
   private static final Queue<PoseObservation> poseObservations = new LinkedBlockingQueue<>(20);
 
-  private static double waitTest;
+  private static String leftPathOne; // The Path that happens after a Left Leave Path
+
+  private static String leftPathTwo; // The Path that happens after Left Path One
+
+  private static String leftPathThree; // The Path that happens after Left Path two
+
+  private static String rightPathOne; // The Path that happens after a right Leave Path
+
+  private static String rightPathTwo; // The Path that happens after right Path One
+
+  private static String rightPathThree; // The Path that happens after right Path two
+
+  private static double startWait;
+
+  private static double bumpWait;
+
+  private static double leaveWait;
+
+  private static double bumpTwoWait;
 
   private static FollowPath.Builder BuilderTest;
 
@@ -111,8 +129,44 @@ public class BobotState extends VirtualSubsystem {
 
   private static double solutionDegAngle;
 
-  public static void updatewaitTest(double waitTest) {
-    BobotState.waitTest = waitTest;
+  public static void updateLeftPathOne(String LPOne) {
+    BobotState.leftPathOne = LPOne;
+  }
+
+  public static void updateLeftPathTwo(String LPTwo) {
+    BobotState.leftPathTwo = LPTwo;
+  }
+
+  public static void updateLeftPathThree(String LPThree) {
+    BobotState.leftPathThree = LPThree;
+  }
+
+  public static void updateRightPathOne(String RPOne) {
+    BobotState.rightPathOne = RPOne;
+  }
+
+  public static void updateRightPathTwo(String RPTwo) {
+    BobotState.rightPathTwo = RPTwo;
+  }
+
+  public static void updateRightPathThree(String RPThree) {
+    BobotState.rightPathThree = RPThree;
+  }
+
+  public static void updateStartWait(double startWait) {
+    BobotState.startWait = startWait;
+  }
+
+  public static void updateBumpWait(double bumpWait) {
+    BobotState.bumpWait = bumpWait;
+  }
+
+  public static void updateLeaveWait(double leaveWait) {
+    BobotState.leaveWait = leaveWait;
+  }
+
+  public static void updateBumpTwoWait(double bumpTwoWait) {
+    BobotState.bumpTwoWait = bumpTwoWait;
   }
 
   public static void setPathBuilder(FollowPath.Builder builder) {
@@ -243,8 +297,44 @@ public class BobotState extends VirtualSubsystem {
    *
    */
 
-  public static double getWaitTest() {
-    return BobotState.waitTest;
+  public static String getLeftPathOne() {
+    return BobotState.leftPathOne;
+  }
+
+  public static String getLeftPathTwo() {
+    return BobotState.leftPathTwo;
+  }
+
+  public static String getLeftPathThree() {
+    return BobotState.leftPathThree;
+  }
+
+  public static String getRightPathOne() {
+    return BobotState.rightPathOne;
+  }
+
+  public static String getRightPathTwo() {
+    return BobotState.rightPathTwo;
+  }
+
+  public static String getRightPathThree() {
+    return BobotState.rightPathThree;
+  }
+
+  public static double getStartWait() {
+    return BobotState.startWait;
+  }
+
+  public static double getBumpWait() {
+    return BobotState.bumpWait;
+  }
+
+  public static double getLeaveWait() {
+    return BobotState.leaveWait;
+  }
+
+  public static double getBumpTwoWait() {
+    return BobotState.bumpTwoWait;
   }
 
   public static double getSolutionAngle() {
@@ -433,7 +523,26 @@ public class BobotState extends VirtualSubsystem {
 
     Logger.recordOutput(logRoot + "Solution Angle", solutionDegAngle);
 
-    Logger.recordOutput(logRoot + "Wait test", waitTest);
+    Logger.recordOutput(logRoot + "Start Wait", startWait);
+
+    Logger.recordOutput(logRoot + "Bump Wait", bumpWait);
+
+    Logger.recordOutput(logRoot + "Leave Wait", leaveWait);
+
+    Logger.recordOutput(logRoot + "Bump Two Wait", bumpTwoWait);
+
+    Logger.recordOutput(logRoot + "Left Path One", leftPathOne);
+
+    Logger.recordOutput(logRoot + "Left Path Two", leftPathTwo);
+
+    Logger.recordOutput(logRoot + "Left Path Three", leftPathThree);
+
+    Logger.recordOutput(logRoot + "Right Path One", rightPathOne);
+
+    Logger.recordOutput(logRoot + "Right Path Two", rightPathTwo);
+
+    Logger.recordOutput(logRoot + "Right Path Three", rightPathThree);
+
     // {
     // String calcLogRoot = logRoot + "ClosestAlignment/";
     // Logger.recordOutput(
