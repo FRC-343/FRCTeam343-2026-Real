@@ -260,7 +260,7 @@ public class RobotContainer {
                 drive,
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
-                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
 
     controller
         .x()
