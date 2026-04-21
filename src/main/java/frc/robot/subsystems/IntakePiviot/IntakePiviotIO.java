@@ -25,7 +25,7 @@ public interface IntakePiviotIO {
   public default void setIntakePiviotOpenLoop(double output) {}
 
   /** Run the drive motor at the specified velocity. */
-  public default void setIntakePiviotVelocity(double velocityRadPerSec) {}
+  public default void setVelocity(double velocityRadPerSec) {}
 
   /** Run the turn motor to the specified rotation. */
   public default void setIntakePiviotPosition(double rotation) {}
@@ -41,6 +41,6 @@ public interface IntakePiviotIO {
   public default void setStatorPosition(double position) {}
 
   public default void stop() {
-    setIntakePiviotVelocity(0);
+    setVelocity(0);
   }
 }

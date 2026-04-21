@@ -22,12 +22,10 @@ import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.BlineAuto.BlineAutos;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.IntakePiviot.IntakePiviot;
 import frc.robot.subsystems.Kicker.Kicker;
 import frc.robot.subsystems.LowerShooter.LowerShooter;
-import frc.robot.subsystems.Spindexer.Spindexer;
 import frc.robot.subsystems.UpperShooter.UpperShooter;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -51,8 +49,6 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
 
-  private final Spindexer spindexer;
-
   private final Kicker kicker;
 
   private final BobotState bobot;
@@ -62,8 +58,6 @@ public class RobotContainer {
   private final UpperShooter upperShooter;
 
   private final LowerShooter lowerShooter;
-
-  private final Hood hood;
 
   private final IntakePiviot iPiviot;
 
@@ -96,10 +90,8 @@ public class RobotContainer {
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
-        spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
-        hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
@@ -120,10 +112,8 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
-        hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
@@ -144,10 +134,8 @@ public class RobotContainer {
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
-        spindexer = new Spindexer();
         kicker = new Kicker();
         intake = new Intake();
-        hood = new Hood();
         upperShooter = new UpperShooter();
         bobot = new BobotState();
         lowerShooter = new LowerShooter();
@@ -189,11 +177,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
     NamedCommands.registerCommand("Shooter no stop", upperShooter.setVelocityThenStopCommand());
-    NamedCommands.registerCommand(
-        "Spindexer", spindexer.setVelocityThenStopCommand(-9).withTimeout(3));
     NamedCommands.registerCommand("Kicker", kicker.setVelocityThenStopCommand(20).withTimeout(3));
-    NamedCommands.registerCommand("Hood", hood.setHoodPosition2().withTimeout(5));
-    NamedCommands.registerCommand("Hood down", hood.setHoodPosition(2).withTimeout(.5));
 
     NamedCommands.registerCommand(
         "AutoAim",
@@ -217,7 +201,7 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
     controller
         .b()
         .whileTrue(
@@ -234,7 +218,7 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.pointAtAngle(
                 drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
     controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
 
@@ -267,42 +251,7 @@ public class RobotContainer {
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(hood.setHoodPosition2()));
-    controller2
-        .leftBumper()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-5)
-                .alongWith(kicker.setVelocityThenStopCommand(14)));
-    controller2
-        .leftTrigger()
-        .whileTrue(
-            kicker
-                .setVelocityThenStopCommand(55)
-                .alongWith(spindexer.setVelocityThenStopCommand(-25)));
-
-    controller2
-        .rightBumper()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(5)
-                .alongWith(kicker.setVelocityThenStopCommand(-55)));
-    controller2
-        .rightTrigger()
-        .whileTrue(
-            spindexer
-                .setVelocityThenStopCommand(-5)
-                .alongWith(kicker.setVelocityThenStopCommand(18)));
-
-    controller2
-        .y()
-        .whileTrue(
-            upperShooter
-                .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(hood.setHoodPosition2()))
-        .whileFalse(hood.setHoodPosition(2));
+                .alongWith(lowerShooter.setVelocityThenStopCommand()));
   }
 
   private void configureTestButtons() {
@@ -314,8 +263,13 @@ public class RobotContainer {
                 .alongWith(lowerShooter.setVelocityThenStopCommand2(32)));
     testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(58));
 
-    // testController.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
-    // testController.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    testController.x().whileTrue(iPiviot.setVelocityThenStopCommand2(-.25));
+    testController.b().whileTrue(iPiviot.setVelocityThenStopCommand2(.25));
+
+    testController.a().whileTrue(iPiviot.holdAngle()).onFalse(iPiviot.stopCommand());
+
+    testController.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    testController.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
   }
 
   /**

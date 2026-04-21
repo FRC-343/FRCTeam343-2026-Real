@@ -95,7 +95,7 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
   }
 
   @Override
-  public void setIntakePiviotVelocity(double velocityRotPerSecond) {
+  public void setVelocity(double velocityRotPerSecond) {
     talon.setControl(dutyCycleOut.withOutput(velocityRotPerSecond));
     // this.follower.setControl(dutyCycleOut.withOutput(velocityRotPerSecond));
   }

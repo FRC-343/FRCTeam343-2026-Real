@@ -33,7 +33,7 @@ public class IntakePiviotMotorSim implements IntakePiviotIO {
   }
 
   @Override
-  public void setIntakePiviotVelocity(double voltage) {
+  public void setVelocity(double voltage) {
     appliedVoltage = voltage;
     sim.setInputVoltage(voltage);
   }

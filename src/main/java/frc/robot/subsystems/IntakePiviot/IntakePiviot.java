@@ -25,7 +25,7 @@ public class IntakePiviot extends SubsystemBase {
   public IntakePiviot() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakePiviotMotorTalonFX(13, 14);
+        io = new IntakePiviotMotorTalonFX(21, 14);
 
         break;
       case SIM:
@@ -64,6 +64,11 @@ public class IntakePiviot extends SubsystemBase {
   }
 
   // Command to stop the motor
+
+  public Command setVelocityThenStopCommand2(double speed) {
+    return new RunCommand(() -> this.io.setVelocity(speed), this).finallyDo(io::stop);
+  }
+
   public Command stopCommand() {
     return new InstantCommand(this.io::stop, this);
   }
@@ -74,5 +79,9 @@ public class IntakePiviot extends SubsystemBase {
 
   public Command setAngle(double angle) {
     return new RunCommand(() -> this.io.setIntakePiviotPosition(angle));
+  }
+
+  public Command holdAngle() {
+    return new RunCommand(() -> this.io.setIntakePiviotPosition(inputs.masterPositionRot));
   }
 }
