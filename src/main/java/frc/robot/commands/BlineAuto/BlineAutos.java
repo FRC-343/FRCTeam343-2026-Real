@@ -32,27 +32,27 @@ public class BlineAutos {
     Path RPO = new Path(RightPathOne);
     Path RightLeave = new Path("RightLeave");
 
-
-    if (RightPathOne == "RightToBump"){
-    return Commands.sequence(
-        Commands.waitSeconds(startWait),
-        iPiviot.setAngle(0).withTimeout(.2),
-        Commands.parallel(
-            intake.setPercentOutputThenStopCommand(-.5),
-            Commands.sequence(
-                drive.pathBuilder().build(RightLeave),
-                drive.pathBuilder().build(RPO),
-                Commands.waitSeconds(bumpOneWait), drive.pathBuilder().build(RightBumpCrossing))));
-    } else if(RightPathOne == "RightToOpHub"){
-    return Commands.sequence(
-        Commands.waitSeconds(startWait),
-        iPiviot.setAngle(0).withTimeout(.2),
-        Commands.parallel(
-            intake.setPercentOutputThenStopCommand(-.5),
-            Commands.sequence(
-                drive.pathBuilder().build(RightLeave),
-                drive.pathBuilder().build(RPO),
-                Commands.waitSeconds(bumpOneWait))));
+    if (RightPathOne == "RightToBump") {
+      return Commands.sequence(
+          Commands.waitSeconds(startWait),
+          iPiviot.setAngle(0).withTimeout(.2),
+          Commands.parallel(
+              intake.setPercentOutputThenStopCommand(-.5),
+              Commands.sequence(
+                  drive.pathBuilder().build(RightLeave),
+                  drive.pathBuilder().build(RPO),
+                  Commands.waitSeconds(bumpOneWait),
+                  drive.pathBuilder().build(RightBumpCrossing))));
+    } else if (RightPathOne == "RightToOpHub") {
+      return Commands.sequence(
+          Commands.waitSeconds(startWait),
+          iPiviot.setAngle(0).withTimeout(.2),
+          Commands.parallel(
+              intake.setPercentOutputThenStopCommand(-.5),
+              Commands.sequence(
+                  drive.pathBuilder().build(RightLeave),
+                  drive.pathBuilder().build(RPO),
+                  Commands.waitSeconds(bumpOneWait))));
 
     } else {
       return null;
