@@ -38,9 +38,12 @@ import frc.robot.util.TurretStuff.TurretUtil.TargetType;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -63,26 +66,28 @@ public class RobotContainer {
   private final CommandCustomController controller = new CommandCustomController(0);
   private final CommandCustomController controller2 = new CommandCustomController(1);
 
-  private final CommandCustomController testController = new CommandCustomController(4);
+  // private final CommandCustomController testController = new CommandCustomController(4);
 
   private final DriverAutomationFactory m_Automation;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  private final LoggedDashboardChooser<Command> LPO;
+  private final LoggedDashboardChooser<String> LPO;
 
-  private final LoggedDashboardChooser<Command> LPT;
+  private final LoggedDashboardChooser<String> LPT;
 
-  private final LoggedDashboardChooser<Command> LPTh;
+  private final LoggedDashboardChooser<String> LPTh;
 
   private final LoggedDashboardChooser<String> RPO;
 
   private final LoggedDashboardChooser<String> RPT;
 
-  private final LoggedDashboardChooser<Command> RPTh;
+  private final LoggedDashboardChooser<String> RPTh;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
 
     switch (Constants.currentMode) {
@@ -90,13 +95,12 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcoder
-        drive =
-            new Drive(
-                new GyroIOPigeon2(),
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight),
-                new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+        drive = new Drive(
+            new GyroIOPigeon2(),
+            new ModuleIOTalonFX(TunerConstants.FrontLeft),
+            new ModuleIOTalonFX(TunerConstants.FrontRight),
+            new ModuleIOTalonFX(TunerConstants.BackLeft),
+            new ModuleIOTalonFX(TunerConstants.BackRight));
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
@@ -112,13 +116,13 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIOSim(TunerConstants.FrontLeft),
+            new ModuleIOSim(TunerConstants.FrontRight),
+            new ModuleIOSim(TunerConstants.BackLeft),
+            new ModuleIOSim(TunerConstants.BackRight));
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
         // shooter = new Shooter();
@@ -133,13 +137,17 @@ public class RobotContainer {
 
       default:
         // Replayed robot, disable IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {},
-                new ModuleIO() {});
+        drive = new Drive(
+            new GyroIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            },
+            new ModuleIO() {
+            });
 
         m_Automation = new DriverAutomationFactory(controller, controller2, drive);
 
@@ -182,48 +190,56 @@ public class RobotContainer {
     RPT.addOption("Right Score Far", "RightScore2Far");
     // // Set up SysId routines
     // autoChooser.addOption(
-    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // "Drive Wheel Radius Characterization",
+    // DriveCommands.wheelRadiusCharacterization(drive));
     // autoChooser.addOption(
-    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // "Drive Simple FF Characterization",
+    // DriveCommands.feedforwardCharacterization(drive));
     // autoChooser.addOption(
-    //     "Drive SysId (Quasistatic Forward)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // "Drive SysId (Quasistatic Forward)",
+    // drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
     // autoChooser.addOption(
-    //     "Drive SysId (Quasistatic Reverse)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // "Drive SysId (Quasistatic Reverse)",
+    // drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
     // autoChooser.addOption(
-    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // "Drive SysId (Dynamic Forward)",
+    // drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     // autoChooser.addOption(
-    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // "Drive SysId (Dynamic Reverse)",
+    // drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
     configureOpButtons();
-    configureTestButtons();
+    // configureTestButtons();
   }
 
-  //   private void configureNamedCommands() {
-  //     // NamedCommands.registerCommand("Intake for time", intake.runForTime(.5, 5));
-  //     // NamedCommands.registerCommand("Intake no stop",
+  // private void configureNamedCommands() {
+  // // NamedCommands.registerCommand("Intake for time", intake.runForTime(.5,
+  // 5));
+  // // NamedCommands.registerCommand("Intake no stop",
   // intake.setPercentOutputThenStopCommand(-.5));
-  //     // NamedCommands.registerCommand(
-  //     //     "Shooter set speed", upperShooter.setVelocityThenStopCommand().withTimeout(4));
-  //     // NamedCommands.registerCommand("Shooter no stop",
+  // // NamedCommands.registerCommand(
+  // // "Shooter set speed",
+  // upperShooter.setVelocityThenStopCommand().withTimeout(4));
+  // // NamedCommands.registerCommand("Shooter no stop",
   // upperShooter.setVelocityThenStopCommand());
-  //     // NamedCommands.registerCommand("Kicker",
+  // // NamedCommands.registerCommand("Kicker",
   // kicker.setVelocityThenStopCommand(20).withTimeout(3));
 
-  //     // NamedCommands.registerCommand(
-  //     //     "AutoAim",
-  //     //     DriveCommands.pointAtAngle(
-  //     //             drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
-  //     //         .withTimeout(4));
-  //   }
+  // // NamedCommands.registerCommand(
+  // // "AutoAim",
+  // // DriveCommands.pointAtAngle(
+  // // drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
+  // // .withTimeout(4));
+  // }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -280,31 +296,39 @@ public class RobotContainer {
   private void configureOpButtons() {
 
     controller2
-        .a()
-        .whileTrue(
-            upperShooter
-                .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand()));
-  }
-
-  private void configureTestButtons() {
-    testController
         .rightBumper()
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand()));
-    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
+                .alongWith(lowerShooter.setVelocityThenStopCommand())
+                .alongWith(intake.setPercentOutputThenStopCommand(.7)));
+    controller2.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
 
-    testController.x().whileTrue(iPiviot.setAngle(-0.04));
-    testController.b().whileTrue(iPiviot.setAngle(-.25));
-    testController.y().whileTrue(iPiviot.setAngle(-.3));
+    controller2.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.7));
 
-    testController.a().whileTrue(iPiviot.holdAngle()).onFalse(iPiviot.stopCommand());
+    controller2.x().whileTrue(iPiviot.setAngle(-0.04));
 
-    testController.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.7));
-    testController.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.7));
+    controller2.b().whileTrue(iPiviot.setAngle(-.25));
+    
+    controller2.y().whileTrue(iPiviot.setAngle(-.3));
   }
+
+  // private void configureTestButtons() {
+  //   testController
+  //       .rightBumper()
+  //       .whileTrue(
+  //           upperShooter
+  //               .setVelocityThenStopCommand()
+  //               .alongWith(lowerShooter.setVelocityThenStopCommand()));
+  //   testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
+
+  //   testController.x().whileTrue(iPiviot.setAngle(-0.04));
+  //   testController.b().whileTrue(iPiviot.setAngle(-.25));
+  //   testController.y().whileTrue(iPiviot.setAngle(-.3));
+
+  //   testController.a().whileTrue(iPiviot.holdAngle()).onFalse(iPiviot.stopCommand());
+
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -319,9 +343,8 @@ public class RobotContainer {
     TargetType target = BobotState.targetType();
     Pose2d robotPose = BobotState.getGlobalPose();
     ChassisSpeeds speeds = BobotState.getRoboSpeed();
-    TurretUtil.ShotSolution solution =
-        TurretUtil.computeLeadShotSolution(
-            robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+    TurretUtil.ShotSolution solution = TurretUtil.computeLeadShotSolution(
+        robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
 
     if (solution.isValid) {
       BobotState.updateOptiTurretYaw(
