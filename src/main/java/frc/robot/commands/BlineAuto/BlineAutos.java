@@ -20,6 +20,8 @@ public class BlineAutos {
   static Path RightToTrench = new Path("RightToTrench");
   static Path RightLeavePTwo = new Path("RightLeavePTwo");
 
+  static Path SanityCheck = new Path("SanityPath");
+
   static double wait = SmartDashboard.getNumber("Wait time", 0);
 
   public static Command RightShoot(
@@ -33,14 +35,17 @@ public class BlineAutos {
       double bumpOneWait,
       double LeaveWait,
       double bumpTwoWait,
-      String RightPathOne) {
+      String RightPathOne,
+      String RightPathTwo) {
     Path RPO = new Path(RightPathOne);
+    Path RPT = new Path(RightPathTwo);
     Path RightLeave = new Path("RightLeave");
 
-    if (RightPathOne == "RightToBump") {
+    if (RightPathOne == "RightToBump"
+        && (RightPathTwo == "RightScore2Close" || RightPathTwo == "RightScore2Far")) {
       return Commands.sequence(
           Commands.waitSeconds(startWait),
-          iPiviot.setAngle(0).withTimeout(.2),
+          iPiviot.setAngle(-0.25).withTimeout(.2),
           Commands.parallel(
               intake.setPercentOutputThenStopCommand(-.5),
               Commands.sequence(
@@ -50,8 +55,7 @@ public class BlineAutos {
                   drive.pathBuilder().build(RightBumpCrossing),
                   Commands.parallel(
                       DriveCommands.pointAtAngle(
-                              drive,
-                              () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180))
+                              drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))
                           .withTimeout(4),
                       lShoot.setVelocityThenStopCommand().withTimeout(4),
                       uShoot.setVelocityThenStopCommand().withTimeout(4),
@@ -60,7 +64,8 @@ public class BlineAutos {
                           kicker.setVelocityThenStopCommand(35).withTimeout(3))),
                   drive.pathBuilder().build(RightToTrench),
                   Commands.waitSeconds(LeaveWait),
-                  drive.pathBuilder().build(RightLeavePTwo))));
+                  drive.pathBuilder().build(RightLeavePTwo),
+                  drive.pathBuilder().build(RPT))));
     } else if (RightPathOne == "RightToOpHub") {
       return Commands.sequence(
           Commands.waitSeconds(startWait),
@@ -74,5 +79,11 @@ public class BlineAutos {
     } else {
       return null;
     }
+  }
+
+  public static Command SanityCheck(Drive drive) {
+    return Commands.sequence(
+        Commands.waitSeconds(1),
+        drive.pathBuilder().withPoseReset(drive::setPose).build(SanityCheck));
   }
 }

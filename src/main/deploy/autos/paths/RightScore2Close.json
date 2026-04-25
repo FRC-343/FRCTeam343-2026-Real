@@ -1,0 +1,82 @@
+{
+  "path_elements": [
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 6.016779467610285,
+        "y_meters": 0.5445246195051361,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": 3.141592653589793,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "rotation",
+      "rotation_radians": 1.5707963267948966,
+      "t_ratio": 0.37193813662405345,
+      "profiled_rotation": true
+    },
+    {
+      "type": "translation",
+      "x_meters": 6.257630522486801,
+      "y_meters": 1.4003632450318912,
+      "intermediate_handoff_radius_meters": 0.4
+    },
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 6.190853544069535,
+        "y_meters": 2.368320079564266,
+        "intermediate_handoff_radius_meters": 0.4
+      },
+      "rotation_target": {
+        "rotation_radians": 1.5707963267948966,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 6.128430373890393,
+        "y_meters": 3.8068524536649857,
+        "intermediate_handoff_radius_meters": 0.4
+      },
+      "rotation_target": {
+        "rotation_radians": 0.0,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "translation",
+      "x_meters": 7.293705045437871,
+      "y_meters": 4.504564683880811,
+      "intermediate_handoff_radius_meters": 0.9000000000000002
+    },
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 7.605489218099741,
+        "y_meters": 2.923543101146999,
+        "intermediate_handoff_radius_meters": 0.4
+      },
+      "rotation_target": {
+        "rotation_radians": 4.276056667386108,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 5.634,
+        "y_meters": 2.586,
+        "intermediate_handoff_radius_meters": 0.2
+      },
+      "rotation_target": {
+        "rotation_radians": 0.0,
+        "profiled_rotation": true
+      }
+    }
+  ]
+}

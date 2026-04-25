@@ -78,7 +78,7 @@ public class RobotContainer {
 
   private final LoggedDashboardChooser<String> RPO;
 
-  private final LoggedDashboardChooser<Command> RPT;
+  private final LoggedDashboardChooser<String> RPT;
 
   private final LoggedDashboardChooser<Command> RPTh;
 
@@ -177,6 +177,9 @@ public class RobotContainer {
 
     RPO.addDefaultOption("RightToBump", "RightToBump");
     RPO.addOption("Right to op hum", "RightToOpHub");
+    RPT.addOption("Rigth to Hps", "RightToHPS");
+    RPT.addDefaultOption("Right Score Close", "RightScore2Close");
+    RPT.addOption("Right Score Far", "RightScore2Far");
     // // Set up SysId routines
     // autoChooser.addOption(
     //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -339,6 +342,7 @@ public class RobotContainer {
     BobotState.updateBumpTwoWait(SmartDashboard.getNumber("Bump Two Wait Time", 0));
 
     BobotState.updateRightPathOne(RPO.get());
+    BobotState.updateRightPathTwo(RPT.get());
   }
 
   public void UpdatingAutos() {
@@ -356,6 +360,8 @@ public class RobotContainer {
             BobotState.getBumpWait(),
             BobotState.getLeaveWait(),
             BobotState.getBumpTwoWait(),
-            BobotState.getRightPathOne()));
+            BobotState.getRightPathOne(),
+            BobotState.getRightPathTwo()));
+    autoChooser.addOption("Sanity Check", BlineAutos.SanityCheck(drive));
   }
 }
