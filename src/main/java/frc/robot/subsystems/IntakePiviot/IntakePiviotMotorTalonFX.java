@@ -62,7 +62,7 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
                 .withSlot0(
                     new Slot0Configs()
                         .withKV(0.1)
-                        .withKA(.01)
+                        .withKA(.2)
                         .withKP(16.0)
                         .withKI(0)
                         .withKD(0.02)
@@ -70,13 +70,13 @@ public class IntakePiviotMotorTalonFX implements IntakePiviotIO {
                 .withFeedback(
                     new FeedbackConfigs()
                         .withFusedCANcoder(absEnc)
-                        .withRotorToSensorRatio(27)
+                        .withRotorToSensorRatio(45)
                         .withSensorToMechanismRatio(1.33))
                 .withMotionMagic(
                     new MotionMagicConfigs()
-                        .withMotionMagicAcceleration(250)
-                        .withMotionMagicCruiseVelocity(250)
-                        .withMotionMagicJerk(1200)));
+                        .withMotionMagicAcceleration(5)
+                        .withMotionMagicCruiseVelocity(5)
+                        .withMotionMagicJerk(300)));
 
     velocityVoltage.Slot = 0;
 

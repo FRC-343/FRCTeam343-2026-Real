@@ -52,7 +52,7 @@ public class IntakeIOTalonFX implements IntakeIO {
                 .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0))
                 .withCurrentLimits(
                     new CurrentLimitsConfigs()
-                        .withStatorCurrentLimit(50)
+                        .withStatorCurrentLimit(90)
                         .withStatorCurrentLimitEnable(true)));
 
     talonFollower
@@ -69,7 +69,7 @@ public class IntakeIOTalonFX implements IntakeIO {
                 .withSlot0(new Slot0Configs().withKV(0.12).withKP(1).withKI(0).withKD(0))
                 .withCurrentLimits(
                     new CurrentLimitsConfigs()
-                        .withStatorCurrentLimit(80)
+                        .withStatorCurrentLimit(90)
                         .withStatorCurrentLimitEnable(true)));
 
     velocityVoltage.Slot = 0;

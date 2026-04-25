@@ -34,49 +34,46 @@ public class VisionConstants {
 
   private static final List<AprilTagCameraConfig> warrigConfigs =
       List.of(
-          // FLO
           new AprilTagCameraConfig(
               new VisionSource(
-                  "FLeft",
+                  "BRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-10.979), // forward+
-                          Units.inchesToMeters(12.331), // left+
-                          Units.inchesToMeters(18.1117401575)), // up+
+                          Units.inchesToMeters(-12.313521), // forward+
+                          Units.inchesToMeters(8.042081), // left+
+                          Units.inchesToMeters(8.014049)), // up+
                       new Rotation3d(
-                          0, Units.degreesToRadians(-5), Units.degreesToRadians(-15.793)))),
+                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-15.504090)))),
+              SimCameraConfig.ARDUCAM_OV9281_70),
+          new AprilTagCameraConfig(
+              new VisionSource(
+                  "SRight",
+                  new Transform3d(
+                      new Translation3d(
+                          Units.inchesToMeters(-.344), // forward+
+                          Units.inchesToMeters(13.618), // left+
+                          Units.inchesToMeters(17.342)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(0), Units.degreesToRadians(90)))),
+              SimCameraConfig.ARDUCAM_OV9281_70),
+          new AprilTagCameraConfig(
+              new VisionSource(
+                  "SLeft",
+                  new Transform3d(
+                      new Translation3d(
+                          Units.inchesToMeters(-.344), // forward+
+                          Units.inchesToMeters(-13.618), // left+
+                          Units.inchesToMeters(17.342)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(0), Units.degreesToRadians(-90)))),
               SimCameraConfig.ARDUCAM_OV9281_70),
           new AprilTagCameraConfig(
               new VisionSource(
                   "BLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-10.635), // forward+
-                          Units.inchesToMeters(10.837), // left+
-                          Units.inchesToMeters(7.602)), // up+
-                      new Rotation3d(
-                          0, Units.degreesToRadians(-15), Units.degreesToRadians(-158.909)))),
-              SimCameraConfig.ARDUCAM_OV9281_70),
-          new AprilTagCameraConfig(
-              new VisionSource(
-                  "FRight",
-                  new Transform3d(
-                      new Translation3d(
-                          Units.inchesToMeters(-6.979), // forward+
-                          Units.inchesToMeters(-12.331), // left+
-                          Units.inchesToMeters(19.6117401575)), // up+
-                      new Rotation3d(0, Units.degreesToRadians(-5), Units.degreesToRadians(15)))),
-              SimCameraConfig.ARDUCAM_OV9281_70),
-          new AprilTagCameraConfig(
-              new VisionSource(
-                  "BRight",
-                  new Transform3d(
-                      new Translation3d(
-                          Units.inchesToMeters(-10.635), // forward+
-                          Units.inchesToMeters(-10.837), // left+
-                          Units.inchesToMeters(7.602)), // up+
-                      new Rotation3d(
-                          0, Units.degreesToRadians(-15), Units.degreesToRadians(158.909)))),
+                          Units.inchesToMeters(-12.106229), // forward+
+                          Units.inchesToMeters(-8.203269), // left+
+                          Units.inchesToMeters(7.954259)), // up+
+                      new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;
 

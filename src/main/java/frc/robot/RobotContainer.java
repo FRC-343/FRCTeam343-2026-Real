@@ -228,11 +228,11 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
+    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.8));
     controller
         .b()
         .whileTrue(
@@ -249,18 +249,17 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.pointAtAngle(
                 drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.8));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    controller.rightBumper().whileTrue(intake.jiggle(.5, .2));
 
     controller
         .a()
         .whileTrue(
             DriveCommands.joystickDriveAtAngleForShoot(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
+                () -> controller.getLeftY(),
+                () -> controller.getLeftX(),
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
 
     controller
         .x()
@@ -270,8 +269,8 @@ public class RobotContainer {
                 .alongWith(
                     DriveCommands.joystickDriveAtAngle(
                         drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
+                        () -> controller.getLeftY(),
+                        () -> controller.getLeftX(),
                         () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
   }
 
@@ -290,17 +289,18 @@ public class RobotContainer {
         .rightBumper()
         .whileTrue(
             upperShooter
-                .setVelocityThenStopCommand2(-32)
-                .alongWith(lowerShooter.setVelocityThenStopCommand2(32)));
-    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(58));
+                .setVelocityThenStopCommand()
+                .alongWith(lowerShooter.setVelocityThenStopCommand()));
+    testController.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
 
-    testController.x().whileTrue(iPiviot.setVelocityThenStopCommand2(-.25));
-    testController.b().whileTrue(iPiviot.setVelocityThenStopCommand2(.25));
+    testController.x().whileTrue(iPiviot.setAngle(-0.04));
+    testController.b().whileTrue(iPiviot.setAngle(-.25));
+    testController.y().whileTrue(iPiviot.setAngle(-.3));
 
     testController.a().whileTrue(iPiviot.holdAngle()).onFalse(iPiviot.stopCommand());
 
-    testController.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.5));
-    testController.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.5));
+    testController.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.7));
+    testController.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.7));
   }
 
   /**

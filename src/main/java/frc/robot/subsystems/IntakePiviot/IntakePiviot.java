@@ -25,7 +25,7 @@ public class IntakePiviot extends SubsystemBase {
   public IntakePiviot() {
     switch (Constants.currentMode) {
       case REAL:
-        io = new IntakePiviotMotorTalonFX(21, 14);
+        io = new IntakePiviotMotorTalonFX(21, 18);
 
         break;
       case SIM:
@@ -44,23 +44,6 @@ public class IntakePiviot extends SubsystemBase {
     this.io.updateInputs(this.inputs);
 
     Logger.processInputs("IntakePiviot", this.inputs);
-
-    // double r17 = BobotState.getR13AbsPos() * 17.0; // 13T gear → mod 17
-    // double r13 = BobotState.getR17AbsPos() * 13.0; // 17T gear → mod 13
-
-    // // Reconstruct X in [0,221)
-    // double X = IntakePiviotCRT1.reconstruct(r17, r13);
-
-    // // Convert to IntakePiviot rotations
-    // double IntakePiviotRot = X / 221.0;
-
-    // // Convert to radians
-    // double IntakePiviotRad = IntakePiviotCRT1.IntakePiviotRotToRadians(IntakePiviotRot);
-
-    // // Apply zero offset (store once at calibration)
-    // // IntakePiviotRad -= IntakePiviot_ZERO_OFFSET_RAD;
-
-    // BobotState.updateIntakePiviotPos1(IntakePiviotRad);
   }
 
   // Command to stop the motor

@@ -56,7 +56,7 @@ public class UpperShooter extends SubsystemBase {
 
   public Command setVelocityThenStopCommand() {
     return new RunCommand(
-            () -> this.io.setVelocity(MathUtil.clamp(BobotState.getWantedShooterRPS(), 0.0, 65.0)),
+            () -> this.io.setVelocity(-MathUtil.clamp(BobotState.getWantedShooterRPS(), 0.0, 65.0)),
             this)
         .finallyDo(io::stop);
   }
