@@ -84,6 +84,8 @@ public class BobotState extends VirtualSubsystem {
    * Highlighting small section importaint for our shooter calcs
    */
 
+  private static boolean FlipCheck;
+
   private static double wantedRotRobot;
 
   private static double
@@ -128,6 +130,10 @@ public class BobotState extends VirtualSubsystem {
   private static boolean slowdown;
 
   private static double solutionDegAngle;
+
+  public static void updateFlipCheck(boolean FlipCheck) {
+    BobotState.FlipCheck = FlipCheck;
+  }
 
   public static void updateLeftPathOne(String LPOne) {
     BobotState.leftPathOne = LPOne;
@@ -289,6 +295,10 @@ public class BobotState extends VirtualSubsystem {
 
   public static Pose2d getGlobalPose() {
     return BobotState.globalPose;
+  }
+
+  public static boolean getFlipCheck() {
+    return BobotState.FlipCheck;
   }
 
   /*

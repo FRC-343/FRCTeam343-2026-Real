@@ -44,4 +44,10 @@ public final class Constants {
     public static final double TURRET_OFFSET_X = Units.inchesToMeters(-2.25);
     public static final double TURRET_OFFSET_Y = Units.inchesToMeters(4.8); // 4.8125 normal
   }
+
+  public static final class IntakeConstants {
+    public static final double INTAKEDOWN = -.04;
+    public static final double INTAKE_FOR_SHOOT = -.25;
+    public static final double INTAKE_STOW = -.3;
+  }
 }
