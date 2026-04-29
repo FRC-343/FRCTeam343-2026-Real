@@ -177,10 +177,20 @@ public class RobotContainer {
     RPTh = new LoggedDashboardChooser<>("Path Three", new SendableChooser<>());
 
     autoChooser.addDefaultOption("None", null);
+    autoChooser.addOption(
+        "Center Backup and shoot",
+        BlineAutos.CenterShoot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
+    autoChooser.addOption(
+        "Center Depot eat",
+        BlineAutos.CenterDepot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
+    autoChooser.addOption("Function test", BlineAutos.FunctionTest(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
 
-    RPO.addDefaultOption("To Bump", "RightToBump");
+    RPO.addDefaultOption("NONE", "RightToBump");
+    RPO.addOption("To Bump", "RightToBump");
+
+    RPT.addDefaultOption("NONE", "RightScore2Close");
+    RPT.addOption("Score Close", "RightScore2Close");
     RPT.addOption("To Hps", "RightToHPS");
-    RPT.addDefaultOption("Score Close", "RightScore2Close");
     RPT.addOption("Score Far", "RightScore2Far");
     // // Set up SysId routines
     // autoChooser.addOption(
