@@ -95,12 +95,12 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
     robotContainer.Automation();
-    robotContainer.TurretMath();
+
     robotContainer.UpdatingAutos();
 
     // Return to non-RT thread priority (do not modify the first argument)
     Threads.setCurrentThreadPriority(false, 10);
-
+    robotContainer.TurretMath();
     // The below is highly experimental
     // robotContainer.TurretCalcs();
     // robotContainer.HoodCalcs();

@@ -37,17 +37,17 @@ public final class Constants {
 
   public static final class TurretConstants {
 
-    public static final double FORWARDLIMITDEGREES = 180.0;
-    public static final double REVERSELIMITDEGREES = -180.0;
+    public static final double FORWARDLIMITDEGREES = 360.0;
+    public static final double REVERSELIMITDEGREES = -360.0;
     public static final double MOTOR_TO_TURRET_RATIO = 7.0 * 3.0;
 
-    public static final double TURRET_OFFSET_X = Units.inchesToMeters(-2.25);
-    public static final double TURRET_OFFSET_Y = Units.inchesToMeters(4.8); // 4.8125 normal
+    public static final double TURRET_OFFSET_X = Units.inchesToMeters(0);
+    public static final double TURRET_OFFSET_Y = Units.inchesToMeters(0); // 4.8125 normal
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKEDOWN = -.04;
-    public static final double INTAKE_FOR_SHOOT = -.25;
-    public static final double INTAKE_STOW = -.3;
+    public static final double INTAKEDOWN = -.09;
+    public static final double INTAKE_FOR_SHOOT = -.13;
+    public static final double INTAKE_STOW = -.2;
   }
 }

@@ -39,7 +39,7 @@ public class VisionConstants {
                   "BRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-12.313521), // forward+
+                          Units.inchesToMeters(12.313521), // forward+
                           Units.inchesToMeters(8.042081), // left+
                           Units.inchesToMeters(8.014049)), // up+
                       new Rotation3d(
@@ -50,7 +50,7 @@ public class VisionConstants {
                   "SRight",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-.344), // forward+
+                          Units.inchesToMeters(.344), // forward+
                           Units.inchesToMeters(13.618), // left+
                           Units.inchesToMeters(17.342)), // up+
                       new Rotation3d(0, Units.degreesToRadians(0), Units.degreesToRadians(90)))),
@@ -60,7 +60,7 @@ public class VisionConstants {
                   "SLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-.344), // forward+
+                          Units.inchesToMeters(.344), // forward+
                           Units.inchesToMeters(-13.618), // left+
                           Units.inchesToMeters(17.342)), // up+
                       new Rotation3d(0, Units.degreesToRadians(0), Units.degreesToRadians(-90)))),
@@ -70,9 +70,9 @@ public class VisionConstants {
                   "BLeft",
                   new Transform3d(
                       new Translation3d(
-                          Units.inchesToMeters(-12.106229), // forward+
+                          Units.inchesToMeters(12.106229), // forward+
                           Units.inchesToMeters(-8.203269), // left+
-                          Units.inchesToMeters(7.954259)), // up+
+                          Units.inchesToMeters(8.014049)), // up+
                       new Rotation3d(0, Units.degreesToRadians(-15), Units.degreesToRadians(15)))),
               SimCameraConfig.ARDUCAM_OV9281_70));
   public static final List<AprilTagCameraConfig> aprilTagCamerasConfigs = warrigConfigs;

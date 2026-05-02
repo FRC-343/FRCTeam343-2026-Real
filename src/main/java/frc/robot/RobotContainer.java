@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -183,7 +182,9 @@ public class RobotContainer {
     autoChooser.addOption(
         "Center Depot eat",
         BlineAutos.CenterDepot(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
-    autoChooser.addOption("Function test", BlineAutos.FunctionTest(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
+    autoChooser.addOption(
+        "Function test",
+        BlineAutos.FunctionTest(intake, lowerShooter, upperShooter, kicker, iPiviot, drive));
 
     RPO.addDefaultOption("NONE", "RightToBump");
     RPO.addOption("To Bump", "RightToBump");
@@ -249,9 +250,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -controller.getLeftY(),
+            () -> -controller.getLeftX(),
+            () -> controller.getRightX()));
 
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.8));
     controller
@@ -269,18 +270,18 @@ public class RobotContainer {
         .y()
         .whileTrue(
             DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
+                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.8));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     controller
         .a()
         .whileTrue(
-            DriveCommands.joystickDriveAtAngleForShoot(
+            DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> controller.getLeftY(),
-                () -> controller.getLeftX(),
-                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
 
     controller
         .x()
@@ -290,8 +291,8 @@ public class RobotContainer {
                 .alongWith(
                     DriveCommands.joystickDriveAtAngle(
                         drive,
-                        () -> controller.getLeftY(),
-                        () -> controller.getLeftX(),
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
                         () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
   }
 
@@ -302,17 +303,25 @@ public class RobotContainer {
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand())
-                .alongWith(intake.setPercentOutputThenStopCommand(.7)));
+                .alongWith(lowerShooter.setVelocityThenStopCommand()));
     controller2.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
 
-    controller2.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.7));
+    controller2
+        .leftTrigger()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(-.7)
+                .alongWith(kicker.setVelocityThenStopCommand(-18)));
 
     controller2.x().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
 
     controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT));
 
     controller2.y().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_STOW));
+
+    controller2.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.25));
+
+    controller2.povDown().whileTrue(iPiviot.setVelocityThenStopCommand2(.25));
   }
 
   // private void configureTestButtons() {
@@ -344,10 +353,8 @@ public class RobotContainer {
   public void TurretMath() {
     TargetType target = BobotState.targetType();
     Pose2d robotPose = BobotState.getGlobalPose();
-    ChassisSpeeds speeds = BobotState.getRoboSpeed();
-    TurretUtil.ShotSolution solution =
-        TurretUtil.computeLeadShotSolution(
-            robotPose, speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, target);
+    // ChassisSpeeds speeds = BobotState.getRoboSpeed();
+    TurretUtil.ShotSolution solution = TurretUtil.computeShotSolution(robotPose, target);
 
     if (solution.isValid) {
       BobotState.updateOptiTurretYaw(
