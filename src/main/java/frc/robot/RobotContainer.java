@@ -252,7 +252,7 @@ public class RobotContainer {
             drive,
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
-            () -> controller.getRightX()));
+            () -> -controller.getRightX()));
 
     controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.8));
     controller
@@ -270,7 +270,7 @@ public class RobotContainer {
         .y()
         .whileTrue(
             DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
+                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
     controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.8));
     controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
@@ -281,7 +281,7 @@ public class RobotContainer {
                 drive,
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
-                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle() + 180)));
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
 
     controller
         .x()

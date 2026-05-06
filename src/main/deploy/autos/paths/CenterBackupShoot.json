@@ -26,13 +26,6 @@
     }
   ],
   "constraints": {
-    "end_translation_tolerance_meters": 0.5,
-    "max_velocity_meters_per_sec": [
-      {
-        "value": 0.25,
-        "start_ordinal": 0,
-        "end_ordinal": 1
-      }
-    ]
+    "end_translation_tolerance_meters": 0.5
   }
 }

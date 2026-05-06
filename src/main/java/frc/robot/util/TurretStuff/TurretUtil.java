@@ -77,7 +77,7 @@ public class TurretUtil {
   public static Pose2d getTurretPose(Pose2d robotPose) {
     return robotPose.plus(
         new Transform2d(
-            new Translation2d(TURRET_OFFSET_X, TURRET_OFFSET_Y), Rotation2d.fromDegrees(90)));
+            new Translation2d(TURRET_OFFSET_X, TURRET_OFFSET_Y), Rotation2d.fromDegrees(0)));
   }
 
   // =========================
