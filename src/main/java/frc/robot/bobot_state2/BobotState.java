@@ -21,14 +21,33 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Class full of static variables and methods that store robot state we'd need across mulitple
- * subsystems. It's called {@link #BobotState} as to not conflict with WPILib's {@link
+ * Class full of static variables and methods that store robot state we'd need
+ * across mulitple
+ * subsystems. It's called {@link #BobotState} as to not conflict with WPILib's
+ * {@link
  * edu.wpi.first.wpilibj.RobotState}
  */
 public class BobotState extends VirtualSubsystem {
-  private static final String logRoot = "BobotState/";
+
+  /*
+   * One use types
+   */
+
+  private static FollowPath.Builder BuilderTest;
 
   private static final Queue<PoseObservation> poseObservations = new LinkedBlockingQueue<>(20);
+
+  private static HubTagTracker hubTracker = new HubTagTracker();
+
+  // list of tags used to calculate where the hub is
+  private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
+
+  private static ChassisSpeeds roboChassisSpeeds; // Robot speed
+
+  /*
+   * Strings
+   */
+  private static final String logRoot = "BobotState/";
 
   private static String leftPathOne; // The Path that happens after a Left Leave Path
 
@@ -42,6 +61,10 @@ public class BobotState extends VirtualSubsystem {
 
   private static String rightPathThree; // The Path that happens after right Path two
 
+  /*
+   * Doubles
+   */
+
   private static double startWait;
 
   private static double bumpWait;
@@ -50,46 +73,9 @@ public class BobotState extends VirtualSubsystem {
 
   private static double bumpTwoWait;
 
-  private static FollowPath.Builder BuilderTest;
-
-  private static Pose2d globalPose = new Pose2d(); // Robots position on the field.
-
-  private static boolean
-      atWantedPerpPose; // Robots perpendicular position in relation to whatever Apriltag we are
-  // lining up to.
-
-  private static boolean
-      atWantedRot; // Robots rotation in relation to whatever Apriltag we are lining up to
-
-  private static boolean
-      atWantedParaPose; // Robots parallel position in relation to whatever Apriltag we are lining
-  // up to
-
-  // adding Tag Trackers here
-  private static HubTagTracker hubTracker = new HubTagTracker();
-
-  // list of tags used to calculate where the hub is
-  private static List<TargetAngleTracker> autoAlignmentTrackers = List.of(BobotState.hubTracker);
-
-  /*
-   * Adding new Tracking info below this
-   *
-   * This will not have the update calls
-   * those will be added below the other update calls
-   * and it will have a section similar to this
-   *
-   */
-
-  /*
-   * Highlighting small section importaint for our shooter calcs
-   */
-
-  private static boolean FlipCheck;
-
   private static double wantedRotRobot;
 
-  private static double
-      ToF; // this will hold the Time of flight info needed for turret and hood calcs
+  private static double ToF; // this will hold the Time of flight info needed for turret and hood calcs
 
   private static double distance;
 
@@ -101,10 +87,6 @@ public class BobotState extends VirtualSubsystem {
 
   private static double ShooterWantedRPS; // Shooter Wanted RPS
 
-  /*
-   * Highlighting small section importaint for our shooter calcs
-   */
-
   private static double HoodPos; // this will store the hood position
 
   private static double TurretPos1; // this will store the turret position
@@ -115,25 +97,104 @@ public class BobotState extends VirtualSubsystem {
 
   private static double ShooterRPM; // Shooter RPM
 
-  private static ChassisSpeeds roboChassisSpeeds; // Robot speed
-
   private static double OptiTurretYaw; // optimized turret angle
-
-  private static Pose2d TurretTarget; // Turret target pose
 
   private static double hoodTest;
 
   private static double shooterTest;
 
-  private static Pose2d turretPose;
+  private static double solutionDegAngle;
+
+  /*
+   * Booleans
+   */
+
+  private static boolean atWantedPerpPose; // Robots perpendicular position in relation to whatever Apriltag we are
+  // lining up to.
+
+  private static boolean atWantedRot; // Robots rotation in relation to whatever Apriltag we are lining up to
+
+  private static boolean atWantedParaPose; // Robots parallel position in relation to whatever Apriltag we are lining
+  // up to
+
+  private static boolean FlipCheck;
 
   private static boolean slowdown;
 
-  private static double solutionDegAngle;
+  /*
+   * Pose2d
+   */
+
+  private static Pose2d globalPose = new Pose2d(); // Robots position on the field.
+
+  private static Pose2d TurretTarget; // Turret target pose
+
+  private static Pose2d turretPose;
+
+  /*
+   * 
+   * 
+   * UPDATE SECTION
+   * 
+   * 
+   * 
+   */
+
+  /*
+   * One use types
+   */
+
+  public static void setPathBuilder(FollowPath.Builder builder) {
+    BobotState.BuilderTest = builder;
+  }
+
+  public static void updateRoboChassisSpeed(ChassisSpeeds speed) {
+    BobotState.roboChassisSpeeds = speed;
+  }
+
+  /*
+   * Pose2d
+   */
+
+  public static void updateTurretPose(Pose2d turret) {
+    BobotState.turretPose = turret;
+  }
+
+  public static void updateGlobalPose(Pose2d pose) {
+    BobotState.globalPose = pose;
+  }
+
+  public static void updateTurretTarget(Pose2d target) {
+    BobotState.TurretTarget = target;
+  }
+
+  /*
+   * Booleans
+   */
 
   public static void updateFlipCheck(boolean FlipCheck) {
     BobotState.FlipCheck = FlipCheck;
   }
+
+  public static void updateSlowdown(boolean slow) {
+    BobotState.slowdown = slow;
+  }
+
+  public static void updateWantedPose(boolean perpPoseWanted) {
+    BobotState.atWantedPerpPose = perpPoseWanted;
+  }
+
+  public static void updateWantedParaPose(boolean paraPoseWanted) {
+    BobotState.atWantedParaPose = paraPoseWanted;
+  }
+
+  public static void updateWantedRot(boolean rotWanted) {
+    BobotState.atWantedRot = rotWanted;
+  }
+
+  /*
+   * Strings
+   */
 
   public static void updateLeftPathOne(String LPOne) {
     BobotState.leftPathOne = LPOne;
@@ -159,6 +220,10 @@ public class BobotState extends VirtualSubsystem {
     BobotState.rightPathThree = RPThree;
   }
 
+  /*
+   * Doubles
+   */
+
   public static void updateStartWait(double startWait) {
     BobotState.startWait = startWait;
   }
@@ -175,20 +240,8 @@ public class BobotState extends VirtualSubsystem {
     BobotState.bumpTwoWait = bumpTwoWait;
   }
 
-  public static void setPathBuilder(FollowPath.Builder builder) {
-    BobotState.BuilderTest = builder;
-  }
-
   public static void updateSolutionDegAngle(double angle) {
     BobotState.solutionDegAngle = angle;
-  }
-
-  public static void updateSlowdown(boolean slow) {
-    BobotState.slowdown = slow;
-  }
-
-  public static void updateTurretPose(Pose2d turret) {
-    BobotState.turretPose = turret;
   }
 
   public static void updateHoodTest(double value) {
@@ -199,35 +252,6 @@ public class BobotState extends VirtualSubsystem {
     BobotState.shooterTest = value;
   }
 
-  public static void updateWantedPose(boolean perpPoseWanted) {
-    BobotState.atWantedPerpPose = perpPoseWanted;
-  }
-
-  public static void updateWantedParaPose(boolean paraPoseWanted) {
-    BobotState.atWantedParaPose = paraPoseWanted;
-  }
-
-  public static void updateWantedRot(boolean rotWanted) {
-    BobotState.atWantedRot = rotWanted;
-  }
-
-  public static void offerVisionObservation(PoseObservation observation) {
-    BobotState.poseObservations.offer(observation);
-  }
-
-  public static Queue<PoseObservation> getVisionObservations() {
-    return BobotState.poseObservations;
-  }
-
-  public static void updateGlobalPose(Pose2d pose) {
-    BobotState.globalPose = pose;
-  }
-
-  /*
-   *
-   * Section that we are adding updates too
-   *
-   */
   public static void updateDistance(double distance) {
     BobotState.distance = distance;
   }
@@ -273,28 +297,28 @@ public class BobotState extends VirtualSubsystem {
     BobotState.TurretMotorPos = pose;
   }
 
-  public static void updateRoboChassisSpeed(ChassisSpeeds speed) {
-    BobotState.roboChassisSpeeds = speed;
-  }
-
   public static void updateOptiTurretYaw(double test) {
     BobotState.OptiTurretYaw = test;
-  }
-
-  public static void updateTurretTarget(Pose2d target) {
-    BobotState.TurretTarget = target;
   }
 
   public static void updateHood(double pos) {
     BobotState.HoodPos = pos;
   }
 
-  public static boolean getSlowdown() {
-    return BobotState.slowdown;
+  /*
+   * Vision Pose Observations
+   */
+
+  public static void offerVisionObservation(PoseObservation observation) {
+    BobotState.poseObservations.offer(observation);
   }
 
-  public static Pose2d getGlobalPose() {
-    return BobotState.globalPose;
+  public static Queue<PoseObservation> getVisionObservations() {
+    return BobotState.poseObservations;
+  }
+
+  public static boolean getSlowdown() {
+    return BobotState.slowdown;
   }
 
   public static boolean getFlipCheck() {
@@ -303,8 +327,12 @@ public class BobotState extends VirtualSubsystem {
 
   /*
    *
-   * Section we are adding get methods to
+   * GET SECTION
    *
+   */
+
+  /*
+   * Strings
    */
 
   public static String getLeftPathOne() {
@@ -331,6 +359,10 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.rightPathThree;
   }
 
+  /*
+   * Doubles
+   */
+
   public static double getStartWait() {
     return BobotState.startWait;
   }
@@ -349,10 +381,6 @@ public class BobotState extends VirtualSubsystem {
 
   public static double getSolutionAngle() {
     return BobotState.solutionDegAngle;
-  }
-
-  public static Pose2d getTurretPose() {
-    return BobotState.turretPose;
   }
 
   public static double getDistance() {
@@ -379,10 +407,6 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.TurretCalc;
   }
 
-  public static ChassisSpeeds getRoboSpeed() {
-    return BobotState.roboChassisSpeeds;
-  }
-
   public static double getTurretPosi1() {
     return BobotState.TurretPos1;
   }
@@ -403,14 +427,6 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.wantedRotRobot;
   }
 
-  public static Rotation2d getRotationtoClosestHub() {
-    return BobotState.hubTracker.getRotationTarget();
-  }
-
-  public static Pose2d getTurretTarget() {
-    return BobotState.TurretTarget;
-  }
-
   public static double getHoodPos() {
     return BobotState.HoodPos;
   }
@@ -419,8 +435,20 @@ public class BobotState extends VirtualSubsystem {
     return BobotState.HoodCalc;
   }
 
-  public static Trigger slowTrigger() {
-    return new Trigger(() -> (BobotState.TurretPos2 < 1.0 && BobotState.TurretPos2 > -1.0));
+  /*
+   * Pose2d
+   */
+
+  public static Pose2d getTurretPose() {
+    return BobotState.turretPose;
+  }
+
+  public static Pose2d getGlobalPose() {
+    return BobotState.globalPose;
+  }
+
+  public static Pose2d getTurretTarget() {
+    return BobotState.TurretTarget;
   }
 
   public static Pose2d targetLocation() {
@@ -429,6 +457,18 @@ public class BobotState extends VirtualSubsystem {
         : onTopHalf().getAsBoolean()
             ? FieldUtils.getLeftTarget()
             : onBottomHalf().getAsBoolean() ? FieldUtils.getRightTarget() : FieldUtils.getHub());
+  }
+
+  /*
+   * One Use Types
+   */
+
+  public static ChassisSpeeds getRoboSpeed() {
+    return BobotState.roboChassisSpeeds;
+  }
+
+  public static Rotation2d getRotationtoClosestHub() {
+    return BobotState.hubTracker.getRotationTarget();
   }
 
   public static TargetType targetType() {
@@ -447,7 +487,13 @@ public class BobotState extends VirtualSubsystem {
   // .get();
   // }
 
-  // Adding Triggers here
+  /*
+   * Triggers
+   */
+
+  public static Trigger slowTrigger() {
+    return new Trigger(() -> (BobotState.TurretPos2 < 1.0 && BobotState.TurretPos2 > -1.0));
+  }
 
   public static Trigger onBottomHalf() {
     return new Trigger(
@@ -461,10 +507,9 @@ public class BobotState extends VirtualSubsystem {
 
   public static Trigger onTeamSide() {
     return new Trigger(
-        () ->
-            FieldUtils.getAlliance() == Alliance.Blue
-                ? getGlobalPose().getX() < FieldConstants.distanceToBlueTrench // fix this
-                : getGlobalPose().getX() > FieldConstants.distanceToRedTrench);
+        () -> FieldUtils.getAlliance() == Alliance.Blue
+            ? getGlobalPose().getX() < FieldConstants.distanceToBlueTrench // fix this
+            : getGlobalPose().getX() > FieldConstants.distanceToRedTrench);
   }
 
   @Override
@@ -571,5 +616,6 @@ public class BobotState extends VirtualSubsystem {
   }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
