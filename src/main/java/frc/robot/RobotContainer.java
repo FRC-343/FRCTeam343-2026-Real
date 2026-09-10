@@ -258,7 +258,7 @@ public class RobotContainer {
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Intake and drop intake
     controller
         .rightBumper()
         .whileTrue(
@@ -267,30 +267,30 @@ public class RobotContainer {
                 .alongWith(
                     lowerShooter
                         .setVelocityThenStopCommand()
-                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT))));
+                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)))); // Rev Shooter and bring up intake
 
     controller
         .leftBumper()
         .whileTrue(
             kicker
                 .setVelocityThenStopCommand(18)
-                .alongWith(intake.setPercentOutputThenStopCommand(.8)));
+                .alongWith(intake.setPercentOutputThenStopCommand(.8))); // Run kicker and intake for shooting
 
     controller
         .leftTrigger()
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(-.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
 
-    controller.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
+    controller.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)); // bring down intake
 
     controller
         .y()
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand2(12)
-                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12)));
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12))); // Reverse intake
 
     controller
         .a()
@@ -299,11 +299,11 @@ public class RobotContainer {
                 drive,
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
-                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
+                () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle()))); // Auto Aim
 
-    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12));
-    controller.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.1));
-    controller.povDown().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT));
+    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12)); // reverse kicker
+    controller.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.1)); // Run intake up slowly
+    controller.povDown().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)); // Bring intake to shoot position 
   }
 
   private void configureOpButtons() {
@@ -313,7 +313,7 @@ public class RobotContainer {
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Intake and drop intake
     controller2
         .rightBumper()
         .whileTrue(
@@ -322,32 +322,32 @@ public class RobotContainer {
                 .alongWith(
                     lowerShooter
                         .setVelocityThenStopCommand()
-                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT))));
+                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)))); // Rev shooter and bring intake up
 
     controller2
         .leftBumper()
         .whileTrue(
             kicker
                 .setVelocityThenStopCommand(18)
-                .alongWith(intake.setPercentOutputThenStopCommand(.8)));
+                .alongWith(intake.setPercentOutputThenStopCommand(.8))); // Run kicker and intake
 
     controller2
         .leftTrigger()
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(-.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
 
-    controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
+    controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)); // Drop intake
 
     controller2
         .y()
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand2(12)
-                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12)));
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12))); // Reverse Shooter
 
-    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12));
+    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12)); // reverse kicker
   }
 
   // private void configureTestButtons() {
