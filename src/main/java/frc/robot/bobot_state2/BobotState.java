@@ -21,10 +21,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.littletonrobotics.junction.Logger;
 
 /**
- * Class full of static variables and methods that store robot state we'd need
- * across mulitple
- * subsystems. It's called {@link #BobotState} as to not conflict with WPILib's
- * {@link
+ * Class full of static variables and methods that store robot state we'd need across mulitple
+ * subsystems. It's called {@link #BobotState} as to not conflict with WPILib's {@link
  * edu.wpi.first.wpilibj.RobotState}
  */
 public class BobotState extends VirtualSubsystem {
@@ -75,7 +73,8 @@ public class BobotState extends VirtualSubsystem {
 
   private static double wantedRotRobot;
 
-  private static double ToF; // this will hold the Time of flight info needed for turret and hood calcs
+  private static double
+      ToF; // this will hold the Time of flight info needed for turret and hood calcs
 
   private static double distance;
 
@@ -109,12 +108,15 @@ public class BobotState extends VirtualSubsystem {
    * Booleans
    */
 
-  private static boolean atWantedPerpPose; // Robots perpendicular position in relation to whatever Apriltag we are
+  private static boolean
+      atWantedPerpPose; // Robots perpendicular position in relation to whatever Apriltag we are
   // lining up to.
 
-  private static boolean atWantedRot; // Robots rotation in relation to whatever Apriltag we are lining up to
+  private static boolean
+      atWantedRot; // Robots rotation in relation to whatever Apriltag we are lining up to
 
-  private static boolean atWantedParaPose; // Robots parallel position in relation to whatever Apriltag we are lining
+  private static boolean
+      atWantedParaPose; // Robots parallel position in relation to whatever Apriltag we are lining
   // up to
 
   private static boolean FlipCheck;
@@ -132,12 +134,12 @@ public class BobotState extends VirtualSubsystem {
   private static Pose2d turretPose;
 
   /*
-   * 
-   * 
+   *
+   *
    * UPDATE SECTION
-   * 
-   * 
-   * 
+   *
+   *
+   *
    */
 
   /*
@@ -507,9 +509,10 @@ public class BobotState extends VirtualSubsystem {
 
   public static Trigger onTeamSide() {
     return new Trigger(
-        () -> FieldUtils.getAlliance() == Alliance.Blue
-            ? getGlobalPose().getX() < FieldConstants.distanceToBlueTrench // fix this
-            : getGlobalPose().getX() > FieldConstants.distanceToRedTrench);
+        () ->
+            FieldUtils.getAlliance() == Alliance.Blue
+                ? getGlobalPose().getX() < FieldConstants.distanceToBlueTrench // fix this
+                : getGlobalPose().getX() > FieldConstants.distanceToRedTrench);
   }
 
   @Override
@@ -616,6 +619,5 @@ public class BobotState extends VirtualSubsystem {
   }
 
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {}
 }

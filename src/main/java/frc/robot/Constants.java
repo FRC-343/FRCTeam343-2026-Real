@@ -46,8 +46,8 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double INTAKEDOWN = -.09;
-    public static final double INTAKE_FOR_SHOOT = -.13;
-    public static final double INTAKE_STOW = -.2;
+    public static final double INTAKEDOWN = -.01;
+    public static final double INTAKE_FOR_SHOOT = -.15;
+    public static final double INTAKE_STOW = -.15;
   }
 }

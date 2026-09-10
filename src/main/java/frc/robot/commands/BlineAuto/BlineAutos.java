@@ -235,7 +235,7 @@ public class BlineAutos {
     return Commands.sequence(
         iPiviot.setAngle(IntakeConstants.INTAKEDOWN).withTimeout(.2),
         Commands.parallel(
-            intake.setPercentOutputThenStopCommand(-.5),
+            intake.setPercentOutputThenStopCommand(.5),
             Commands.sequence(
                 Commands.waitSeconds(.25),
                 drive.pathBuilder().build(BackToDepot),

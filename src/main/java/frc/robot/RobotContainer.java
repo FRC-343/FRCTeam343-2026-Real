@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.bobot_state2.BobotState;
 import frc.robot.commands.BlineAuto.BlineAutos;
@@ -254,25 +253,44 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    controller.rightTrigger().whileTrue(intake.setPercentOutputThenStopCommand(.8));
     controller
-        .b()
+        .rightTrigger()
         .whileTrue(
             intake
-                .setPercentOutputThenStopCommand(-.5)
+                .setPercentOutputThenStopCommand(.8)
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+    controller
+        .rightBumper()
+        .whileTrue(
+            upperShooter
+                .setVelocityThenStopCommand()
                 .alongWith(
-                    DriveCommands.joystickDriveAtAngle(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> new Rotation2d(-controller.getLeftY(), -controller.getLeftX()))));
+                    lowerShooter
+                        .setVelocityThenStopCommand()
+                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT))));
+
+    controller
+        .leftBumper()
+        .whileTrue(
+            kicker
+                .setVelocityThenStopCommand(18)
+                .alongWith(intake.setPercentOutputThenStopCommand(.8)));
+
+    controller
+        .leftTrigger()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(-.8)
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+
+    controller.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
+
     controller
         .y()
         .whileTrue(
-            DriveCommands.pointAtAngle(
-                drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
-    controller.leftTrigger().whileTrue(intake.setPercentOutputThenStopCommand(-.8));
-    controller.leftBumper().onTrue(Commands.runOnce(drive::stopWithX, drive));
+            upperShooter
+                .setVelocityThenStopCommand2(12)
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12)));
 
     controller
         .a()
@@ -283,45 +301,53 @@ public class RobotContainer {
                 () -> -controller.getLeftX(),
                 () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
 
-    controller
-        .x()
-        .whileTrue(
-            intake
-                .setPercentOutputThenStopCommand(.5)
-                .alongWith(
-                    DriveCommands.joystickDriveAtAngle(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        () -> new Rotation2d(controller.getLeftY(), controller.getLeftX()))));
+    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12));
+    controller.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.1));
+    controller.povDown().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT));
   }
 
   private void configureOpButtons() {
 
     controller2
+        .rightTrigger()
+        .whileTrue(
+            intake
+                .setPercentOutputThenStopCommand(.8)
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
+    controller2
         .rightBumper()
         .whileTrue(
             upperShooter
                 .setVelocityThenStopCommand()
-                .alongWith(lowerShooter.setVelocityThenStopCommand()));
-    controller2.leftBumper().whileTrue(kicker.setVelocityThenStopCommand(18));
+                .alongWith(
+                    lowerShooter
+                        .setVelocityThenStopCommand()
+                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT))));
+
+    controller2
+        .leftBumper()
+        .whileTrue(
+            kicker
+                .setVelocityThenStopCommand(18)
+                .alongWith(intake.setPercentOutputThenStopCommand(.8)));
 
     controller2
         .leftTrigger()
         .whileTrue(
             intake
-                .setPercentOutputThenStopCommand(-.7)
-                .alongWith(kicker.setVelocityThenStopCommand(-18)));
+                .setPercentOutputThenStopCommand(-.8)
+                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)));
 
-    controller2.x().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
+    controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN));
 
-    controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT));
+    controller2
+        .y()
+        .whileTrue(
+            upperShooter
+                .setVelocityThenStopCommand2(12)
+                .alongWith(lowerShooter.setVelocityThenStopCommand2(-12)));
 
-    controller2.y().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_STOW));
-
-    controller2.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.25));
-
-    controller2.povDown().whileTrue(iPiviot.setVelocityThenStopCommand2(.25));
+    controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12));
   }
 
   // private void configureTestButtons() {
