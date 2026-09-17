@@ -118,7 +118,7 @@ public class BlineAutos {
             drive, () -> Rotation2d.fromDegrees(BobotState.getSolutionAngle())));
   }
 
-  public static Command trenchShoot(
+  public static Command leftShoot(
       Intake intake,
       LowerShooter lShoot,
       UpperShooter uShoot,

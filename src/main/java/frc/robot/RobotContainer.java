@@ -69,11 +69,11 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  private final LoggedDashboardChooser<String> LPO;
+  //   private final LoggedDashboardChooser<String> LPO;
 
-  private final LoggedDashboardChooser<String> LPT;
+  //   private final LoggedDashboardChooser<String> LPT;
 
-  private final LoggedDashboardChooser<String> LPTh;
+  //   private final LoggedDashboardChooser<String> LPTh;
 
   private final LoggedDashboardChooser<String> RPO;
 
@@ -159,16 +159,16 @@ public class RobotContainer {
 
     SmartDashboard.putString(
         "Auto info",
-        "Main Path selection is at the top of this stack. \n If a Left side start is chosen use the left stack of choosers to select paths.\nIf a right side start is chosen use the right stack of choosers to select paths. \n"
+        "Main Path selection is at the top of this stack. \n It will auto flip the paths for left and right depending on what start is selected. \n"
             + " The above waits determine start delay, over bump 1, leave, and over bump 2.\nIf not using a path that goes over the bump you do not have to change wait times");
 
     // configureNamedCommands();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", new SendableChooser<>());
 
-    LPO = new LoggedDashboardChooser<>("Left Path One", new SendableChooser<>());
-    LPT = new LoggedDashboardChooser<>("Left Path Two", new SendableChooser<>());
-    LPTh = new LoggedDashboardChooser<>("Left Path Three", new SendableChooser<>());
+    // LPO = new LoggedDashboardChooser<>("Left Path One", new SendableChooser<>());
+    // LPT = new LoggedDashboardChooser<>("Left Path Two", new SendableChooser<>());
+    // LPTh = new LoggedDashboardChooser<>("Left Path Three", new SendableChooser<>());
 
     RPO = new LoggedDashboardChooser<>("Path One", new SendableChooser<>());
     RPT = new LoggedDashboardChooser<>("Path Two", new SendableChooser<>());
@@ -267,21 +267,27 @@ public class RobotContainer {
                 .alongWith(
                     lowerShooter
                         .setVelocityThenStopCommand()
-                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)))); // Rev Shooter and bring up intake
+                        .alongWith(
+                            iPiviot.setAngle(
+                                IntakeConstants
+                                    .INTAKE_FOR_SHOOT)))); // Rev Shooter and bring up intake
 
     controller
         .leftBumper()
         .whileTrue(
             kicker
                 .setVelocityThenStopCommand(18)
-                .alongWith(intake.setPercentOutputThenStopCommand(.8))); // Run kicker and intake for shooting
+                .alongWith(
+                    intake.setPercentOutputThenStopCommand(
+                        .8))); // Run kicker and intake for shooting
 
     controller
         .leftTrigger()
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(-.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
+                .alongWith(
+                    iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
 
     controller.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)); // bring down intake
 
@@ -303,7 +309,10 @@ public class RobotContainer {
 
     controller.x().whileTrue(kicker.setVelocityThenStopCommand(-12)); // reverse kicker
     controller.povUp().whileTrue(iPiviot.setVelocityThenStopCommand2(-.1)); // Run intake up slowly
-    controller.povDown().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)); // Bring intake to shoot position 
+    controller
+        .povDown()
+        .whileTrue(
+            iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)); // Bring intake to shoot position
   }
 
   private void configureOpButtons() {
@@ -322,7 +331,10 @@ public class RobotContainer {
                 .alongWith(
                     lowerShooter
                         .setVelocityThenStopCommand()
-                        .alongWith(iPiviot.setAngle(IntakeConstants.INTAKE_FOR_SHOOT)))); // Rev shooter and bring intake up
+                        .alongWith(
+                            iPiviot.setAngle(
+                                IntakeConstants
+                                    .INTAKE_FOR_SHOOT)))); // Rev shooter and bring intake up
 
     controller2
         .leftBumper()
@@ -336,7 +348,8 @@ public class RobotContainer {
         .whileTrue(
             intake
                 .setPercentOutputThenStopCommand(-.8)
-                .alongWith(iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
+                .alongWith(
+                    iPiviot.setAngle(IntakeConstants.INTAKEDOWN))); // Exhaust and drop intake
 
     controller2.b().whileTrue(iPiviot.setAngle(IntakeConstants.INTAKEDOWN)); // Drop intake
 
@@ -394,7 +407,9 @@ public class RobotContainer {
   }
 
   public void Automation() {
-    BobotState.updateTurretTarget(BobotState.targetLocation());
+    BobotState.updateTurretTarget(
+        BobotState.targetLocation()); // Updates the target the robot is currently targeting
+
     BobotState.updateStartWait(SmartDashboard.getNumber("Start Wait Time", 0));
     BobotState.updateBumpWait(SmartDashboard.getNumber("Bump Wait Time", 0));
     BobotState.updateLeaveWait(SmartDashboard.getNumber("Leave Wait Time", 0));
@@ -427,7 +442,7 @@ public class RobotContainer {
     autoChooser.addOption("Sanity Check", BlineAutos.SanityCheck(drive));
     autoChooser.addOption(
         "LeftLeave",
-        BlineAutos.trenchShoot(
+        BlineAutos.leftShoot(
             intake,
             lowerShooter,
             upperShooter,
